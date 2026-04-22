@@ -50,19 +50,63 @@
       if (navLogin) navLogin.style.display = 'none';
       if (navUser) {
         navUser.style.display = 'flex';
-        navUser.innerHTML =
-          '<div class="nav-user-info" onclick="toggleUserMenu()">' +
-            '<span class="nav-user-avatar">👤</span>' +
-            '<span class="nav-user-nome">' + user.nome.split(' ')[0] + '</span>' +
-            '<span class="nav-user-pontos">⭐ ' + user.pontos + ' pts</span>' +
-            '<span>▼</span>' +
-          '</div>' +
-          '<div class="nav-user-dropdown" id="userDropdown" style="display:none">' +
-            '<a href="meus-achados.html">📋 Meus Achados</a>' +
-            '<a href="recompensas.html">🏆 Recompensas</a>' +
-            '<hr>' +
-            '<a href="#" onclick="Auth.logout()" class="link-danger">🚪 Sair</a>' +
-          '</div>';
+
+        // Build using DOM methods to avoid XSS
+        var info = document.createElement('div');
+        info.className = 'nav-user-info';
+        info.setAttribute('onclick', 'toggleUserMenu()');
+
+        var avatar = document.createElement('span');
+        avatar.className = 'nav-user-avatar';
+        avatar.textContent = '👤';
+
+        var nome = document.createElement('span');
+        nome.className = 'nav-user-nome';
+        nome.textContent = user.nome.split(' ')[0];
+
+        var pontos = document.createElement('span');
+        pontos.className = 'nav-user-pontos';
+        pontos.textContent = '⭐ ' + user.pontos + ' pts';
+
+        var arrow = document.createElement('span');
+        arrow.textContent = '▼';
+
+        info.appendChild(avatar);
+        info.appendChild(nome);
+        info.appendChild(pontos);
+        info.appendChild(arrow);
+
+        var dropdown = document.createElement('div');
+        dropdown.className = 'nav-user-dropdown';
+        dropdown.id = 'userDropdown';
+        dropdown.style.display = 'none';
+
+        var linkAchados = document.createElement('a');
+        linkAchados.href = 'meus-achados.html';
+        linkAchados.textContent = '📋 Meus Achados';
+
+        var linkRecompensas = document.createElement('a');
+        linkRecompensas.href = 'recompensas.html';
+        linkRecompensas.textContent = '🏆 Recompensas';
+
+        var hr = document.createElement('hr');
+
+        var linkSair = document.createElement('a');
+        linkSair.href = '#';
+        linkSair.className = 'link-danger';
+        linkSair.textContent = '🚪 Sair';
+        linkSair.addEventListener('click', function (e) {
+          e.preventDefault();
+          Auth.logout();
+        });
+
+        dropdown.appendChild(linkAchados);
+        dropdown.appendChild(linkRecompensas);
+        dropdown.appendChild(hr);
+        dropdown.appendChild(linkSair);
+
+        navUser.appendChild(info);
+        navUser.appendChild(dropdown);
       }
     }
   }

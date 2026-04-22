@@ -69,12 +69,13 @@ document.getElementById('formLogin').addEventListener('submit', function (e) {
       alertaSucesso.textContent = '✅ Login realizado com sucesso! A redirecionar...';
       alertaSucesso.style.display = 'block';
 
-      // Verificar redirect param
+      // Verificar redirect param (validar para evitar redireccionamentos externos)
       const params = new URLSearchParams(window.location.search);
-      const redirect = params.get('redirect');
+      const redirectParam = params.get('redirect');
+      const safeRedirect = redirectParam && /^[^/:][^:]*$/.test(redirectParam) ? redirectParam : null;
 
       setTimeout(function () {
-        window.location.href = redirect || redirecionarPara;
+        window.location.href = safeRedirect || redirecionarPara;
       }, 1000);
     } else {
       alertaErro.textContent = '❌ Email ou senha incorrectos. Tente novamente.';
