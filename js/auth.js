@@ -30,8 +30,9 @@ var Auth = (function () {
 
   function requireAuth() {
     if (!isLoggedIn()) {
-      // Usar apenas o caminho relativo para o redirect, sem origem
-      var currentPage = window.location.pathname.split('/').pop() + window.location.search;
+      // Usar apenas o caminho relativo (sem origem) para o redirect
+      var pathParts = window.location.pathname.substring(1);
+      var currentPage = (pathParts || 'index.html') + window.location.search;
       window.location.href = 'login.html?redirect=' + encodeURIComponent(currentPage);
     }
   }

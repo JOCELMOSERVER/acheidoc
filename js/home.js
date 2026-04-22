@@ -16,7 +16,7 @@
 
     // Preencher nome e pontos
     var nomeEl = document.getElementById('nomeUtilizador');
-    if (nomeEl) nomeEl.textContent = user.nome.split(' ')[0];
+    if (nomeEl && user.nome) nomeEl.textContent = user.nome.split(' ')[0];
 
     var pontosEl = document.getElementById('pontosUtilizador');
     if (pontosEl) pontosEl.textContent = (user.pontos || 0).toLocaleString('pt-AO');

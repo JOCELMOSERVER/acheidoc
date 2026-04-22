@@ -40,8 +40,8 @@
         Auth.login({ id: user.id, nome: user.nome, email: user.email, role: 'utilizador', pontos: user.pontos });
         var params = new URLSearchParams(window.location.search);
         var redirect = params.get('redirect');
-        // Validar redirect: apenas caminhos relativos sem protocolo
-        var safePath = (redirect && /^[^:]*$/.test(redirect) && redirect.startsWith('/') === false && redirect.indexOf('//') === -1)
+        // Validar redirect: apenas caminhos para ficheiros .html locais
+        var safePath = (redirect && /^[a-zA-Z0-9_\-\.\/]+\.html(\?.*)?$/.test(redirect))
           ? redirect
           : 'index.html';
         window.location.href = safePath;
