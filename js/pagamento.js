@@ -103,8 +103,11 @@
     if (btnInstrucoes) {
       btnInstrucoes.addEventListener('click', function () {
         var url = 'ponto-entrega.html';
-        if (docId) url += '?id=' + docId + '&codigo=' + (codigoEl ? codigoEl.textContent : '');
-        window.location.href = url;
+        if (docId) {
+          var codigo = codigoEl ? codigoEl.textContent : '';
+          url += '?id=' + encodeURIComponent(docId) + '&codigo=' + encodeURIComponent(codigo);
+        }
+        window.location.assign(url);
       });
     }
 
