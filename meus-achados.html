@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meus Achados — AcheiDoc</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="navbar-logo"><span class="logo-icon">📄</span>AcheiDoc</a>
+    <div class="navbar-links">
+      <a href="index.html">Home</a>
+      <a href="buscar.html">Buscar Documento</a>
+      <a href="publicar.html">Publicar Achado</a>
+      <a href="recompensas.html">Recompensas</a>
+    </div>
+    <div class="navbar-right">
+      <button class="btn-login" id="loginBtn">Entrar <span class="arrow">▼</span></button>
+      <div class="login-dropdown" id="loginDropdown">
+        <a href="agente/login.html"><span class="dd-icon">🏪</span> Sou Agente</a>
+        <div class="dd-divider"></div>
+        <a href="admin/login.html"><span class="dd-icon">🛡️</span> Sou Admin</a>
+      </div>
+    </div>
+    <div class="navbar-toggle" id="navbarToggle"><span></span><span></span><span></span></div>
+  </div>
+  <div class="navbar-mobile" id="navbarMobile">
+    <a href="index.html">🏠 Home</a>
+    <a href="buscar.html">🔍 Buscar Documento</a>
+    <a href="publicar.html">📤 Publicar Achado</a>
+    <a href="recompensas.html">🏆 Recompensas</a>
+    <div class="mobile-divider"></div>
+    <a href="agente/login.html">🏪 Sou Agente</a>
+    <a href="admin/login.html">🛡️ Sou Admin</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container flex-between">
+    <div>
+      <h1>📋 Meus Achados</h1>
+      <p>Todos os documentos que publicou na plataforma</p>
+    </div>
+    <a href="publicar.html" class="btn btn-success">+ Publicar Novo</a>
+  </div>
+</div>
+
+<main class="page-content">
+  <div class="container">
+
+    <!-- Filtro por status -->
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-filter="">Todos</button>
+      <button class="filter-tab" data-filter="PENDENTE">Pendente</button>
+      <button class="filter-tab" data-filter="PUBLICADO">Publicado</button>
+      <button class="filter-tab" data-filter="AGUARDANDO_ENTREGA">Aguardando Entrega</button>
+      <button class="filter-tab" data-filter="DISPONIVEL_LEVANTAMENTO">Disponível</button>
+      <button class="filter-tab" data-filter="ENTREGUE">Entregue</button>
+    </div>
+
+    <!-- Tabela -->
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Tipo</th>
+            <th>Nome Parcial</th>
+            <th>Status</th>
+            <th>Data</th>
+            <th>Pontos</th>
+            <th>Acções</th>
+          </tr>
+        </thead>
+        <tbody id="achadosTabela">
+          <!-- Preenchido pelo JS -->
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© 2026 AcheiDoc. Todos os direitos reservados.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/mockData.js"></script>
+<script src="js/navbar.js"></script>
+<script>
+(function () {
+  var tabelaBody = document.getElementById('achadosTabela');
+  var filterTabs = document.querySelectorAll('.filter-tab');
+  var filtroAtual = '';
+
+  function renderTabela(filtro) {
+    if (!tabelaBody) return;
+    var docs = DOCUMENTOS.filter(function (d) {
+      return !filtro || d.status === filtro;
+    });
+
+    if (docs.length === 0) {
+      tabelaBody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-gray);">Nenhum achado encontrado.</td></tr>`;
+      return;
+    }
+
+    tabelaBody.innerHTML = docs.map(function (d) {
+      var pontos = d.status === 'ENTREGUE' ? '+60 pts' : d.status === 'AGUARDANDO_ENTREGA' ? '+10 pts' : '—';
+      var cor = pontos !== '—' ? 'color:var(--success); font-weight:700;' : '';
+      return `
+        <tr>
+          <td><code>${d.id}</code></td>
+          <td>${d.tipo}</td>
+          <td>${d.nomeParcial}</td>
+          <td><span class="badge ${getStatusBadgeClass(d.status)}">${getStatusLabel(d.status)}</span></td>
+          <td>${formatDate(d.dataCriacao)}</td>
+          <td style="${cor}">${pontos}</td>
+          <td><a href="detalhes.html?id=${d.id}" class="btn btn-outline btn-sm">Ver</a></td>
+        </tr>`;
+    }).join('');
+  }
+
+  filterTabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      filterTabs.forEach(function (t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      filtroAtual = tab.getAttribute('data-filter') || '';
+      renderTabela(filtroAtual);
+    });
+  });
+
+  renderTabela('');
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buscar Documento — AcheiDoc</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="navbar-logo"><span class="logo-icon">📄</span>AcheiDoc</a>
+    <div class="navbar-links">
+      <a href="index.html">Home</a>
+      <a href="buscar.html" class="active">Buscar Documento</a>
+      <a href="publicar.html">Publicar Achado</a>
+      <a href="recompensas.html">Recompensas</a>
+    </div>
+    <div class="navbar-right">
+      <button class="btn-login" id="loginBtn">Entrar <span class="arrow">▼</span></button>
+      <div class="login-dropdown" id="loginDropdown">
+        <a href="agente/login.html"><span class="dd-icon">🏪</span> Sou Agente</a>
+        <div class="dd-divider"></div>
+        <a href="admin/login.html"><span class="dd-icon">🛡️</span> Sou Admin</a>
+      </div>
+    </div>
+    <div class="navbar-toggle" id="navbarToggle"><span></span><span></span><span></span></div>
+  </div>
+  <div class="navbar-mobile" id="navbarMobile">
+    <a href="index.html">🏠 Home</a>
+    <a href="buscar.html" class="active">🔍 Buscar Documento</a>
+    <a href="publicar.html">📤 Publicar Achado</a>
+    <a href="recompensas.html">🏆 Recompensas</a>
+    <div class="mobile-divider"></div>
+    <a href="agente/login.html">🏪 Sou Agente</a>
+    <a href="admin/login.html">🛡️ Sou Admin</a>
+  </div>
+</nav>
+
+<!-- ══ CABEÇALHO ══ -->
+<div class="page-header">
+  <div class="container">
+    <h1>🔍 Buscar Documento</h1>
+    <p>Pesquise por nome, tipo ou localização</p>
+  </div>
+</div>
+
+<main class="page-content">
+  <div class="container">
+
+    <!-- Filtros -->
+    <div class="filter-bar">
+      <div class="form-group" style="flex: 2; min-width: 200px;">
+        <label class="form-label">Pesquisar</label>
+        <input type="text" id="searchInput" class="form-input" placeholder="Nome ou tipo de documento...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tipo</label>
+        <select id="tipoSelect" class="form-select">
+          <option value="">Todos os tipos</option>
+          <option value="Bilhete de Identidade">Bilhete de Identidade</option>
+          <option value="Carta de Condução">Carta de Condução</option>
+          <option value="Passaporte">Passaporte</option>
+          <option value="Cartão Bancário">Cartão Bancário</option>
+          <option value="Outro">Outro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Localização</label>
+        <select id="localSelect" class="form-select">
+          <option value="">Todas as zonas</option>
+          <option value="Luanda">Luanda</option>
+          <option value="Viana">Viana</option>
+          <option value="Cacuaco">Cacuaco</option>
+          <option value="Belas">Belas</option>
+          <option value="Outro">Outro</option>
+        </select>
+      </div>
+      <div class="form-group" style="align-self: flex-end; margin-bottom: 0;">
+        <button id="filterBtn" class="btn btn-primary">🔍 Filtrar</button>
+      </div>
+    </div>
+
+    <!-- Contagem de resultados -->
+    <p id="resultsCount" style="color: var(--text-gray); margin-bottom: 1rem; font-size: 0.9rem;"></p>
+
+    <!-- Grid de resultados -->
+    <div class="grid-4" id="resultsGrid">
+      <!-- Preenchido pelo buscar.js -->
+    </div>
+
+  </div>
+</main>
+
+<!-- ══ FOOTER ══ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© 2026 AcheiDoc. Todos os direitos reservados.</span>
+      <div class="footer-legal">
+        <a href="#">Privacidade</a>
+        <a href="#">Termos de Uso</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/mockData.js"></script>
+<script src="js/navbar.js"></script>
+<script src="js/buscar.js"></script>
+</body>
+</html>

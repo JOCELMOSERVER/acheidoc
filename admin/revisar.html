@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Revisar Documento — AcheiDoc Admin</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/navbar.css">
+  <link rel="stylesheet" href="../css/footer.css">
+  <link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+
+<!-- ══ NAVBAR ADMIN ══ -->
+<nav class="navbar" style="border-bottom: 3px solid #312E81;">
+  <div class="container navbar-inner">
+    <a href="../index.html" class="navbar-logo" style="color: #312E81;"><span class="logo-icon">📄</span>AcheiDoc <span style="font-size:0.75rem; background:#312E81; color:white; padding:2px 8px; border-radius:4px; margin-left:4px;">ADMIN</span></a>
+    <div class="navbar-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="revisar.html" class="active">Revisar Documentos</a>
+    </div>
+    <div class="navbar-right">
+      <button id="btnLogout" class="btn btn-outline" style="font-size:0.85rem; padding:8px 14px;">Sair</button>
+    </div>
+    <div class="navbar-toggle" id="navbarToggle"><span></span><span></span><span></span></div>
+  </div>
+  <div class="navbar-mobile" id="navbarMobile">
+    <a href="dashboard.html">🏠 Dashboard</a>
+    <a href="revisar.html" class="active">📋 Revisar</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <a href="dashboard.html" style="color: #312E81; font-weight:600;">← Dashboard</a>
+    <h1 style="margin-top:0.5rem;">📋 Revisar Documento</h1>
+  </div>
+</div>
+
+<main class="page-content">
+  <div class="container" id="mainContent">
+    <div class="grid-2" style="align-items:start; gap:2rem;">
+
+      <!-- Coluna esquerda: Foto -->
+      <div class="card" style="padding:0; overflow:hidden;">
+        <div style="position:relative; width:100%; aspect-ratio:4/3; background:#F3F4F6;">
+          <img id="docFoto" src="https://via.placeholder.com/600x400?text=Documento" alt="Foto" style="width:100%; height:100%; object-fit:cover;">
+        </div>
+        <div style="padding:1rem;">
+          <p style="color:var(--text-gray); font-size:0.85rem;">ID do Documento</p>
+          <p style="font-weight:700; font-family:monospace;" id="docId">—</p>
+          <p style="color:var(--text-gray); font-size:0.85rem; margin-top:0.5rem;">Data de Submissão</p>
+          <p id="docData">—</p>
+        </div>
+      </div>
+
+      <!-- Coluna direita: Análise e Ações -->
+      <div style="display:flex; flex-direction:column; gap:1rem;">
+
+        <!-- Análise da IA -->
+        <div class="card">
+          <h3 style="font-size:1rem; font-weight:700; margin-bottom:1rem;">🤖 Análise Automática (IA)</h3>
+          <ul class="checklist">
+            <li><div class="check-icon success">✓</div><span>Qualidade da imagem: <strong>Boa</strong></span></li>
+            <li><div class="check-icon success">✓</div><span>Dados completos: <strong>Sim</strong></span></li>
+            <li><div class="check-icon success">✓</div><span>Possível fraude: <strong>Não detectado</strong></span></li>
+            <li><div class="check-icon success">✓</div><span>Duplicidade: <strong>Não encontrada</strong></span></li>
+            <li>
+              <div class="check-icon" style="background:#FEF3C7;">⚠</div>
+              <span>Classificação de Risco: <span id="riscoBadge" class="badge badge-risco-baixo">—</span></span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Dados do documento -->
+        <div class="card">
+          <h3 style="font-size:1rem; font-weight:700; margin-bottom:1rem;">📋 Dados do Documento</h3>
+          <table style="width:100%; border-collapse:collapse;">
+            <tr>
+              <td style="padding:6px 0; color:var(--text-gray); font-size:0.85rem; width:100px;">Tipo</td>
+              <td style="padding:6px 0; font-weight:600;" id="docTipo">—</td>
+            </tr>
+            <tr>
+              <td style="padding:6px 0; color:var(--text-gray); font-size:0.85rem;">Nome</td>
+              <td style="padding:6px 0;" id="docNome">—</td>
+            </tr>
+            <tr>
+              <td style="padding:6px 0; color:var(--text-gray); font-size:0.85rem;">Local</td>
+              <td style="padding:6px 0;" id="docLocal">—</td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- Resultado da acção -->
+        <div id="actionResult" class="hidden"></div>
+
+        <!-- Botões de acção -->
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.75rem;">
+          <button id="btnAprovar" class="btn btn-success btn-lg" style="grid-column:1/-1;">
+            ✅ APROVAR
+          </button>
+          <button id="btnRejeitar" class="btn btn-danger btn-lg">
+            ❌ REJEITAR
+          </button>
+          <button id="btnCorrigir" class="btn btn-warning btn-lg">
+            ✏️ CORRIGIR
+          </button>
+        </div>
+
+        <!-- Secção de correcção -->
+        <div id="corrigirSection" class="card hidden" style="border-left:4px solid var(--warning);">
+          <h4 style="margin-bottom:0.75rem;">✏️ Observação de Correcção</h4>
+          <div class="form-group" style="margin-bottom:0.75rem;">
+            <textarea id="obsCorrecao" class="form-input" placeholder="Descreva o que precisa ser corrigido pelo utilizador..." style="min-height:120px;"></textarea>
+          </div>
+          <button id="btnSalvarCorrecao" class="btn btn-warning btn-full">Salvar Correcção</button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© 2026 AcheiDoc — Painel Admin</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/mockData.js"></script>
+<script src="../js/navbar.js"></script>
+<script src="../js/admin-revisar.js"></script>
+</body>
+</html>

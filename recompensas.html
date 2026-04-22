@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recompensas — AcheiDoc</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="navbar-logo"><span class="logo-icon">📄</span>AcheiDoc</a>
+    <div class="navbar-links">
+      <a href="index.html">Home</a>
+      <a href="buscar.html">Buscar Documento</a>
+      <a href="publicar.html">Publicar Achado</a>
+      <a href="recompensas.html" class="active">Recompensas</a>
+    </div>
+    <div class="navbar-right">
+      <button class="btn-login" id="loginBtn">Entrar <span class="arrow">▼</span></button>
+      <div class="login-dropdown" id="loginDropdown">
+        <a href="agente/login.html"><span class="dd-icon">🏪</span> Sou Agente</a>
+        <div class="dd-divider"></div>
+        <a href="admin/login.html"><span class="dd-icon">🛡️</span> Sou Admin</a>
+      </div>
+    </div>
+    <div class="navbar-toggle" id="navbarToggle"><span></span><span></span><span></span></div>
+  </div>
+  <div class="navbar-mobile" id="navbarMobile">
+    <a href="index.html">🏠 Home</a>
+    <a href="buscar.html">🔍 Buscar Documento</a>
+    <a href="publicar.html">📤 Publicar Achado</a>
+    <a href="recompensas.html" class="active">🏆 Recompensas</a>
+    <div class="mobile-divider"></div>
+    <a href="agente/login.html">🏪 Sou Agente</a>
+    <a href="admin/login.html">🛡️ Sou Admin</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1>🏆 Recompensas e Pontos</h1>
+    <p>Ganhe pontos ao publicar e entregar documentos</p>
+  </div>
+</div>
+
+<main class="page-content">
+  <div class="container">
+    <div class="grid-2" style="align-items: start; gap: 2rem;">
+
+      <!-- Coluna esquerda -->
+      <div style="display:flex; flex-direction:column; gap:1.5rem;">
+
+        <!-- Saldo de pontos -->
+        <div class="card" style="text-align:center; border-top:4px solid var(--warning);">
+          <div style="font-size:3rem;">🏆</div>
+          <p style="color:var(--text-gray); margin:0.5rem 0 0.25rem;">Os seus Pontos</p>
+          <div style="font-size:3rem; font-weight:900; color:var(--warning);" id="totalPontos">350</div>
+          <div style="font-size:1rem; color:var(--text-gray);">pts</div>
+          <div class="progress-bar" style="margin:1rem 0 0.5rem;">
+            <div class="progress-bar-fill" id="pontosProgress" style="width:70%; background:var(--warning);"></div>
+          </div>
+          <p style="font-size:0.85rem; color:var(--text-gray);" id="progressLabel">350 / 500 pts para o próximo nível</p>
+          <button id="btnResgatar" class="btn btn-warning btn-full" style="margin-top:1rem;">🎁 Resgatar Pontos</button>
+        </div>
+
+        <!-- Como ganhar pontos -->
+        <div class="card">
+          <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:1rem;">Como ganhar pontos</h3>
+          <ul class="checklist">
+            <li><div class="check-icon success">+</div><span><strong>+60 pts</strong> por documento entregue ao dono</span></li>
+            <li><div class="check-icon success">+</div><span><strong>+10 pts</strong> por documento publicado</span></li>
+            <li><div class="check-icon success">+</div><span><strong>+30 pts</strong> por confirmação de recepção</span></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Coluna direita -->
+      <div style="display:flex; flex-direction:column; gap:1.5rem;">
+
+        <!-- Tabela de benefícios -->
+        <div class="card">
+          <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:1rem;">🎁 Tabela de Benefícios</h3>
+          <div class="table-wrapper" style="box-shadow:none;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Pontos</th>
+                  <th>Benefício</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>100 pts</strong></td>
+                  <td>500 Kz saldo Unitel</td>
+                </tr>
+                <tr>
+                  <td><strong>150 pts</strong></td>
+                  <td>1 GB dados Unitel</td>
+                </tr>
+                <tr>
+                  <td><strong>200 pts</strong></td>
+                  <td>1.000 Kz em dinheiro</td>
+                </tr>
+                <tr>
+                  <td><strong>300 pts</strong></td>
+                  <td>Voucher parceiro AcheiDoc</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Histórico -->
+        <div class="card">
+          <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:1rem;">📊 Histórico de Pontos</h3>
+          <div class="table-wrapper" style="box-shadow:none;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Acção</th>
+                  <th>Documento</th>
+                  <th>Pontos</th>
+                </tr>
+              </thead>
+              <tbody id="historicoTabela">
+                <!-- Preenchido pelo JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Modal de resgate -->
+<div class="modal-overlay" id="modalResgatar">
+  <div class="modal">
+    <h3>🎁 Resgatar Pontos</h3>
+    <p style="color:var(--text-gray); margin-bottom:1rem;">Escolha o benefício que deseja resgatar:</p>
+    <div class="form-group">
+      <label class="form-label">Benefício</label>
+      <select id="beneficioSelect" class="form-select">
+        <option value="100">100 pts — 500 Kz saldo Unitel</option>
+        <option value="150">150 pts — 1 GB dados Unitel</option>
+        <option value="200">200 pts — 1.000 Kz em dinheiro</option>
+        <option value="300">300 pts — Voucher parceiro</option>
+      </select>
+    </div>
+    <div style="display:flex; gap:0.75rem; margin-top:1.5rem;">
+      <button id="btnFecharModal" class="btn btn-outline" style="flex:1;">Cancelar</button>
+      <button id="btnConfirmarResgate" class="btn btn-warning" style="flex:2;">Confirmar Resgate</button>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© 2026 AcheiDoc. Todos os direitos reservados.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/mockData.js"></script>
+<script src="js/navbar.js"></script>
+<script src="js/recompensas.js"></script>
+</body>
+</html>

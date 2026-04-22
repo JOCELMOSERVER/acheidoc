@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Admin — AcheiDoc</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/navbar.css">
+  <link rel="stylesheet" href="../css/footer.css">
+  <link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+
+<!-- ══ NAVBAR ADMIN ══ -->
+<nav class="navbar" style="border-bottom: 3px solid #312E81;">
+  <div class="container navbar-inner">
+    <a href="../index.html" class="navbar-logo" style="color: #312E81;"><span class="logo-icon">📄</span>AcheiDoc <span style="font-size:0.75rem; background:#312E81; color:white; padding:2px 8px; border-radius:4px; margin-left:4px;">ADMIN</span></a>
+    <div class="navbar-links">
+      <a href="dashboard.html" class="active">Dashboard</a>
+      <a href="revisar.html">Revisar Documentos</a>
+    </div>
+    <div class="navbar-right">
+      <span id="adminNome" style="font-weight:600; color:var(--text-dark);"></span>
+      <button id="btnLogout" class="btn btn-outline" style="font-size:0.85rem; padding:8px 14px;">Sair</button>
+    </div>
+    <div class="navbar-toggle" id="navbarToggle"><span></span><span></span><span></span></div>
+  </div>
+  <div class="navbar-mobile" id="navbarMobile">
+    <a href="dashboard.html" class="active">🏠 Dashboard</a>
+    <a href="revisar.html">📋 Revisar</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1>🛡️ Painel Administrativo</h1>
+    <p>Gerir e aprovar documentos submetidos na plataforma</p>
+  </div>
+</div>
+
+<main class="page-content">
+  <div class="container">
+
+    <!-- Cards de resumo -->
+    <div class="grid-4 mb-4">
+      <div class="summary-card">
+        <div class="summary-icon red">🔴</div>
+        <div class="summary-info">
+          <h3 id="countAlto">0</h3>
+          <p>Alto Risco</p>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon yellow">🟡</div>
+        <div class="summary-info">
+          <h3 id="countMedio">0</h3>
+          <p>Médio Risco</p>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon green">🟢</div>
+        <div class="summary-info">
+          <h3 id="countBaixo">0</h3>
+          <p>Baixo Risco</p>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon blue">✅</div>
+        <div class="summary-info">
+          <h3 id="countAprovados">0</h3>
+          <p>Aprovados</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filtros por risco -->
+    <div class="filter-tabs mb-3">
+      <button class="filter-tab active" data-filter="TODOS">Todos</button>
+      <button class="filter-tab" data-filter="ALTO">🔴 Alto Risco</button>
+      <button class="filter-tab" data-filter="MEDIO">🟡 Médio Risco</button>
+      <button class="filter-tab" data-filter="BAIXO">🟢 Baixo Risco</button>
+    </div>
+
+    <!-- Tabela de documentos -->
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Tipo</th>
+            <th>Nome Parcial</th>
+            <th>Risco</th>
+            <th>Data</th>
+            <th>Status</th>
+            <th>Acção</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaBody">
+          <!-- Preenchido pelo JS -->
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© 2026 AcheiDoc — Painel Admin</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/mockData.js"></script>
+<script src="../js/navbar.js"></script>
+<script src="../js/admin-dashboard.js"></script>
+</body>
+</html>

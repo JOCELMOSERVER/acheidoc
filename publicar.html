@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Publicar Achado — AcheiDoc</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="navbar-logo"><span class="logo-icon">📄</span>AcheiDoc</a>
+    <div class="navbar-links">
+      <a href="index.html">Home</a>
+      <a href="buscar.html">Buscar Documento</a>
+      <a href="publicar.html" class="active">Publicar Achado</a>
+      <a href="recompensas.html">Recompensas</a>
+    </div>
+    <div class="navbar-right">
+      <button class="btn-login" id="loginBtn">Entrar <span class="arrow">▼</span></button>
+      <div class="login-dropdown" id="loginDropdown">
+        <a href="agente/login.html"><span class="dd-icon">🏪</span> Sou Agente</a>
+        <div class="dd-divider"></div>
+        <a href="admin/login.html"><span class="dd-icon">🛡️</span> Sou Admin</a>
+      </div>
+    </div>
+    <div class="navbar-toggle" id="navbarToggle"><span></span><span></span><span></span></div>
+  </div>
+  <div class="navbar-mobile" id="navbarMobile">
+    <a href="index.html">🏠 Home</a>
+    <a href="buscar.html">🔍 Buscar Documento</a>
+    <a href="publicar.html" class="active">📤 Publicar Achado</a>
+    <a href="recompensas.html">🏆 Recompensas</a>
+    <div class="mobile-divider"></div>
+    <a href="agente/login.html">🏪 Sou Agente</a>
+    <a href="admin/login.html">🛡️ Sou Admin</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1>📤 Publicar Achado</h1>
+    <p>Preencha os dados do documento encontrado</p>
+  </div>
+</div>
+
+<main class="page-content">
+  <div class="container" style="max-width: 680px;">
+
+    <!-- Container do formulário multi-step -->
+    <div id="formContainer">
+
+      <!-- Indicador de passos -->
+      <div class="steps-indicator mb-4">
+        <div class="step-item">
+          <div class="step-circle active" id="stepCircle1">1</div>
+          <span class="step-label active" id="stepLabel1">Dados</span>
+        </div>
+        <div class="step-line" id="stepLine1"></div>
+        <div class="step-item">
+          <div class="step-circle" id="stepCircle2">2</div>
+          <span class="step-label" id="stepLabel2">Foto e Local</span>
+        </div>
+        <div class="step-line" id="stepLine2"></div>
+        <div class="step-item">
+          <div class="step-circle" id="stepCircle3">3</div>
+          <span class="step-label" id="stepLabel3">Revisão</span>
+        </div>
+      </div>
+
+      <!-- PASSO 1 — Dados do documento -->
+      <div id="step1" class="card">
+        <h2 style="font-size:1.2rem; font-weight:700; margin-bottom:1.5rem;">📋 Passo 1 — Dados do Documento</h2>
+
+        <div class="form-group">
+          <label class="form-label">Tipo de Documento *</label>
+          <select id="tipoDoc" class="form-select">
+            <option value="">Seleccione o tipo...</option>
+            <option value="Bilhete de Identidade">Bilhete de Identidade</option>
+            <option value="Carta de Condução">Carta de Condução</option>
+            <option value="Passaporte">Passaporte</option>
+            <option value="Cartão Bancário">Cartão Bancário</option>
+            <option value="Cartão de Estudante">Cartão de Estudante</option>
+            <option value="Outro">Outro</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Nome que aparece no documento *</label>
+          <input type="text" id="nomeDoc" class="form-input" placeholder="Ex: Carlos Alberto Ferreira">
+          <span class="form-hint">O nome será parcialmente ocultado para proteger o proprietário</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Descrição (opcional)</label>
+          <textarea id="descricaoDoc" class="form-input" placeholder="Descreva o estado do documento, cor, detalhes relevantes..."></textarea>
+        </div>
+
+        <div style="text-align:right;">
+          <button id="btnNext1" class="btn btn-primary btn-lg">Próximo →</button>
+        </div>
+      </div>
+
+      <!-- PASSO 2 — Foto e Localização -->
+      <div id="step2" class="card hidden">
+        <h2 style="font-size:1.2rem; font-weight:700; margin-bottom:1.5rem;">📸 Passo 2 — Foto e Localização</h2>
+
+        <div class="form-group">
+          <label class="form-label">Foto do Documento *</label>
+          <input type="file" id="fotoInput" class="form-input" accept="image/*" style="padding: 8px;">
+          <span class="form-hint">Tire uma foto clara do documento. Marca d'água será aplicada automaticamente.</span>
+        </div>
+
+        <!-- Preview da imagem -->
+        <div id="fotoPreview" class="hidden" style="position:relative; border-radius:12px; overflow:hidden; margin-bottom:1rem; height:200px; background:#F3F4F6;">
+          <img id="fotoPreviewImg" src="" alt="Preview" style="width:100%; height:100%; object-fit:cover;">
+          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.2);">
+            <span style="color:rgba(255,255,255,0.9); font-size:0.9rem; font-weight:700; letter-spacing:0.1em; transform:rotate(-30deg); border:2px solid rgba(255,255,255,0.7); padding:4px 14px; border-radius:4px;">
+              MARCA D'ÁGUA APLICADA
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Local onde foi encontrado *</label>
+          <input type="text" id="localDoc" class="form-input" placeholder="Ex: Rua Rainha Ginga, próximo ao banco">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Município *</label>
+          <select id="municipioDoc" class="form-select">
+            <option value="">Seleccione o município...</option>
+            <option value="Luanda">Luanda</option>
+            <option value="Viana">Viana</option>
+            <option value="Cacuaco">Cacuaco</option>
+            <option value="Belas">Belas</option>
+            <option value="Cazenga">Cazenga</option>
+            <option value="Maianga">Maianga</option>
+            <option value="Outro">Outro</option>
+          </select>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; gap:1rem;">
+          <button id="btnPrev2" class="btn btn-outline">← Anterior</button>
+          <button id="btnNext2" class="btn btn-primary btn-lg">Próximo →</button>
+        </div>
+      </div>
+
+      <!-- PASSO 3 — Revisão -->
+      <div id="step3" class="card hidden">
+        <h2 style="font-size:1.2rem; font-weight:700; margin-bottom:1.5rem;">✅ Passo 3 — Revisão e Publicação</h2>
+
+        <div class="alert alert-info">
+          🔒 O nome será parcialmente ocultado para proteger o proprietário
+        </div>
+        <div class="alert alert-warning">
+          📸 A foto terá marca d'água aplicada automaticamente
+        </div>
+
+        <div class="card" style="background: var(--bg-light); box-shadow: none; border: 1px solid var(--border);">
+          <h3 style="font-size:1rem; margin-bottom:1rem; color:var(--text-gray);">Resumo do documento</h3>
+          <table style="width:100%; border-collapse:collapse;">
+            <tr>
+              <td style="padding:8px 0; color:var(--text-gray); font-size:0.9rem; width:120px;">Tipo</td>
+              <td style="padding:8px 0; font-weight:600;" id="reviewTipo">—</td>
+            </tr>
+            <tr>
+              <td style="padding:8px 0; color:var(--text-gray); font-size:0.9rem;">Nome (oculto)</td>
+              <td style="padding:8px 0; font-weight:600;" id="reviewNome">—</td>
+            </tr>
+            <tr>
+              <td style="padding:8px 0; color:var(--text-gray); font-size:0.9rem;">Descrição</td>
+              <td style="padding:8px 0;" id="reviewDescricao">—</td>
+            </tr>
+            <tr>
+              <td style="padding:8px 0; color:var(--text-gray); font-size:0.9rem;">Local</td>
+              <td style="padding:8px 0;" id="reviewLocal">—</td>
+            </tr>
+          </table>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; gap:1rem; margin-top:1.5rem;">
+          <button id="btnPrev3" class="btn btn-outline">← Anterior</button>
+          <button id="btnPublicar" class="btn btn-success btn-lg">✅ Publicar Agora</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Resultado de sucesso (depois de publicar) -->
+    <div id="successContainer" class="hidden">
+      <div class="card" style="text-align:center; border-top: 4px solid var(--success);">
+        <div style="font-size:4rem; margin-bottom:1rem;">🎉</div>
+        <h2 style="font-size:1.5rem; font-weight:800; color:var(--success); margin-bottom:0.5rem;">
+          Documento publicado com sucesso!
+        </h2>
+        <p style="color:var(--text-gray); margin-bottom:1.5rem;">
+          O sistema irá analisar automaticamente. Receberá pontos quando o documento for entregue ao dono.
+        </p>
+        <div style="background:var(--bg-light); border-radius:12px; padding:1.5rem; margin-bottom:1.5rem;">
+          <p style="color:var(--text-gray); font-size:0.85rem; margin-bottom:0.25rem;">ID do documento</p>
+          <p style="font-size:1.4rem; font-weight:900; font-family:monospace; color:var(--primary);" id="newDocId">—</p>
+          <span class="badge badge-pendente" style="margin-top:0.5rem;">Pendente</span>
+        </div>
+        <a href="meus-achados.html" class="btn btn-primary btn-full">📋 Ver Meus Achados</a>
+        <a href="publicar.html" class="btn btn-outline btn-full" style="margin-top:0.75rem;">Publicar outro achado</a>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© 2026 AcheiDoc. Todos os direitos reservados.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/mockData.js"></script>
+<script src="js/navbar.js"></script>
+<script src="js/publicar.js"></script>
+</body>
+</html>

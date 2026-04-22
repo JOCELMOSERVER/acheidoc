@@ -1,0 +1,241 @@
+/* ===========================
+   AcheiDoc — Navbar
+   =========================== */
+
+.navbar {
+  background: var(--bg-white);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+/* Logo */
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.navbar-logo span.logo-icon {
+  font-size: 1.6rem;
+}
+
+/* Links centrais */
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.navbar-links a {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  color: var(--text-dark);
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.navbar-links a:hover {
+  background: var(--bg-light);
+  color: var(--primary);
+}
+
+.navbar-links a.active {
+  background: #DBEAFE;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* Lado direito — botão de login com dropdown */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  position: relative;
+}
+
+.btn-login {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 8px 18px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-login:hover {
+  background: var(--primary-dark);
+}
+
+.btn-login .arrow {
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+}
+
+.btn-login.open .arrow {
+  transform: rotate(180deg);
+}
+
+/* Dropdown */
+.login-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  border: 1px solid var(--border);
+  min-width: 200px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 200;
+}
+
+.login-dropdown.open {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+
+.login-dropdown a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 12px 16px;
+  color: var(--text-dark);
+  font-weight: 500;
+  transition: background 0.15s;
+}
+
+.login-dropdown a:hover {
+  background: var(--bg-light);
+}
+
+.login-dropdown a .dd-icon {
+  font-size: 1.2rem;
+}
+
+.login-dropdown .dd-divider {
+  height: 1px;
+  background: var(--border);
+}
+
+/* Hambúrguer */
+.navbar-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+
+.navbar-toggle:hover {
+  background: var(--bg-light);
+}
+
+.navbar-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--text-dark);
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+
+/* Estado aberto do hambúrguer */
+.navbar-toggle.open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.navbar-toggle.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.navbar-toggle.open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Menu mobile */
+.navbar-mobile {
+  display: none;
+  flex-direction: column;
+  background: white;
+  border-top: 1px solid var(--border);
+  padding: 1rem;
+  gap: 0.25rem;
+}
+
+.navbar-mobile.open {
+  display: flex;
+}
+
+.navbar-mobile a {
+  display: block;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 500;
+  color: var(--text-dark);
+  transition: background 0.15s;
+}
+
+.navbar-mobile a:hover,
+.navbar-mobile a.active {
+  background: #DBEAFE;
+  color: var(--primary);
+}
+
+.navbar-mobile .mobile-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0.5rem 0;
+}
+
+.navbar-mobile .mobile-section-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-gray);
+  text-transform: uppercase;
+  padding: 4px 14px;
+}
+
+/* ===========================
+   Responsividade
+   =========================== */
+
+@media (max-width: 768px) {
+  .navbar-links {
+    display: none;
+  }
+
+  .btn-login {
+    display: none;
+  }
+
+  .navbar-toggle {
+    display: flex;
+  }
+}

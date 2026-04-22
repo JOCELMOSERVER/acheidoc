@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Agente — AcheiDoc</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/components.css">
+</head>
+<body style="min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; background:var(--bg-light);">
+
+  <div style="width:100%; max-width:420px; padding: 1rem;">
+
+    <!-- Logo -->
+    <div style="text-align:center; margin-bottom:2rem;">
+      <a href="../index.html" style="display:inline-flex; align-items:center; gap:0.5rem; font-size:1.8rem; font-weight:800; color:var(--primary); text-decoration:none;">
+        📄 AcheiDoc
+      </a>
+      <p style="color:var(--text-gray); margin-top:0.5rem;">Acesso para Agentes de Ponto de Entrega</p>
+    </div>
+
+    <div class="card card-lg">
+      <h2 style="font-size:1.3rem; font-weight:700; margin-bottom:1.5rem;">🏪 Entrar como Agente</h2>
+
+      <div id="errorMsg" class="alert alert-danger hidden"></div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" id="emailInput" class="form-input" placeholder="agente@acheidoc.ao" autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Senha</label>
+          <input type="password" id="senhaInput" class="form-input" placeholder="••••••••" autocomplete="current-password">
+        </div>
+        <button type="submit" id="btnEntrar" class="btn btn-primary btn-full btn-lg">
+          Entrar
+        </button>
+      </form>
+
+      <!-- Credenciais de teste -->
+      <div class="alert alert-info" style="margin-top:1.5rem; font-size:0.875rem;">
+        <div><strong>🔑 Credenciais de teste:</strong></div>
+        <div>Email: <code>agente@acheidoc.ao</code></div>
+        <div>Senha: <code>1234</code></div>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:1.5rem;">
+      <a href="../index.html" style="color:var(--primary); font-weight:600;">← Voltar ao início</a>
+    </div>
+
+  </div>
+
+  <script src="../js/mockData.js"></script>
+  <script src="../js/agente-login.js"></script>
+</body>
+</html>
