@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalhes do Documento — AcheiDoc</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="navbar-logo"><span class="logo-icon">📄</span>AcheiDoc</a>
+    <div class="navbar-links">
+      <a href="index.html">Home</a>
+      <a href="buscar.html">Buscar Documento</a>
+      <a href="publicar.html">Publicar Achado</a>
+      <a href="recompensas.html">Recompensas</a>
+    </div>
+    <div class="navbar-right">
+      <button class="btn-login" id="loginBtn">Entrar <span class="arrow">▼</span></button>
+      <div class="login-dropdown" id="loginDropdown">
+        <a href="agente/login.html"><span class="dd-icon">🏪</span> Sou Agente</a>
+        <div class="dd-divider"></div>
+        <a href="admin/login.html"><span class="dd-icon">🛡️</span> Sou Admin</a>
+      </div>
+    </div>
+    <div class="navbar-toggle" id="navbarToggle"><span></span><span></span><span></span></div>
+  </div>
+  <div class="navbar-mobile" id="navbarMobile">
+    <a href="index.html">🏠 Home</a>
+    <a href="buscar.html">🔍 Buscar Documento</a>
+    <a href="publicar.html">📤 Publicar Achado</a>
+    <a href="recompensas.html">🏆 Recompensas</a>
+    <div class="mobile-divider"></div>
+    <a href="agente/login.html">🏪 Sou Agente</a>
+    <a href="admin/login.html">🛡️ Sou Admin</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <a href="buscar.html" style="color: var(--primary); font-weight:600;">← Voltar à Busca</a>
+    <h1 style="margin-top: 0.5rem;">Detalhes do Documento</h1>
+  </div>
+</div>
+
+<main class="page-content">
+  <div class="container" id="docContent">
+    <div class="grid-2" style="align-items: start; gap: 2rem;">
+
+      <!-- Coluna: Foto -->
+      <div class="card" style="padding: 0; overflow: hidden;">
+        <div style="position: relative; width: 100%; aspect-ratio: 4/3; background: #F3F4F6;">
+          <img id="docFoto" src="https://via.placeholder.com/600x400?text=Documento" alt="Foto do documento" style="width:100%; height:100%; object-fit:cover;">
+          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.18);">
+            <span style="color:rgba(255,255,255,0.9); font-size:1.1rem; font-weight:800; letter-spacing:0.15em; text-transform:uppercase; transform:rotate(-30deg); border:2px solid rgba(255,255,255,0.7); padding:6px 18px; border-radius:4px;">
+              MARCA D'ÁGUA
+            </span>
+          </div>
+        </div>
+        <div style="padding: 1rem; background: white;">
+          <p style="font-size:0.85rem; color: var(--text-gray); text-align:center;">
+            🔒 Foto com marca d'água por segurança. Visível na íntegra após pagamento.
+          </p>
+        </div>
+      </div>
+
+      <!-- Coluna: Informações -->
+      <div style="display:flex; flex-direction:column; gap:1rem;">
+        <div class="card">
+          <h2 style="font-size:1.4rem; font-weight:700; margin-bottom:1rem;">Informações do Documento</h2>
+          <table style="width:100%; border-collapse:collapse;">
+            <tr>
+              <td style="padding: 8px 0; color:var(--text-gray); font-size:0.9rem; width: 140px;">ID</td>
+              <td style="padding: 8px 0; font-weight:600; font-family:monospace;" id="docId">—</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; color:var(--text-gray); font-size:0.9rem;">Tipo</td>
+              <td style="padding: 8px 0; font-weight:600;" id="docTipo">—</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; color:var(--text-gray); font-size:0.9rem;">Nome</td>
+              <td style="padding: 8px 0; font-weight:600;" id="docNomeParcial">—</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; color:var(--text-gray); font-size:0.9rem;">Local</td>
+              <td style="padding: 8px 0; font-weight:600;" id="docLocalParcial">—</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; color:var(--text-gray); font-size:0.9rem;">Data</td>
+              <td style="padding: 8px 0;" id="docData">—</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; color:var(--text-gray); font-size:0.9rem;">Status</td>
+              <td style="padding: 8px 0;"><span class="badge badge-pendente" id="docStatusBadge">—</span></td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; color:var(--text-gray); font-size:0.9rem;">Taxa</td>
+              <td style="padding: 8px 0; font-weight:700; color:var(--primary);" id="docTaxa">—</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="alert alert-info">
+          🔒 Para ver os dados completos e o local exacto, efectue o pagamento da taxa de resgate.
+        </div>
+
+        <button id="btnResgatar" class="btn btn-success btn-lg btn-full">
+          💳 Resgatar Documento — 500 Kz
+        </button>
+
+        <a href="buscar.html" class="btn btn-outline btn-full">← Voltar à Busca</a>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- ══ FOOTER ══ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© 2026 AcheiDoc. Todos os direitos reservados.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/mockData.js"></script>
+<script src="js/navbar.js"></script>
+<script src="js/detalhes.js"></script>
+</body>
+</html>

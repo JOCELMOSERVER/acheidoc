@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pagamento — AcheiDoc</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="navbar-logo"><span class="logo-icon">📄</span>AcheiDoc</a>
+    <div class="navbar-links">
+      <a href="index.html">Home</a>
+      <a href="buscar.html">Buscar Documento</a>
+      <a href="publicar.html">Publicar Achado</a>
+      <a href="recompensas.html">Recompensas</a>
+    </div>
+    <div class="navbar-right">
+      <button class="btn-login" id="loginBtn">Entrar <span class="arrow">▼</span></button>
+      <div class="login-dropdown" id="loginDropdown">
+        <a href="agente/login.html"><span class="dd-icon">🏪</span> Sou Agente</a>
+        <div class="dd-divider"></div>
+        <a href="admin/login.html"><span class="dd-icon">🛡️</span> Sou Admin</a>
+      </div>
+    </div>
+    <div class="navbar-toggle" id="navbarToggle"><span></span><span></span><span></span></div>
+  </div>
+  <div class="navbar-mobile" id="navbarMobile">
+    <a href="index.html">🏠 Home</a>
+    <a href="buscar.html">🔍 Buscar Documento</a>
+    <a href="publicar.html">📤 Publicar Achado</a>
+    <div class="mobile-divider"></div>
+    <a href="agente/login.html">🏪 Sou Agente</a>
+    <a href="admin/login.html">🛡️ Sou Admin</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1>💳 Pagamento da Taxa de Resgate</h1>
+    <p>Pague a taxa para obter o código de resgate e os dados completos</p>
+  </div>
+</div>
+
+<main class="page-content">
+  <div class="container" style="max-width: 600px;">
+
+    <!-- Formulário de pagamento -->
+    <div id="paymentForm">
+      <!-- Resumo do documento -->
+      <div class="card mb-3">
+        <h3 style="font-size:1rem; color:var(--text-gray); margin-bottom:0.75rem;">Documento a resgatar</h3>
+        <p><strong id="pagDocTipo">—</strong></p>
+        <p style="color:var(--text-gray);" id="pagDocNome">—</p>
+      </div>
+
+      <!-- Valor da taxa -->
+      <div class="card mb-3" style="text-align:center; border-top: 4px solid var(--primary);">
+        <p style="color:var(--text-gray); margin-bottom:0.5rem;">Valor da taxa de resgate</p>
+        <div style="font-size:3rem; font-weight:900; color:var(--primary);" id="taxaValor">500 Kz</div>
+        <p style="font-size:0.85rem; color:var(--text-gray); margin-top:0.5rem;">Pagamento único, não reembolsável</p>
+      </div>
+
+      <!-- Métodos de pagamento -->
+      <div class="card mb-3">
+        <h3 style="margin-bottom:1rem;">Escolha o método de pagamento</h3>
+        <div class="payment-methods">
+          <button class="payment-method-btn multicaixa" data-method="multicaixa">
+            <span class="pm-icon">💳</span>
+            <span class="pm-name">Multicaixa Express</span>
+            <span class="pm-desc">Pagamento instantâneo</span>
+          </button>
+          <button class="payment-method-btn unitel" data-method="unitel">
+            <span class="pm-icon">📱</span>
+            <span class="pm-name">Unitel Money</span>
+            <span class="pm-desc">Transferência móvel</span>
+          </button>
+        </div>
+
+        <!-- Campo telefone -->
+        <div id="phoneGroup" class="form-group hidden" style="margin-top:1rem;">
+          <label class="form-label" id="phoneLabel">Número de telefone</label>
+          <input type="tel" id="phoneInput" class="form-input" placeholder="Ex: 923 456 789">
+          <span class="form-hint">Introduza o número associado à sua conta</span>
+        </div>
+      </div>
+
+      <button id="btnConfirmar" class="btn btn-success btn-lg btn-full">
+        ✅ Confirmar Pagamento
+      </button>
+    </div>
+
+    <!-- Secção de sucesso -->
+    <div id="successSection" class="hidden">
+      <div class="rescue-code-card">
+        <div style="font-size:3rem; margin-bottom:0.5rem;">✅</div>
+        <h2 style="font-size:1.5rem; font-weight:800; color: var(--success); margin-bottom:0.5rem;">
+          Pagamento confirmado!
+        </h2>
+        <p style="color:var(--text-gray); margin-bottom:1rem;">O seu código de resgate é:</p>
+
+        <div class="rescue-code" id="codigoResgate">------</div>
+
+        <p style="font-size:0.85rem; color:var(--text-gray); margin-bottom:1.5rem;">
+          Apresente este código no ponto de entrega juntamente com um documento de identificação.
+        </p>
+
+        <button id="btnCopiarCodigo" class="btn btn-outline mb-2" style="width:100%;">📋 Copiar Código</button>
+
+        <div class="card" style="text-align:left; margin: 1rem 0; border-left: 4px solid var(--primary);">
+          <h4 style="font-size:0.9rem; color:var(--text-gray); margin-bottom:0.5rem;">📍 Ponto de Entrega</h4>
+          <p style="font-weight:700;" id="successPontoNome">—</p>
+          <p style="font-size:0.9rem;" id="successPontoEndereco">—</p>
+          <p style="font-size:0.85rem; color:var(--text-gray);" id="successPontoHorario">—</p>
+          <p style="font-size:0.85rem; color:var(--text-gray);" id="successPontoTel">—</p>
+        </div>
+
+        <button id="btnInstrucoes" class="btn btn-primary btn-full">
+          📍 Ver Instruções de Levantamento →
+        </button>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© 2026 AcheiDoc. Todos os direitos reservados.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/mockData.js"></script>
+<script src="js/navbar.js"></script>
+<script src="js/pagamento.js"></script>
+</body>
+</html>

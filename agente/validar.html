@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Validar Entrega — AcheiDoc</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/navbar.css">
+  <link rel="stylesheet" href="../css/footer.css">
+  <link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+
+<!-- ══ NAVBAR AGENTE ══ -->
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="../index.html" class="navbar-logo"><span class="logo-icon">📄</span>AcheiDoc</a>
+    <div class="navbar-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="validar.html" class="active">Validar Entrega</a>
+      <a href="historico.html">Histórico</a>
+    </div>
+    <div class="navbar-right">
+      <button id="btnLogout" class="btn btn-outline" style="font-size:0.85rem; padding:8px 14px;">Sair</button>
+    </div>
+    <div class="navbar-toggle" id="navbarToggle"><span></span><span></span><span></span></div>
+  </div>
+  <div class="navbar-mobile" id="navbarMobile">
+    <a href="dashboard.html">🏠 Dashboard</a>
+    <a href="validar.html" class="active">✅ Validar Entrega</a>
+    <a href="historico.html">📊 Histórico</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <a href="dashboard.html" style="color:var(--primary); font-weight:600;">← Dashboard</a>
+    <h1 style="margin-top:0.5rem;">✅ Validar Entrega de Documento</h1>
+    <p>Verifique o código de resgate do cliente</p>
+  </div>
+</div>
+
+<main class="page-content">
+  <div class="container" style="max-width:560px;">
+
+    <!-- Campo do código -->
+    <div class="card mb-3">
+      <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:1rem;">Código de Resgate</h3>
+      <p style="color:var(--text-gray); margin-bottom:1rem; font-size:0.9rem;">
+        Solicite ao cliente o código de resgate de 6 caracteres recebido após o pagamento.
+      </p>
+      <div style="display:flex; gap:0.75rem;">
+        <input type="text" id="codigoInput" class="form-input"
+          placeholder="Ex: AB12CD"
+          maxlength="6"
+          style="text-transform:uppercase; font-size:1.3rem; letter-spacing:0.2em; text-align:center; font-family:monospace; font-weight:700; flex:1;">
+        <button id="btnValidar" class="btn btn-primary btn-lg">Validar</button>
+      </div>
+      <div class="alert alert-info" style="margin-top:0.75rem; font-size:0.85rem;">
+        💡 Código de teste: <strong>AB12CD</strong>
+      </div>
+    </div>
+
+    <!-- Mensagem de erro -->
+    <div id="errorMsg" class="alert alert-danger hidden"></div>
+
+    <!-- Checklist de verificação -->
+    <div id="checklistSection" class="card hidden mb-3">
+      <h3 style="font-size:1rem; font-weight:700; margin-bottom:1rem;">🔍 A verificar...</h3>
+      <ul class="checklist">
+        <li id="check1">
+          <div class="check-icon pending">○</div>
+          <span>Código válido</span>
+        </li>
+        <li id="check2">
+          <div class="check-icon pending">○</div>
+          <span>Pagamento confirmado</span>
+        </li>
+        <li id="check3">
+          <div class="check-icon pending">○</div>
+          <span>Correspondência do documento confirmada</span>
+        </li>
+      </ul>
+      <button id="btnAutorizar" class="btn btn-success btn-full btn-lg hidden" style="margin-top:1.5rem;">
+        ✅ AUTORIZAR ENTREGA
+      </button>
+    </div>
+
+    <!-- Confirmação -->
+    <div id="confirmSection" class="card hidden mb-3" style="border-left: 4px solid var(--warning);">
+      <h3 style="font-size:1rem; font-weight:700; margin-bottom:0.75rem; color:var(--warning-dark);">⚠️ Confirmação Final</h3>
+      <p style="color:var(--text-gray); margin-bottom:1rem;">
+        Confirme que entregou o documento físico ao dono, após verificar o documento de identificação.
+      </p>
+      <div id="docValidadoInfo"></div>
+      <button id="btnConfirmar" class="btn btn-success btn-full btn-lg" style="margin-top:1rem;">
+        ✔️ Confirmar Entrega ao Dono
+      </button>
+    </div>
+
+    <!-- Sucesso -->
+    <div id="successSection" class="card hidden" style="text-align:center; border-top:4px solid var(--success);">
+      <div style="font-size:3.5rem; margin-bottom:0.75rem;">🎉</div>
+      <h2 style="font-size:1.4rem; font-weight:800; color:var(--success); margin-bottom:0.5rem;">
+        Entrega registada!
+      </h2>
+      <p style="color:var(--text-gray); margin-bottom:1rem;">
+        Excelente trabalho! Os pontos foram creditados na sua conta.
+      </p>
+      <div style="background:#DCFCE7; border-radius:12px; padding:1rem; font-size:1.5rem; font-weight:800; color:var(--success); margin-bottom:1.5rem;">
+        +30 pontos ganhos ⭐
+      </div>
+      <a href="dashboard.html" class="btn btn-primary btn-full">← Voltar ao Dashboard</a>
+    </div>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© 2026 AcheiDoc — Portal do Agente</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/mockData.js"></script>
+<script src="../js/navbar.js"></script>
+<script src="../js/agente-validar.js"></script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Histórico do Agente — AcheiDoc</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/navbar.css">
+  <link rel="stylesheet" href="../css/footer.css">
+  <link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+
+<!-- ══ NAVBAR AGENTE ══ -->
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="../index.html" class="navbar-logo"><span class="logo-icon">📄</span>AcheiDoc</a>
+    <div class="navbar-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="validar.html">Validar Entrega</a>
+      <a href="historico.html" class="active">Histórico</a>
+    </div>
+    <div class="navbar-right">
+      <button id="btnLogout" class="btn btn-outline" style="font-size:0.85rem; padding:8px 14px;">Sair</button>
+    </div>
+    <div class="navbar-toggle" id="navbarToggle"><span></span><span></span><span></span></div>
+  </div>
+  <div class="navbar-mobile" id="navbarMobile">
+    <a href="dashboard.html">🏠 Dashboard</a>
+    <a href="validar.html">✅ Validar Entrega</a>
+    <a href="historico.html" class="active">📊 Histórico</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container flex-between">
+    <div>
+      <h1>📊 Histórico do Agente</h1>
+      <p>Olá, <strong id="agenteNome">Agente</strong>! Consulte o seu histórico de actividade</p>
+    </div>
+    <button id="btnExportar" class="btn btn-outline">📥 Exportar CSV</button>
+  </div>
+</div>
+
+<main class="page-content">
+  <div class="container">
+
+    <!-- Filtro por mês -->
+    <div class="filter-bar mb-3">
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label">Filtrar por mês</label>
+        <select id="mesSelect" class="form-select" style="min-width:200px;">
+          <option value="">Todos os meses</option>
+          <option value="2026-04">Abril 2026</option>
+          <option value="2026-03">Março 2026</option>
+          <option value="2026-02">Fevereiro 2026</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Tabela -->
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>ID Documento</th>
+            <th>Tipo</th>
+            <th>Acção</th>
+            <th>Pontos</th>
+          </tr>
+        </thead>
+        <tbody id="historicoBody">
+          <!-- Preenchido pelo JS -->
+        </tbody>
+        <tfoot>
+          <tr style="background: var(--bg-light);">
+            <td colspan="4" style="padding:12px 16px; font-weight:700; text-align:right;">Total de Pontos:</td>
+            <td style="padding:12px 16px; font-weight:800; color:var(--success);" id="totalPontosHistorico">—</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© 2026 AcheiDoc — Portal do Agente</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/mockData.js"></script>
+<script src="../js/navbar.js"></script>
+<script src="../js/agente-historico.js"></script>
+</body>
+</html>
