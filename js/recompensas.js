@@ -2,6 +2,8 @@
    AcheiDoc — Recompensas JS
    =========================== */
 
+if (typeof Auth !== 'undefined') Auth.requireAuth();
+
 (function () {
   // Pontos do utilizador (simulados)
   var totalPontos = 350;

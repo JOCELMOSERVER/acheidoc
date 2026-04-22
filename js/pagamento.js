@@ -2,6 +2,8 @@
    AcheiDoc — Pagamento JS
    =========================== */
 
+if (typeof Auth !== 'undefined') Auth.requireAuth();
+
 (function () {
   var params = new URLSearchParams(window.location.search);
   var docId = params.get('id');

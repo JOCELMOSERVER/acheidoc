@@ -378,3 +378,174 @@ tr.risco-medio:hover td {
     padding: 0 0.75rem;
   }
 }
+
+/* ===========================
+   Como Funciona
+   =========================== */
+
+.como-funciona {
+  padding: 4rem 0;
+  background: var(--bg-white);
+}
+
+.como-funciona h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-dark);
+}
+
+.passos-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+  position: relative;
+  margin-top: 2rem;
+}
+
+/* Linha conectora entre passos (apenas desktop) */
+.passos-grid::before {
+  content: '';
+  position: absolute;
+  top: 30px;
+  left: 10%;
+  width: 80%;
+  height: 2px;
+  background: linear-gradient(to right, var(--primary), var(--success));
+  z-index: 0;
+}
+
+.passo-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  padding: 0 0.5rem;
+}
+
+.passo-numero {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  font-size: 1.4rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+  flex-shrink: 0;
+}
+
+.passo-emoji {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.passo-titulo {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  margin-bottom: 0.3rem;
+}
+
+.passo-desc {
+  font-size: 0.8rem;
+  color: var(--text-gray);
+  line-height: 1.4;
+}
+
+/* ── Acções rápidas (grid no dashboard) ── */
+.acoes-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.acao-card {
+  padding: 1.5rem 1rem;
+  display: block;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.acao-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+/* ===========================
+   MOBILE — Como Funciona
+   =========================== */
+@media (max-width: 768px) {
+  .passos-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+    max-width: 380px;
+    margin: 1.5rem auto 0;
+  }
+
+  /* Esconder linha horizontal no mobile */
+  .passos-grid::before {
+    display: none;
+  }
+
+  .passo-item {
+    flex-direction: row;
+    text-align: left;
+    align-items: flex-start;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+    gap: 1rem;
+  }
+
+  .passo-item:last-child {
+    border-bottom: none;
+  }
+
+  .passo-numero {
+    width: 48px;
+    height: 48px;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    margin-bottom: 0;
+  }
+
+  .passo-conteudo {
+    flex: 1;
+  }
+
+  .passo-emoji {
+    font-size: 1.2rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .passo-titulo {
+    font-size: 0.95rem;
+  }
+
+  .passo-desc {
+    font-size: 0.85rem;
+  }
+
+  /* Acções rápidas: 2 colunas no tablet */
+  .acoes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .como-funciona h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Acções rápidas: 2 colunas no mobile pequeno */
+  .acoes-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+}

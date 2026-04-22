@@ -18,26 +18,52 @@
       <span class="logo-icon">📄</span>
       AcheiDoc
     </a>
-    <div class="navbar-links">
-      <a href="index.html">Home</a>
+    <!-- Links para visitantes -->
+    <div class="navbar-links" id="navLinksVisitante">
+      <a href="index.html" class="active">Home</a>
+      <a href="#como-funciona">Como Funciona</a>
+      <a href="#sobre">Sobre</a>
+    </div>
+    <!-- Links para utilizadores logados -->
+    <div class="navbar-links hidden" id="navLinksLogado">
+      <a href="index.html" class="active">Home</a>
       <a href="buscar.html">Buscar Documento</a>
       <a href="publicar.html">Publicar Achado</a>
-      <a href="recompensas.html">Recompensas</a>
     </div>
     <div class="navbar-right">
-      <button class="btn-login" id="loginBtn">
-        Entrar <span class="arrow">▼</span>
-      </button>
-      <div class="login-dropdown" id="loginDropdown">
-        <a href="agente/login.html">
-          <span class="dd-icon">🏪</span>
-          Sou Agente
-        </a>
-        <div class="dd-divider"></div>
-        <a href="admin/login.html">
-          <span class="dd-icon">🛡️</span>
-          Sou Admin
-        </a>
+      <!-- Botões para visitantes -->
+      <div id="navBtnsVisitante" style="display:flex;gap:0.5rem;align-items:center;">
+        <a href="login.html" class="btn btn-outline">Entrar</a>
+        <a href="cadastro.html" class="btn btn-primary">Cadastrar</a>
+      </div>
+      <!-- Dropdown para utilizadores logados -->
+      <div id="navBtnsLogado" class="hidden" style="position:relative;">
+        <button class="btn-login" id="userMenuBtn">
+          👤 <span id="nomeNavbar"></span> &nbsp;⭐<span id="pontosNavbar"></span>pts <span class="arrow">▼</span>
+        </button>
+        <div class="login-dropdown" id="userMenuDropdown">
+          <a href="meus-achados.html"><span class="dd-icon">📋</span> Meus Achados</a>
+          <a href="recompensas.html"><span class="dd-icon">🏆</span> Recompensas</a>
+          <div class="dd-divider"></div>
+          <a href="#" id="btnSair"><span class="dd-icon">🚪</span> Sair</a>
+        </div>
+      </div>
+      <!-- Dropdown agente/admin -->
+      <div style="position:relative;">
+        <button class="btn-login" id="loginBtn" style="background:var(--neutral);">
+          Acesso <span class="arrow">▼</span>
+        </button>
+        <div class="login-dropdown" id="loginDropdown">
+          <a href="agente/login.html">
+            <span class="dd-icon">🏪</span>
+            Sou Agente
+          </a>
+          <div class="dd-divider"></div>
+          <a href="admin/login.html">
+            <span class="dd-icon">🛡️</span>
+            Sou Admin
+          </a>
+        </div>
       </div>
     </div>
     <div class="navbar-toggle" id="navbarToggle">
@@ -46,144 +72,252 @@
   </div>
   <div class="navbar-mobile" id="navbarMobile">
     <a href="index.html">🏠 Home</a>
-    <a href="buscar.html">🔍 Buscar Documento</a>
-    <a href="publicar.html">📤 Publicar Achado</a>
-    <a href="recompensas.html">🏆 Recompensas</a>
+    <!-- Mobile: links visitante -->
+    <div id="mobileLinksVisitante">
+      <a href="#como-funciona">ℹ️ Como Funciona</a>
+      <a href="#sobre">📌 Sobre</a>
+    </div>
+    <!-- Mobile: links logado -->
+    <div id="mobileLinksLogado" class="hidden">
+      <a href="buscar.html">🔍 Buscar Documento</a>
+      <a href="publicar.html">📤 Publicar Achado</a>
+      <a href="meus-achados.html">📋 Meus Achados</a>
+      <a href="recompensas.html">🏆 Recompensas</a>
+    </div>
     <div class="mobile-divider"></div>
-    <div class="mobile-section-title">Acesso</div>
+    <!-- Mobile: botões visitante -->
+    <div id="mobileBtnsVisitante">
+      <a href="login.html" class="btn btn-outline btn-full" style="margin-bottom:0.5rem;display:flex;">Entrar</a>
+      <a href="cadastro.html" class="btn btn-primary btn-full" style="display:flex;">Cadastrar</a>
+    </div>
+    <!-- Mobile: info + sair logado -->
+    <div id="mobileBtnsLogado" class="hidden" style="padding:0.5rem 0;">
+      <div style="padding:8px 14px; font-weight:600; color:var(--text-dark);">
+        👤 <span id="nomeNavbarMobile"></span> &nbsp;⭐<span id="pontosNavbarMobile"></span>pts
+      </div>
+      <a href="#" id="btnSairMobile" style="color:var(--danger); padding:10px 14px; display:block; font-weight:600;">🚪 Sair</a>
+    </div>
+    <div class="mobile-divider"></div>
+    <div class="mobile-section-title">Acesso Profissional</div>
     <a href="agente/login.html">🏪 Sou Agente</a>
     <a href="admin/login.html">🛡️ Sou Admin</a>
   </div>
 </nav>
 
-<!-- ══ HERO ══ -->
-<section style="background: linear-gradient(135deg, #1E40AF 0%, #16A34A 100%); color: white; padding: 5rem 0; text-align: center;">
-  <div class="container">
-    <h1 style="font-size: 3rem; font-weight: 800; margin-bottom: 1rem; line-height: 1.2;">
-      Encontrou um documento? 📄
-    </h1>
-    <p style="font-size: 1.3rem; opacity: 0.92; max-width: 600px; margin: 0 auto 2.5rem;">
-      Ajude alguém a recuperar o que perdeu. Publique agora e ganhe pontos!
-    </p>
-    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-      <a href="publicar.html" class="btn btn-success btn-lg">📤 Publicar Achado</a>
-      <a href="buscar.html" class="btn btn-outline-white btn-lg">🔍 Buscar Meu Documento</a>
-    </div>
-  </div>
-</section>
+<!-- ══════════════════════════════════════
+     SECÇÃO VISITANTE (não logado)
+     ══════════════════════════════════════ -->
+<div id="secaoVisitante">
 
-<!-- ══ BUSCA RÁPIDA ══ -->
-<section style="background: white; padding: 2.5rem 0; border-bottom: 1px solid var(--border);">
-  <div class="container">
-    <form id="quickSearchForm" style="max-width: 640px; margin: 0 auto;">
-      <div class="search-bar">
-        <input type="text" id="quickSearchInput" placeholder="Pesquise por nome ou tipo de documento...">
-        <button type="submit">🔍 Buscar</button>
-      </div>
-    </form>
-  </div>
-</section>
-
-<!-- ══ COMO FUNCIONA ══ -->
-<section>
-  <div class="container">
-    <h2 class="section-title text-center">Como Funciona</h2>
-    <p class="section-subtitle text-center">5 passos simples para devolver documentos perdidos</p>
-    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5rem; margin-top: 2rem;">
-      <div class="card text-center" style="padding: 1.5rem 1rem;">
-        <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">📸</div>
-        <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem;">1. Encontrou</h3>
-        <p style="font-size: 0.85rem; color: var(--text-gray);">Publique o achado com foto do documento</p>
-      </div>
-      <div class="card text-center" style="padding: 1.5rem 1rem;">
-        <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">🤖</div>
-        <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem;">2. IA Analisa</h3>
-        <p style="font-size: 0.85rem; color: var(--text-gray);">Verificação automática de autenticidade</p>
-      </div>
-      <div class="card text-center" style="padding: 1.5rem 1rem;">
-        <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">🔍</div>
-        <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem;">3. Dono Busca</h3>
-        <p style="font-size: 0.85rem; color: var(--text-gray);">Pesquisa pelo seu documento no sistema</p>
-      </div>
-      <div class="card text-center" style="padding: 1.5rem 1rem;">
-        <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">💳</div>
-        <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem;">4. Pagamento</h3>
-        <p style="font-size: 0.85rem; color: var(--text-gray);">Taxa de 500 Kz via Multicaixa / Unitel</p>
-      </div>
-      <div class="card text-center" style="padding: 1.5rem 1rem;">
-        <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">🤝</div>
-        <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem;">5. Entrega</h3>
-        <p style="font-size: 0.85rem; color: var(--text-gray);">Levantamento no ponto + pontos ganhos</p>
+  <!-- Hero informativo -->
+  <section style="background: linear-gradient(135deg, #1E40AF 0%, #16A34A 100%); color: white; padding: 5rem 0; text-align: center;">
+    <div class="container">
+      <h1 style="font-size: 3rem; font-weight: 800; margin-bottom: 1rem; line-height: 1.2;">
+        Encontrou um documento perdido? 📄
+      </h1>
+      <p style="font-size: 1.3rem; opacity: 0.92; max-width: 600px; margin: 0 auto 2.5rem;">
+        O AcheiDoc conecta quem encontra com quem perdeu. Simples, seguro e rápido.
+      </p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="login.html" class="btn btn-outline-white btn-lg">🔍 Buscar Meu Documento</a>
+        <a href="cadastro.html" class="btn btn-success btn-lg">📢 Publicar Achado</a>
       </div>
     </div>
-    <!-- Mobile: stack em 2 colunas -->
-    <style>
-      @media (max-width: 768px) {
-        .como-funciona-grid {
-          grid-template-columns: repeat(2, 1fr) !important;
-        }
-      }
-      @media (max-width: 480px) {
-        .como-funciona-grid {
-          grid-template-columns: 1fr !important;
-        }
-      }
-    </style>
-  </div>
-</section>
+  </section>
 
-<!-- ══ ESTATÍSTICAS ══ -->
-<section style="background: var(--primary); color: white;">
-  <div class="container">
-    <div class="grid-4">
-      <div class="stat-card" style="background: rgba(255,255,255,0.1); box-shadow: none;">
-        <div class="stat-number" style="color: white;" data-counter="1247">0</div>
-        <div class="stat-label" style="color: rgba(255,255,255,0.8);">Documentos Encontrados</div>
-      </div>
-      <div class="stat-card" style="background: rgba(255,255,255,0.1); box-shadow: none;">
-        <div class="stat-number" style="color: white;" data-counter="893">0</div>
-        <div class="stat-label" style="color: rgba(255,255,255,0.8);">Documentos Entregues</div>
-      </div>
-      <div class="stat-card" style="background: rgba(255,255,255,0.1); box-shadow: none;">
-        <div class="stat-number" style="color: white;" data-counter="3421">0</div>
-        <div class="stat-label" style="color: rgba(255,255,255,0.8);">Utilizadores Registados</div>
-      </div>
-      <div class="stat-card" style="background: rgba(255,255,255,0.1); box-shadow: none;">
-        <div class="stat-number" style="color: white;" data-counter="15">0</div>
-        <div class="stat-label" style="color: rgba(255,255,255,0.8);">Pontos de Entrega</div>
+  <!-- Como Funciona -->
+  <section class="como-funciona" id="como-funciona">
+    <div class="container">
+      <h2 class="section-title text-center">Como Funciona</h2>
+      <p class="section-subtitle text-center">5 passos simples para devolver documentos perdidos</p>
+      <div class="passos-grid">
+        <div class="passo-item">
+          <div class="passo-numero">1</div>
+          <div class="passo-conteudo">
+            <div class="passo-emoji">📸</div>
+            <div class="passo-titulo">Encontrou</div>
+            <div class="passo-desc">Publica o documento encontrado com foto e localização</div>
+          </div>
+        </div>
+        <div class="passo-item">
+          <div class="passo-numero">2</div>
+          <div class="passo-conteudo">
+            <div class="passo-emoji">🤖</div>
+            <div class="passo-titulo">IA Analisa</div>
+            <div class="passo-desc">Verificação automática de autenticidade do documento</div>
+          </div>
+        </div>
+        <div class="passo-item">
+          <div class="passo-numero">3</div>
+          <div class="passo-conteudo">
+            <div class="passo-emoji">🔍</div>
+            <div class="passo-titulo">Dono Busca</div>
+            <div class="passo-desc">O dono pesquisa o seu documento no sistema</div>
+          </div>
+        </div>
+        <div class="passo-item">
+          <div class="passo-numero">4</div>
+          <div class="passo-conteudo">
+            <div class="passo-emoji">💳</div>
+            <div class="passo-titulo">Pagamento</div>
+            <div class="passo-desc">Taxa de 500 Kz via Multicaixa ou Unitel Money</div>
+          </div>
+        </div>
+        <div class="passo-item">
+          <div class="passo-numero">5</div>
+          <div class="passo-conteudo">
+            <div class="passo-emoji">🤝</div>
+            <div class="passo-titulo">Entrega</div>
+            <div class="passo-desc">Levantamento no ponto autorizado e pontos ganhos</div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ══ DOCUMENTOS RECENTES ══ -->
-<section>
-  <div class="container">
-    <div class="flex-between mb-3">
-      <div>
-        <h2 class="section-title">Documentos Recentes</h2>
-        <p class="section-subtitle">Os últimos documentos publicados na plataforma</p>
+  <!-- Porquê usar AcheiDoc -->
+  <section style="background: var(--bg-light);" id="sobre">
+    <div class="container">
+      <h2 class="section-title text-center">Porquê usar o AcheiDoc?</h2>
+      <p class="section-subtitle text-center">A plataforma mais confiável de Angola para documentos perdidos</p>
+      <div class="grid-3" style="margin-top: 1rem;">
+        <div class="card text-center" style="padding: 2rem 1.5rem;">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">🛡️</div>
+          <h3 style="font-weight: 700; margin-bottom: 0.5rem;">Seguro</h3>
+          <p style="color: var(--text-gray); font-size: 0.95rem;">Dados protegidos e verificados. Marca d'água em todas as fotos para prevenir fraudes.</p>
+        </div>
+        <div class="card text-center" style="padding: 2rem 1.5rem;">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">⚡</div>
+          <h3 style="font-weight: 700; margin-bottom: 0.5rem;">Rápido</h3>
+          <p style="color: var(--text-gray); font-size: 0.95rem;">Publicação em menos de 5 minutos. Notificações em tempo real quando o dono é encontrado.</p>
+        </div>
+        <div class="card text-center" style="padding: 2rem 1.5rem;">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">🏆</div>
+          <h3 style="font-weight: 700; margin-bottom: 0.5rem;">Recompensas</h3>
+          <p style="color: var(--text-gray); font-size: 0.95rem;">Ganhe pontos por cada documento entregue e troque por benefícios exclusivos.</p>
+        </div>
       </div>
-      <a href="buscar.html" class="btn btn-outline">Ver Todos →</a>
     </div>
-    <div class="grid-4" id="recentDocs">
-      <!-- Preenchido pelo home.js -->
-    </div>
-  </div>
-</section>
+  </section>
 
-<!-- ══ CTA FINAL ══ -->
-<section style="background: linear-gradient(135deg, #16A34A, #166534); color: white; text-align: center;">
-  <div class="container">
-    <h2 style="font-size: 2rem; font-weight: 800; margin-bottom: 1rem;">
-      Encontrou um documento? Ajude alguém hoje!
-    </h2>
-    <p style="font-size: 1.1rem; opacity: 0.9; margin-bottom: 2rem;">
-      Cada documento devolvido representa uma pessoa que pode voltar à sua vida normal.
-    </p>
-    <a href="publicar.html" class="btn btn-outline-white btn-lg">Publicar Agora →</a>
-  </div>
-</section>
+  <!-- Estatísticas -->
+  <section style="background: var(--primary); color: white;">
+    <div class="container">
+      <div class="grid-4">
+        <div class="stat-card" style="background: rgba(255,255,255,0.1); box-shadow: none;">
+          <div class="stat-number" style="color: white;" data-counter="1247">0</div>
+          <div class="stat-label" style="color: rgba(255,255,255,0.8);">Documentos Encontrados</div>
+        </div>
+        <div class="stat-card" style="background: rgba(255,255,255,0.1); box-shadow: none;">
+          <div class="stat-number" style="color: white;" data-counter="893">0</div>
+          <div class="stat-label" style="color: rgba(255,255,255,0.8);">Documentos Entregues</div>
+        </div>
+        <div class="stat-card" style="background: rgba(255,255,255,0.1); box-shadow: none;">
+          <div class="stat-number" style="color: white;" data-counter="3421">0</div>
+          <div class="stat-label" style="color: rgba(255,255,255,0.8);">Utilizadores Registados</div>
+        </div>
+        <div class="stat-card" style="background: rgba(255,255,255,0.1); box-shadow: none;">
+          <div class="stat-number" style="color: white;" data-counter="15">0</div>
+          <div class="stat-label" style="color: rgba(255,255,255,0.8);">Pontos de Entrega</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Final -->
+  <section style="background: linear-gradient(135deg, #16A34A, #166534); color: white; text-align: center;">
+    <div class="container">
+      <h2 style="font-size: 2rem; font-weight: 800; margin-bottom: 1rem;">
+        Junte-se à comunidade AcheiDoc
+      </h2>
+      <p style="font-size: 1.1rem; opacity: 0.9; margin-bottom: 2rem;">
+        Cada documento devolvido representa uma pessoa que pode voltar à sua vida normal.
+      </p>
+      <a href="cadastro.html" class="btn btn-outline-white btn-lg">Criar Conta Grátis →</a>
+      <div style="margin-top: 1rem;">
+        <a href="login.html" style="color: rgba(255,255,255,0.85); font-size: 0.95rem;">Já tenho conta → Entrar</a>
+      </div>
+    </div>
+  </section>
+
+</div><!-- #secaoVisitante -->
+
+<!-- ══════════════════════════════════════
+     SECÇÃO LOGADO (utilizador autenticado)
+     ══════════════════════════════════════ -->
+<div id="secaoLogado" style="display:none">
+
+  <!-- Saudação -->
+  <section style="background: linear-gradient(135deg, #1E40AF 0%, #16A34A 100%); color: white; padding: 3rem 0;">
+    <div class="container">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 0.4rem;">
+            Bem-vindo(a), <span id="nomeUtilizador"></span>! 👋
+          </h1>
+          <p style="opacity: 0.9; font-size: 1.05rem;">O que deseja fazer hoje?</p>
+        </div>
+        <div style="background: rgba(255,255,255,0.15); border-radius: 12px; padding: 1rem 1.5rem; text-align:center;">
+          <div style="font-size: 1.8rem; font-weight: 800;" id="pontosUtilizador">0</div>
+          <div style="font-size: 0.85rem; opacity: 0.9;">⭐ Pontos</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Acções rápidas -->
+  <section style="background: white; padding: 2rem 0; border-bottom: 1px solid var(--border);">
+    <div class="container">
+      <div class="acoes-grid">
+        <a href="publicar.html" class="card text-center acao-card" style="color: var(--text-dark);">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">📢</div>
+          <div style="font-weight: 600; font-size: 0.95rem;">Publicar Achado</div>
+        </a>
+        <a href="buscar.html" class="card text-center acao-card" style="color: var(--text-dark);">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔍</div>
+          <div style="font-weight: 600; font-size: 0.95rem;">Buscar Documento</div>
+        </a>
+        <a href="meus-achados.html" class="card text-center acao-card" style="color: var(--text-dark);">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">📋</div>
+          <div style="font-weight: 600; font-size: 0.95rem;">Meus Achados</div>
+        </a>
+        <a href="recompensas.html" class="card text-center acao-card" style="color: var(--text-dark);">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">🏆</div>
+          <div style="font-weight: 600; font-size: 0.95rem;">Recompensas</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Busca rápida -->
+  <section style="background: white; padding: 1.5rem 0; border-bottom: 1px solid var(--border);">
+    <div class="container">
+      <form id="quickSearchForm" style="max-width: 640px; margin: 0 auto;">
+        <div class="search-bar">
+          <input type="text" id="quickSearchInput" placeholder="Pesquise por nome ou tipo de documento...">
+          <button type="submit">🔍 Buscar</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Documentos recentes -->
+  <section>
+    <div class="container">
+      <div class="flex-between mb-3">
+        <div>
+          <h2 class="section-title">Documentos Recentes</h2>
+          <p class="section-subtitle">Os últimos documentos publicados na plataforma</p>
+        </div>
+        <a href="buscar.html" class="btn btn-outline">Ver Todos →</a>
+      </div>
+      <div class="grid-4" id="recentDocs">
+        <!-- Preenchido pelo home.js -->
+      </div>
+    </div>
+  </section>
+
+</div><!-- #secaoLogado -->
 
 <!-- ══ FOOTER ══ -->
 <footer class="footer">
@@ -205,6 +339,8 @@
       <div class="footer-col">
         <h4>Acesso</h4>
         <ul>
+          <li><a href="login.html">Entrar</a></li>
+          <li><a href="cadastro.html">Criar Conta</a></li>
           <li><a href="agente/login.html">Portal do Agente</a></li>
           <li><a href="admin/login.html">Painel Admin</a></li>
         </ul>
@@ -229,6 +365,7 @@
 </footer>
 
 <script src="js/mockData.js"></script>
+<script src="js/auth.js"></script>
 <script src="js/navbar.js"></script>
 <script src="js/home.js"></script>
 </body>

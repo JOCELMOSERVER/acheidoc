@@ -2,6 +2,8 @@
    AcheiDoc — Buscar JS
    =========================== */
 
+if (typeof Auth !== 'undefined') Auth.requireAuth();
+
 (function () {
   var searchInput = document.getElementById('searchInput');
   var tipoSelect = document.getElementById('tipoSelect');

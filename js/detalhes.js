@@ -36,11 +36,15 @@
     badgeEl.className = 'badge ' + getStatusBadgeClass(doc.status);
   }
 
-  // Botão resgatar
+  // Botão resgatar — verificar autenticação antes de ir para pagamento
   var btnResgatar = document.getElementById('btnResgatar');
   if (btnResgatar) {
     btnResgatar.textContent = 'Resgatar Documento — ' + doc.taxaKz.toLocaleString('pt-AO') + ' Kz';
     btnResgatar.addEventListener('click', function () {
+      if (typeof Auth !== 'undefined' && !Auth.isLoggedIn()) {
+        window.location.href = 'login.html?redirect=' + encodeURIComponent('pagamento.html?id=' + doc.id);
+        return;
+      }
       window.location.href = 'pagamento.html?id=' + doc.id;
     });
 

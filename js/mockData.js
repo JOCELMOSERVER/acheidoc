@@ -102,6 +102,11 @@ const PONTOS_ENTREGA = [
   }
 ];
 
+const UTILIZADORES = [
+  { id: 1, nome: 'Carlos Mendes', email: 'carlos@exemplo.ao', senha: '1234', role: 'utilizador', pontos: 120 },
+  { id: 2, nome: 'Ana Teixeira', email: 'ana@exemplo.ao', senha: '1234', role: 'utilizador', pontos: 80 }
+];
+
 const AGENTES = [
   { id: 1, nome: 'Manuel Sebastião', email: 'agente@acheidoc.ao', senha: '1234', pontoId: 1, pontos: 340 },
   { id: 2, nome: 'Filomena Dias', email: 'filomena@acheidoc.ao', senha: '1234', pontoId: 2, pontos: 210 }

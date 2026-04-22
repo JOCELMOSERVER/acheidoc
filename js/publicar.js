@@ -2,6 +2,8 @@
    AcheiDoc — Publicar JS
    =========================== */
 
+if (typeof Auth !== 'undefined') Auth.requireAuth();
+
 (function () {
   var currentStep = 1;
   var totalSteps = 3;

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrar — AcheiDoc</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-light);
+      padding: 1.5rem 1rem;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .login-logo {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .login-logo a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .login-logo p {
+      color: var(--text-gray);
+      margin-top: 0.4rem;
+      font-size: 0.95rem;
+    }
+
+    .login-tabs {
+      display: flex;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 1.5rem;
+      gap: 0;
+    }
+
+    .login-tab {
+      flex: 1;
+      padding: 10px 0;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-gray);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: color 0.2s, border-color 0.2s;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+    }
+
+    .login-tab:hover {
+      color: var(--primary);
+    }
+
+    .login-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .login-back {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+
+    .login-back a {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .login-footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: var(--text-gray);
+      font-size: 0.9rem;
+    }
+
+    .login-footer a {
+      color: var(--primary);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-box">
+
+    <div class="login-logo">
+      <a href="index.html">📄 AcheiDoc</a>
+      <p>Entre na sua conta para continuar</p>
+    </div>
+
+    <div class="card card-lg">
+      <div class="login-tabs">
+        <button class="login-tab active" data-panel="panelUtilizador">👤 Utilizador</button>
+        <button class="login-tab" data-panel="panelAgente">🏪 Agente</button>
+        <button class="login-tab" data-panel="panelAdmin">🛡️ Admin</button>
+      </div>
+
+      <!-- Painel Utilizador -->
+      <div id="panelUtilizador" class="login-panel">
+        <div id="errorUtilizador" class="alert alert-danger hidden"></div>
+        <form id="formUtilizador" novalidate>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" id="emailUtilizador" class="form-input" placeholder="o-seu-email@exemplo.ao" autocomplete="username" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Senha</label>
+            <div style="position:relative;">
+              <input type="password" id="senhaUtilizador" class="form-input" placeholder="••••••••" autocomplete="current-password" required style="padding-right:3rem;">
+              <button type="button" id="toggleSenha" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.1rem;" title="Mostrar/ocultar senha">👁️</button>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full btn-lg">Entrar →</button>
+        </form>
+
+        <div class="alert alert-info" style="margin-top:1.25rem; font-size:0.875rem;">
+          <strong>🔑 Credenciais de teste:</strong><br>
+          Email: <code>carlos@exemplo.ao</code> &nbsp;|&nbsp; Senha: <code>1234</code>
+        </div>
+
+        <div style="text-align:center; margin-top:1rem; color:var(--text-gray); font-size:0.9rem;">
+          Não tem conta? <a href="cadastro.html" style="color:var(--primary); font-weight:600;">Criar conta grátis →</a>
+        </div>
+      </div>
+
+      <!-- Painel Agente -->
+      <div id="panelAgente" class="login-panel hidden">
+        <p style="color:var(--text-gray); margin-bottom:1rem; font-size:0.95rem;">
+          Acesso exclusivo para Agentes de Ponto de Entrega autorizados.
+        </p>
+        <a href="agente/login.html" class="btn btn-success btn-full btn-lg">Entrar como Agente →</a>
+      </div>
+
+      <!-- Painel Admin -->
+      <div id="panelAdmin" class="login-panel hidden">
+        <p style="color:var(--text-gray); margin-bottom:1rem; font-size:0.95rem;">
+          Acesso exclusivo para administradores do sistema AcheiDoc.
+        </p>
+        <a href="admin/login.html" class="btn btn-full btn-lg" style="background:#312E81;color:white;">Entrar como Admin →</a>
+      </div>
+    </div>
+
+    <div class="login-back">
+      <a href="index.html">← Voltar ao início</a>
+    </div>
+
+  </div>
+
+  <script src="js/mockData.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/login.js"></script>
+  <script>
+    // Toggle mostrar/ocultar senha
+    var toggleBtn = document.getElementById('toggleSenha');
+    var senhaField = document.getElementById('senhaUtilizador');
+    if (toggleBtn && senhaField) {
+      toggleBtn.addEventListener('click', function () {
+        senhaField.type = senhaField.type === 'password' ? 'text' : 'password';
+        toggleBtn.textContent = senhaField.type === 'password' ? '👁️' : '🙈';
+      });
+    }
+  </script>
+</body>
+</html>

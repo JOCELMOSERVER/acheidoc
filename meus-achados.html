@@ -97,8 +97,10 @@
 </footer>
 
 <script src="js/mockData.js"></script>
+<script src="js/auth.js"></script>
 <script src="js/navbar.js"></script>
 <script>
+if (typeof Auth !== 'undefined') Auth.requireAuth();
 (function () {
   var tabelaBody = document.getElementById('achadosTabela');
   var filterTabs = document.querySelectorAll('.filter-tab');
