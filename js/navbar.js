@@ -54,7 +54,7 @@
         // Build using DOM methods to avoid XSS
         var info = document.createElement('div');
         info.className = 'nav-user-info';
-        info.setAttribute('onclick', 'toggleUserMenu()');
+        info.addEventListener('click', toggleUserMenu);
 
         var avatar = document.createElement('span');
         avatar.className = 'nav-user-avatar';

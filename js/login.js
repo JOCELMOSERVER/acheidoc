@@ -16,16 +16,20 @@ document.querySelectorAll('.auth-tab').forEach(function (tab) {
 
     // Atualizar credenciais de teste
     const creds = document.getElementById('credenciaisTeste');
-    if (tabActual === 'utilizador') {
-      creds.innerHTML = '<p>🧪 <strong>Teste:</strong> carlos@gmail.com / 1234</p>';
-      creds.style.display = 'block';
-    } else if (tabActual === 'agente') {
-      creds.innerHTML = '<p>🧪 <strong>Teste:</strong> agente@acheidoc.ao / 1234</p>';
-      creds.style.display = 'block';
-    } else {
-      creds.innerHTML = '<p>🧪 <strong>Teste:</strong> admin@acheidoc.ao / admin123</p>';
-      creds.style.display = 'block';
-    }
+    const credTexts = {
+      utilizador: 'carlos@gmail.com / 1234',
+      agente: 'agente@acheidoc.ao / 1234',
+      admin: 'admin@acheidoc.ao / admin123'
+    };
+    const p = document.createElement('p');
+    const strong = document.createElement('strong');
+    strong.textContent = 'Teste: ';
+    p.appendChild(document.createTextNode('🧪 '));
+    p.appendChild(strong);
+    p.appendChild(document.createTextNode(credTexts[tabActual] || ''));
+    creds.textContent = '';
+    creds.appendChild(p);
+    creds.style.display = 'block';
   });
 });
 
@@ -69,10 +73,12 @@ document.getElementById('formLogin').addEventListener('submit', function (e) {
       alertaSucesso.textContent = '✅ Login realizado com sucesso! A redirecionar...';
       alertaSucesso.style.display = 'block';
 
-      // Verificar redirect param (validar para evitar redireccionamentos externos)
+      // Verificar redirect param — apenas permitir caminhos relativos seguros (.html)
       const params = new URLSearchParams(window.location.search);
       const redirectParam = params.get('redirect');
-      const safeRedirect = redirectParam && /^[^/:][^:]*$/.test(redirectParam) ? redirectParam : null;
+      const safeRedirect = (redirectParam && /^(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_-]+\.html$/.test(redirectParam))
+        ? redirectParam
+        : null;
 
       setTimeout(function () {
         window.location.href = safeRedirect || redirecionarPara;
