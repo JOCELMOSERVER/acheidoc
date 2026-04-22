@@ -72,9 +72,9 @@
         return;
       }
 
-      // Verificar se email já existe
+      // Verificar se email já existe (comparação case-insensitive)
       var existe = (typeof UTILIZADORES !== 'undefined')
-        ? UTILIZADORES.find(function (u) { return u.email === email; })
+        ? UTILIZADORES.find(function (u) { return u.email.toLowerCase() === email.toLowerCase(); })
         : false;
 
       if (existe) {

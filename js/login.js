@@ -33,14 +33,18 @@
       var errorEl = document.getElementById('errorUtilizador');
 
       var user = (typeof UTILIZADORES !== 'undefined')
-        ? UTILIZADORES.find(function (u) { return u.email === email && u.senha === senha; })
+        ? UTILIZADORES.find(function (u) { return u.email.toLowerCase() === email.toLowerCase() && u.senha === senha; })
         : null;
 
       if (user) {
         Auth.login({ id: user.id, nome: user.nome, email: user.email, role: 'utilizador', pontos: user.pontos });
         var params = new URLSearchParams(window.location.search);
         var redirect = params.get('redirect');
-        window.location.href = redirect || 'index.html';
+        // Validar redirect: apenas caminhos relativos sem protocolo
+        var safePath = (redirect && /^[^:]*$/.test(redirect) && redirect.startsWith('/') === false && redirect.indexOf('//') === -1)
+          ? redirect
+          : 'index.html';
+        window.location.href = safePath;
       } else {
         errorEl.textContent = 'Email ou senha incorrectos. Verifique os dados e tente novamente.';
         errorEl.classList.remove('hidden');
