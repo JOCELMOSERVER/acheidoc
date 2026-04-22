@@ -93,7 +93,7 @@ document.getElementById('formLogin').addEventListener('submit', function (e) {
 });
 
 // Toggle password visibility
-function togglePassword() {
+document.getElementById('btnTogglePassword').addEventListener('click', function () {
   const input = document.getElementById('inputSenha');
   input.type = input.type === 'password' ? 'text' : 'password';
-}
+});

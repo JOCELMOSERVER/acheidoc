@@ -82,7 +82,7 @@ document.getElementById('formCadastro').addEventListener('submit', function (e) 
 });
 
 // Toggle password visibility
-function togglePasswordCadastro() {
+document.getElementById('btnTogglePasswordCadastro').addEventListener('click', function () {
   const input = document.getElementById('inputSenha');
   input.type = input.type === 'password' ? 'text' : 'password';
-}
+});

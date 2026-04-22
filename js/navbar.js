@@ -51,6 +51,13 @@
       if (navUser) {
         navUser.style.display = 'flex';
 
+        function toggleUserMenu() {
+          var dropdown = document.getElementById('userDropdown');
+          if (dropdown) {
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+          }
+        }
+
         // Build using DOM methods to avoid XSS
         var info = document.createElement('div');
         info.className = 'nav-user-info';
@@ -111,10 +118,3 @@
     }
   }
 })();
-
-function toggleUserMenu() {
-  const dropdown = document.getElementById('userDropdown');
-  if (dropdown) {
-    dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-  }
-}
