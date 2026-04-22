@@ -123,6 +123,33 @@ const CODIGOS_RESGATE = {
   'DOC-2026-000004': 'MN56PQ'
 };
 
+const UTILIZADORES = [
+  {
+    id: 1,
+    nome: 'Carlos Alberto Ferreira',
+    email: 'carlos@gmail.com',
+    senha: '1234',
+    telefone: '+244 923 111 222',
+    municipio: 'Luanda',
+    dataCadastro: '2026-01-15',
+    pontos: 120,
+    documentosPublicados: ['DOC-2026-000001'],
+    documentosResgatados: []
+  },
+  {
+    id: 2,
+    nome: 'Maria Isabel Cardoso',
+    email: 'maria@gmail.com',
+    senha: '1234',
+    telefone: '+244 912 333 444',
+    municipio: 'Viana',
+    dataCadastro: '2026-02-20',
+    pontos: 60,
+    documentosPublicados: [],
+    documentosResgatados: ['DOC-2026-000002']
+  }
+];
+
 // Utilitários
 
 function getStatusLabel(status) {
