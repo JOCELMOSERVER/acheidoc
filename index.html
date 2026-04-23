@@ -15,14 +15,16 @@
 <nav class="navbar">
   <div class="container navbar-inner">
     <a href="index.html" class="navbar-logo">
-      <span class="logo-icon">📄</span>
+      <span class="logo-icon">AD</span>
       AcheiDoc
     </a>
-    <div class="navbar-links">
-      <a href="index.html">Home</a>
-      <a href="buscar.html">Buscar Documento</a>
-      <a href="publicar.html">Publicar Achado</a>
-      <a href="recompensas.html">Recompensas</a>
+    <div class="navbar-search">
+      <form id="quickSearchForm">
+        <div class="search-bar">
+          <input type="text" id="quickSearchInput" placeholder="Pesquise por nome ou tipo de documento...">
+          <button type="submit">Buscar</button>
+        </div>
+      </form>
     </div>
     <div class="navbar-right">
       <div id="navLogin">
@@ -35,115 +37,89 @@
     </div>
   </div>
   <div class="navbar-mobile" id="navbarMobile">
-    <a href="index.html">🏠 Home</a>
-    <a href="buscar.html">🔍 Buscar Documento</a>
-    <a href="publicar.html">📤 Publicar Achado</a>
-    <a href="recompensas.html">🏆 Recompensas</a>
+    <div class="mobile-search">
+      <div class="search-bar">
+        <input type="text" id="mobileSearchInput" placeholder="Pesquise por documento...">
+        <button type="button" id="mobileSearchBtn">Ir</button>
+      </div>
+    </div>
+    <div id="mobileNavLogin"><a href="login.html">Entrar / Registar</a></div>
+    <div id="mobileNavUser" style="display:none;"></div>
     <div class="mobile-divider"></div>
-    <a href="agente/login.html">🏪 Sou Agente</a>
-    <a href="admin/login.html">🛡️ Sou Admin</a>
+    <a href="index.html">Home</a>
+    <a href="buscar.html">Buscar Documento</a>
+    <a href="publicar.html">Publicar Achado</a>
+    <a href="recompensas.html">Recompensas</a>
+    <div class="mobile-divider"></div>
+    <a href="agente/login.html">Agente</a>
+    <a href="admin/login.html">Admin</a>
   </div>
 </nav>
 
 <!-- ══ HERO ══ -->
-<section style="background: linear-gradient(135deg, #1E40AF 0%, #16A34A 100%); color: white; padding: 5rem 0; text-align: center;">
+<section class="hero-section">
   <div class="container">
-    <h1 style="font-size: 3rem; font-weight: 800; margin-bottom: 1rem; line-height: 1.2;">
-      Encontrou um documento? 📄
+    <h1 class="hero-title">
+      Um serviço simples para recuperar <br> documentos perdidos.
     </h1>
-    <p style="font-size: 1.3rem; opacity: 0.92; max-width: 600px; margin: 0 auto 2.5rem;">
-      Ajude alguém a recuperar o que perdeu. Publique agora e ganhe pontos!
+    <p class="hero-subtitle">
+      Publique um achado, acompanhe a validação e organize a entrega com mais segurança.
     </p>
-    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-      <a href="publicar.html" class="btn btn-success btn-lg">📤 Publicar Achado</a>
-      <a href="buscar.html" class="btn btn-outline-white btn-lg">🔍 Buscar Meu Documento</a>
+    <div class="hero-actions">
+      <a href="publicar.html" class="btn btn-primary btn-lg">Publicar documento</a>
+      <a href="buscar.html" class="btn btn-outline-white btn-lg">Buscar documento</a>
     </div>
   </div>
 </section>
 
-<!-- ══ BUSCA RÁPIDA ══ -->
+<!-- ══ BUSCA RÁPIDA ══ 
 <section style="background: white; padding: 2.5rem 0; border-bottom: 1px solid var(--border);">
   <div class="container">
     <form id="quickSearchForm" style="max-width: 640px; margin: 0 auto;">
       <div class="search-bar">
         <input type="text" id="quickSearchInput" placeholder="Pesquise por nome ou tipo de documento...">
-        <button type="submit">🔍 Buscar</button>
+        <button type="submit">Buscar</button>
       </div>
     </form>
   </div>
 </section>
-
+-->
 <!-- ══ COMO FUNCIONA ══ -->
 <section>
   <div class="container">
     <h2 class="section-title text-center">Como Funciona</h2>
-    <p class="section-subtitle text-center">5 passos simples para devolver documentos perdidos</p>
-    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5rem; margin-top: 2rem;">
-      <div class="card text-center" style="padding: 1.5rem 1rem;">
-        <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">📸</div>
-        <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem;">1. Encontrou</h3>
-        <p style="font-size: 0.85rem; color: var(--text-gray);">Publique o achado com foto do documento</p>
+    <p class="section-subtitle text-center">Um fluxo claro para registar, validar e devolver documentos.</p>
+    <div class="como-funciona-grid">
+      <div class="card card-process text-center">
+        <div class="process-step">01</div>
+        <h3 class="process-title">Registo do achado</h3>
+        <p class="process-copy">O documento é publicado com fotografia, localização e dados essenciais.</p>
       </div>
-      <div class="card text-center" style="padding: 1.5rem 1rem;">
-        <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">🤖</div>
-        <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem;">2. IA Analisa</h3>
-        <p style="font-size: 0.85rem; color: var(--text-gray);">Verificação automática de autenticidade</p>
+      <div class="card card-process text-center">
+        <div class="process-step">02</div>
+        <h3 class="process-title">Validação</h3>
+        <p class="process-copy">A equipa confirma a informação antes do documento ficar disponível para consulta.</p>
       </div>
-      <div class="card text-center" style="padding: 1.5rem 1rem;">
-        <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">🔍</div>
-        <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem;">3. Dono Busca</h3>
-        <p style="font-size: 0.85rem; color: var(--text-gray);">Pesquisa pelo seu documento no sistema</p>
+      <div class="card card-process text-center">
+        <div class="process-step">03</div>
+        <h3 class="process-title">Pesquisa</h3>
+        <p class="process-copy">O proprietário localiza o documento por nome, tipo ou zona de entrega.</p>
       </div>
-      <div class="card text-center" style="padding: 1.5rem 1rem;">
-        <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">💳</div>
-        <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem;">4. Pagamento</h3>
-        <p style="font-size: 0.85rem; color: var(--text-gray);">Taxa de 500 Kz via Multicaixa / Unitel</p>
+      <div class="card card-process text-center">
+        <div class="process-step">04</div>
+        <h3 class="process-title">Confirmação</h3>
+        <p class="process-copy">O pedido de resgate é confirmado e o ponto de levantamento é disponibilizado.</p>
       </div>
-      <div class="card text-center" style="padding: 1.5rem 1rem;">
-        <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">🤝</div>
-        <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem;">5. Entrega</h3>
-        <p style="font-size: 0.85rem; color: var(--text-gray);">Levantamento no ponto + pontos ganhos</p>
+      <div class="card card-process text-center">
+        <div class="process-step">05</div>
+        <h3 class="process-title">Entrega</h3>
+        <p class="process-copy">O documento é levantado no local indicado e o processo é encerrado.</p>
       </div>
     </div>
-    <!-- Mobile: stack em 2 colunas -->
-    <style>
-      @media (max-width: 768px) {
-        .como-funciona-grid {
-          grid-template-columns: repeat(2, 1fr) !important;
-        }
-      }
-      @media (max-width: 480px) {
-        .como-funciona-grid {
-          grid-template-columns: 1fr !important;
-        }
-      }
-    </style>
   </div>
 </section>
 
-<!-- ══ ESTATÍSTICAS ══ -->
-<section style="background: var(--primary); color: white;">
-  <div class="container">
-    <div class="grid-4">
-      <div class="stat-card" style="background: rgba(255,255,255,0.1); box-shadow: none;">
-        <div class="stat-number" style="color: white;" data-counter="1247">0</div>
-        <div class="stat-label" style="color: rgba(255,255,255,0.8);">Documentos Encontrados</div>
-      </div>
-      <div class="stat-card" style="background: rgba(255,255,255,0.1); box-shadow: none;">
-        <div class="stat-number" style="color: white;" data-counter="893">0</div>
-        <div class="stat-label" style="color: rgba(255,255,255,0.8);">Documentos Entregues</div>
-      </div>
-      <div class="stat-card" style="background: rgba(255,255,255,0.1); box-shadow: none;">
-        <div class="stat-number" style="color: white;" data-counter="3421">0</div>
-        <div class="stat-label" style="color: rgba(255,255,255,0.8);">Utilizadores Registados</div>
-      </div>
-      <div class="stat-card" style="background: rgba(255,255,255,0.1); box-shadow: none;">
-        <div class="stat-number" style="color: white;" data-counter="15">0</div>
-        <div class="stat-label" style="color: rgba(255,255,255,0.8);">Pontos de Entrega</div>
-      </div>
-    </div>
-  </div>
-</section>
+
 
 <!-- ══ DOCUMENTOS RECENTES ══ -->
 <section>
@@ -162,15 +138,62 @@
 </section>
 
 <!-- ══ CTA FINAL ══ -->
-<section style="background: linear-gradient(135deg, #16A34A, #166534); color: white; text-align: center;">
+<section class="cta-section">
   <div class="container">
-    <h2 style="font-size: 2rem; font-weight: 800; margin-bottom: 1rem;">
-      Encontrou um documento? Ajude alguém hoje!
-    </h2>
-    <p style="font-size: 1.1rem; opacity: 0.9; margin-bottom: 2rem;">
-      Cada documento devolvido representa uma pessoa que pode voltar à sua vida normal.
-    </p>
-    <a href="publicar.html" class="btn btn-outline-white btn-lg">Publicar Agora →</a>
+    <div class="partners-marquee" aria-label="Empresas parceiras">
+      <div class="partners-track partners-track-a">
+        <div class="partner-logo partner-logo-image">
+          <img src="img/pna.png" alt="PNA">
+        </div>
+        <div class="partner-logo partner-logo-image">
+          <img src="img/angola.png" alt="Angola">
+        </div>
+        <div class="partner-logo partner-logo-image">
+          <img src="img/pna.png" alt="PNA">
+        </div>
+        <div class="partner-logo partner-logo-image">
+          <img src="img/angola.png" alt="Angola">
+        </div>
+      </div>
+      <div class="partners-track partners-track-b" aria-hidden="true">
+        <div class="partner-logo partner-logo-image">
+          <img src="img/pna.png" alt="PNA">
+        </div>
+        <div class="partner-logo partner-logo-image">
+          <img src="img/angola.png" alt="Angola">
+        </div>
+        <div class="partner-logo partner-logo-image">
+          <img src="img/pna.png" alt="PNA">
+        </div>
+        <div class="partner-logo partner-logo-image">
+          <img src="img/angola.png" alt="Angola">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ESTATÍSTICAS ══ -->
+<section class="stats-section">
+  <div class="container">
+    <div class="grid-4">
+      <div class="stat-card stat-card-muted">
+        <div class="stat-number stat-number-light" data-counter="1247">0</div>
+        <div class="stat-label stat-label-light">Documentos registados</div>
+      </div>
+      <div class="stat-card stat-card-muted">
+        <div class="stat-number stat-number-light" data-counter="893">0</div>
+        <div class="stat-label stat-label-light">Documentos entregues</div>
+      </div>
+      <div class="stat-card stat-card-muted">
+        <div class="stat-number stat-number-light" data-counter="3421">0</div>
+        <div class="stat-label stat-label-light">Utilizadores registados</div>
+      </div>
+      <div class="stat-card stat-card-muted">
+        <div class="stat-number stat-number-light" data-counter="15">0</div>
+        <div class="stat-label stat-label-light">Pontos de entrega</div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -179,7 +202,7 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <div class="footer-logo">📄 AcheiDoc</div>
+        <div class="footer-logo"><span class="logo-icon">AD</span> AcheiDoc</div>
         <p>Sistema de recuperação de documentos perdidos em Angola. Ligamos quem encontrou a quem perdeu.</p>
       </div>
       <div class="footer-col">

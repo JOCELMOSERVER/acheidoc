@@ -14,10 +14,11 @@
 <!-- ══ NAVBAR ADMIN ══ -->
 <nav class="navbar" style="border-bottom: 3px solid #312E81;">
   <div class="container navbar-inner">
-    <a href="../index.html" class="navbar-logo" style="color: #312E81;"><span class="logo-icon">📄</span>AcheiDoc <span style="font-size:0.75rem; background:#312E81; color:white; padding:2px 8px; border-radius:4px; margin-left:4px;">ADMIN</span></a>
+    <a href="../index.html" class="navbar-logo" style="color: #312E81;"><span class="logo-icon">AD</span>AcheiDoc <span style="font-size:0.75rem; background:#312E81; color:white; padding:2px 8px; border-radius:4px; margin-left:4px;">ADMIN</span></a>
     <div class="navbar-links">
       <a href="dashboard.html" class="active">Dashboard</a>
       <a href="revisar.html">Revisar Documentos</a>
+      <a href="pagamentos.html">Pagamentos</a>
     </div>
     <div class="navbar-right">
       <span id="adminNome" style="font-weight:600; color:var(--text-dark);"></span>
@@ -26,14 +27,15 @@
     <div class="navbar-toggle" id="navbarToggle"><span></span><span></span><span></span></div>
   </div>
   <div class="navbar-mobile" id="navbarMobile">
-    <a href="dashboard.html" class="active">🏠 Dashboard</a>
-    <a href="revisar.html">📋 Revisar</a>
+    <a href="dashboard.html" class="active">Dashboard</a>
+    <a href="revisar.html">Revisar</a>
+    <a href="pagamentos.html">Pagamentos</a>
   </div>
 </nav>
 
 <div class="page-header">
   <div class="container">
-    <h1>🛡️ Painel Administrativo</h1>
+    <h1>Painel administrativo</h1>
     <p>Gerir e aprovar documentos submetidos na plataforma</p>
   </div>
 </div>
@@ -44,28 +46,28 @@
     <!-- Cards de resumo -->
     <div class="grid-4 mb-4">
       <div class="summary-card">
-        <div class="summary-icon red">🔴</div>
+        <div class="summary-icon red">A</div>
         <div class="summary-info">
           <h3 id="countAlto">0</h3>
           <p>Alto Risco</p>
         </div>
       </div>
       <div class="summary-card">
-        <div class="summary-icon yellow">🟡</div>
+        <div class="summary-icon yellow">M</div>
         <div class="summary-info">
           <h3 id="countMedio">0</h3>
           <p>Médio Risco</p>
         </div>
       </div>
       <div class="summary-card">
-        <div class="summary-icon green">🟢</div>
+        <div class="summary-icon green">B</div>
         <div class="summary-info">
           <h3 id="countBaixo">0</h3>
           <p>Baixo Risco</p>
         </div>
       </div>
       <div class="summary-card">
-        <div class="summary-icon blue">✅</div>
+        <div class="summary-icon blue">OK</div>
         <div class="summary-info">
           <h3 id="countAprovados">0</h3>
           <p>Aprovados</p>
@@ -76,9 +78,9 @@
     <!-- Filtros por risco -->
     <div class="filter-tabs mb-3">
       <button class="filter-tab active" data-filter="TODOS">Todos</button>
-      <button class="filter-tab" data-filter="ALTO">🔴 Alto Risco</button>
-      <button class="filter-tab" data-filter="MEDIO">🟡 Médio Risco</button>
-      <button class="filter-tab" data-filter="BAIXO">🟢 Baixo Risco</button>
+      <button class="filter-tab" data-filter="ALTO">Alto Risco</button>
+      <button class="filter-tab" data-filter="MEDIO">Médio Risco</button>
+      <button class="filter-tab" data-filter="BAIXO">Baixo Risco</button>
     </div>
 
     <!-- Tabela de documentos -->

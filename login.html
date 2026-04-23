@@ -7,14 +7,14 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/components.css">
 </head>
-<body class="auth-body">
+<body class="auth-body auth-login-split">
 
   <div class="auth-container">
     <div class="auth-card">
 
       <!-- Logo -->
       <div class="auth-logo">
-        <span class="auth-logo-icon">📄</span>
+        <span class="auth-logo-icon">AD</span>
         <span class="auth-logo-text">AcheiDoc</span>
       </div>
 
@@ -22,12 +22,7 @@
       <h1 class="auth-title">Bem-vindo de volta!</h1>
       <p class="auth-subtitle">Entre na sua conta para continuar</p>
 
-      <!-- Tabs: Utilizador / Agente / Admin -->
-      <div class="auth-tabs">
-        <button class="auth-tab active" data-tab="utilizador">👤 Utilizador</button>
-        <button class="auth-tab" data-tab="agente">🏪 Agente</button>
-        <button class="auth-tab" data-tab="admin">🛡️ Admin</button>
-      </div>
+     
 
       <!-- Alerta de erro -->
       <div id="alertaErro" class="alert alert-danger" style="display:none"></div>
@@ -37,14 +32,14 @@
       <!-- Formulário -->
       <form id="formLogin">
         <div class="form-group">
-          <label class="form-label">📧 Email</label>
+          <label class="form-label">Email</label>
           <input type="email" id="inputEmail" class="form-input" placeholder="o-seu-email@gmail.com" required>
         </div>
         <div class="form-group">
-          <label class="form-label">🔒 Senha</label>
+          <label class="form-label">Senha</label>
           <div class="input-password-wrap">
             <input type="password" id="inputSenha" class="form-input" placeholder="A sua senha" required>
-            <button type="button" class="btn-toggle-password" id="btnTogglePassword">👁️</button>
+            <button type="button" class="btn-toggle-password" id="btnTogglePassword">Ver</button>
           </div>
         </div>
         <div class="form-group flex-between">
@@ -68,13 +63,20 @@
 
       <!-- Credenciais de teste -->
       <div class="auth-demo-credentials" id="credenciaisTeste">
-        <p>🧪 <strong>Teste rápido:</strong> carlos@gmail.com / 1234</p>
+        <p><strong>Acesso de teste:</strong> carlos@gmail.com / 1234</p>
       </div>
 
       <!-- Voltar -->
       <div class="auth-back">
         <a href="index.html">← Voltar ao início</a>
       </div>
+
+      <div class="auth-divider"><span>acesso institucional</span></div>
+
+      <p class="auth-switch" style="margin-top:0.25rem; margin-bottom:0.5rem;">
+        Agente: <a href="agente/login.html" class="link-primary">Portal do Agente</a>
+      </p>
+     
 
     </div>
   </div>

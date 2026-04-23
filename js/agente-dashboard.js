@@ -20,16 +20,42 @@
     }
   }
 
-  setEl('agentePontos', agenteLogado.pontos + ' pts');
+  setEl('agentePontos', agenteLogado.pontos);
   setEl('agentePontosMes', '+120 pts');
-  setEl('agenteTotal', agenteLogado.pontos + ' pts');
 
-  // Documentos no ponto (filtrar por pontoEntregaId)
+  // Documentos aguardando recepção física pelo agente
+  var docsReceberBody = document.getElementById('docsReceberBody');
+  if (docsReceberBody && typeof DOCUMENTOS !== 'undefined') {
+    var docsReceber = DOCUMENTOS.filter(function (d) {
+      return d.pontoEntregaId === agenteLogado.pontoId && d.status === 'PUBLICADO';
+    });
+
+    if (docsReceber.length === 0) {
+      docsReceberBody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding: 2rem; color: var(--text-gray);">Nenhum documento pendente de recepção neste ponto.</td></tr>`;
+    } else {
+      docsReceberBody.innerHTML = docsReceber.map(function (d) {
+        return `
+          <tr>
+            <td><code>${d.id}</code></td>
+            <td>${d.tipo}</td>
+            <td>${d.nomeParcial}</td>
+            <td>${d.encontradoPor || '—'}</td>
+            <td><span class="badge ${getStatusBadgeClass(d.status)}">${getStatusLabel(d.status)}</span></td>
+            <td>${formatDate(d.dataCriacao)}</td>
+            <td>
+              <a href="validar.html?id=${d.id}&flow=receber" class="btn btn-primary btn-sm">Receber documento</a>
+            </td>
+          </tr>`;
+      }).join('');
+    }
+  }
+
+  // Documentos no ponto prontos para entrega ao dono
   var tabelaBody = document.getElementById('docsTabelaBody');
   if (tabelaBody && typeof DOCUMENTOS !== 'undefined') {
     var docs = DOCUMENTOS.filter(function (d) {
       return d.pontoEntregaId === agenteLogado.pontoId &&
-        d.status !== 'ENTREGUE';
+        (d.status === 'DISPONIVEL_LEVANTAMENTO' || d.status === 'AGUARDANDO_ENTREGA');
     });
 
     if (docs.length === 0) {
@@ -44,7 +70,7 @@
             <td><span class="badge ${getStatusBadgeClass(d.status)}">${getStatusLabel(d.status)}</span></td>
             <td>${formatDate(d.dataCriacao)}</td>
             <td>
-              <a href="validar.html?id=${d.id}" class="btn btn-success btn-sm">Validar Entrega</a>
+              <a href="validar.html?id=${d.id}&flow=entregar" class="btn btn-success btn-sm">Entregar ao dono</a>
             </td>
           </tr>`;
       }).join('');
@@ -68,7 +94,12 @@
       });
 
       if (found) {
-        searchResult.innerHTML = buildDocCard(found, '../');
+        var flow = found.status === 'PUBLICADO' ? 'receber' : 'entregar';
+        var actionLabel = found.status === 'PUBLICADO' ? 'Receber no ponto' : 'Validar entrega';
+        searchResult.innerHTML = buildDocCard(found, '../') + `
+          <div style="margin-top:0.75rem; display:flex; justify-content:flex-end;">
+            <a href="validar.html?id=${found.id}&flow=${flow}" class="btn btn-primary btn-sm">${actionLabel}</a>
+          </div>`;
         searchResult.classList.remove('hidden');
       } else {
         searchResult.innerHTML = `<div class="alert alert-danger">Documento não encontrado.</div>`;

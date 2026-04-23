@@ -15,7 +15,9 @@ const DOCUMENTOS = [
     status: 'PUBLICADO',
     risco: 'BAIXO',
     taxaKz: 500,
-    pontoEntregaId: 1
+    pontoEntregaId: 1,
+    encontradoPor: 'Paulo Fernando Mateus',
+    contactoEncontrador: '+244 923 888 111'
   },
   {
     id: 'DOC-2026-000002',
@@ -29,7 +31,9 @@ const DOCUMENTOS = [
     status: 'AGUARDANDO_ENTREGA',
     risco: 'MEDIO',
     taxaKz: 500,
-    pontoEntregaId: 2
+    pontoEntregaId: 2,
+    encontradoPor: 'Helena Gouveia',
+    contactoEncontrador: '+244 912 400 210'
   },
   {
     id: 'DOC-2026-000003',
@@ -43,7 +47,9 @@ const DOCUMENTOS = [
     status: 'PENDENTE',
     risco: 'ALTO',
     taxaKz: 1000,
-    pontoEntregaId: 1
+    pontoEntregaId: 1,
+    encontradoPor: 'Marta Ines Kassoma',
+    contactoEncontrador: '+244 934 111 908'
   },
   {
     id: 'DOC-2026-000004',
@@ -57,7 +63,9 @@ const DOCUMENTOS = [
     status: 'DISPONIVEL_LEVANTAMENTO',
     risco: 'BAIXO',
     taxaKz: 500,
-    pontoEntregaId: 3
+    pontoEntregaId: 3,
+    encontradoPor: 'Luis António Neves',
+    contactoEncontrador: '+244 945 333 222'
   },
   {
     id: 'DOC-2026-000005',
@@ -71,7 +79,9 @@ const DOCUMENTOS = [
     status: 'ENTREGUE',
     risco: 'BAIXO',
     taxaKz: 500,
-    pontoEntregaId: 2
+    pontoEntregaId: 2,
+    encontradoPor: 'Sonia Patrícia Cabral',
+    contactoEncontrador: '+244 922 555 010'
   }
 ];
 
@@ -122,6 +132,87 @@ const CODIGOS_RESGATE = {
   'DOC-2026-000002': 'XY34ZW',
   'DOC-2026-000004': 'MN56PQ'
 };
+
+const CHAVES_ENTREGA = {
+  'DOC-2026-000001': 'RC11PT',
+  'DOC-2026-000002': 'VG24LU',
+  'DOC-2026-000004': 'NX08CA'
+};
+
+/* ──────────────────────────────────────────────
+   PAGAMENTOS — PayPay (Entidade + Referência)
+   Entidade fixa: 00282
+   Referência única por transacção (9 dígitos)
+   ────────────────────────────────────────────── */
+const PAYPAY_ENTIDADE = '00282';
+
+const PAGAMENTOS = [
+  {
+    id: 'PAG-2026-0001',
+    docId: 'DOC-2026-000001',
+    utilizador: 'Carlos Alberto Ferreira',
+    email: 'carlos@gmail.com',
+    tipoDoc: 'Bilhete de Identidade',
+    valor: 500,
+    entidade: PAYPAY_ENTIDADE,
+    referencia: '100 201 301',
+    status: 'PAGO',
+    dataCriacao: '2026-04-20',
+    dataPagamento: '2026-04-20'
+  },
+  {
+    id: 'PAG-2026-0002',
+    docId: 'DOC-2026-000002',
+    utilizador: 'Maria Isabel Neto Cardoso',
+    email: 'maria@gmail.com',
+    tipoDoc: 'Carta de Condução',
+    valor: 500,
+    entidade: PAYPAY_ENTIDADE,
+    referencia: '100 201 302',
+    status: 'PENDENTE',
+    dataCriacao: '2026-04-21',
+    dataPagamento: null
+  },
+  {
+    id: 'PAG-2026-0003',
+    docId: 'DOC-2026-000003',
+    utilizador: 'João Paulo Silva Domingos',
+    email: 'joao.domingos@gmail.com',
+    tipoDoc: 'Passaporte',
+    valor: 1000,
+    entidade: PAYPAY_ENTIDADE,
+    referencia: '100 201 303',
+    status: 'PENDENTE',
+    dataCriacao: '2026-04-19',
+    dataPagamento: null
+  },
+  {
+    id: 'PAG-2026-0004',
+    docId: 'DOC-2026-000004',
+    utilizador: 'Ana Beatriz Lopes Teixeira',
+    email: 'ana.teixeira@gmail.com',
+    tipoDoc: 'Cartão Bancário',
+    valor: 500,
+    entidade: PAYPAY_ENTIDADE,
+    referencia: '100 201 304',
+    status: 'PAGO',
+    dataCriacao: '2026-04-22',
+    dataPagamento: '2026-04-22'
+  },
+  {
+    id: 'PAG-2026-0005',
+    docId: 'DOC-2026-000005',
+    utilizador: 'Pedro António Gomes Nkosi',
+    email: 'pedro.nkosi@gmail.com',
+    tipoDoc: 'Bilhete de Identidade',
+    valor: 500,
+    entidade: PAYPAY_ENTIDADE,
+    referencia: '100 201 305',
+    status: 'PAGO',
+    dataCriacao: '2026-04-18',
+    dataPagamento: '2026-04-18'
+  }
+];
 
 const UTILIZADORES = [
   {

@@ -27,6 +27,20 @@
   margin-bottom: 0.75rem;
 }
 
+.footer-brand .footer-logo .logo-icon {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.12);
+  color: white;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
 .footer-brand p {
   font-size: 0.9rem;
   line-height: 1.7;

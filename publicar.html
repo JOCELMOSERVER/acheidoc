@@ -14,7 +14,7 @@
 <!-- ══ NAVBAR ══ -->
 <nav class="navbar">
   <div class="container navbar-inner">
-    <a href="index.html" class="navbar-logo"><span class="logo-icon">📄</span>AcheiDoc</a>
+    <a href="index.html" class="navbar-logo"><span class="logo-icon">AD</span>AcheiDoc</a>
     <div class="navbar-links">
       <a href="index.html">Home</a>
       <a href="buscar.html">Buscar Documento</a>
@@ -30,19 +30,19 @@
     <div class="navbar-toggle" id="navbarToggle"><span></span><span></span><span></span></div>
   </div>
   <div class="navbar-mobile" id="navbarMobile">
-    <a href="index.html">🏠 Home</a>
-    <a href="buscar.html">🔍 Buscar Documento</a>
-    <a href="publicar.html" class="active">📤 Publicar Achado</a>
-    <a href="recompensas.html">🏆 Recompensas</a>
+    <a href="index.html">Home</a>
+    <a href="buscar.html">Buscar Documento</a>
+    <a href="publicar.html" class="active">Publicar Achado</a>
+    <a href="recompensas.html">Recompensas</a>
     <div class="mobile-divider"></div>
-    <a href="agente/login.html">🏪 Sou Agente</a>
-    <a href="admin/login.html">🛡️ Sou Admin</a>
+    <a href="agente/login.html">Agente</a>
+    <a href="admin/login.html">Admin</a>
   </div>
 </nav>
 
 <div class="page-header">
   <div class="container">
-    <h1>📤 Publicar Achado</h1>
+    <h1>Publicar Achado</h1>
     <p>Preencha os dados do documento encontrado</p>
   </div>
 </div>
@@ -73,7 +73,7 @@
 
       <!-- PASSO 1 — Dados do documento -->
       <div id="step1" class="card">
-        <h2 style="font-size:1.2rem; font-weight:700; margin-bottom:1.5rem;">📋 Passo 1 — Dados do Documento</h2>
+        <h2 style="font-size:1.2rem; font-weight:700; margin-bottom:1.5rem;">Passo 1 — Dados do documento</h2>
 
         <div class="form-group">
           <label class="form-label">Tipo de Documento *</label>
@@ -106,7 +106,7 @@
 
       <!-- PASSO 2 — Foto e Localização -->
       <div id="step2" class="card hidden">
-        <h2 style="font-size:1.2rem; font-weight:700; margin-bottom:1.5rem;">📸 Passo 2 — Foto e Localização</h2>
+        <h2 style="font-size:1.2rem; font-weight:700; margin-bottom:1.5rem;">Passo 2 — Foto e localização</h2>
 
         <div class="form-group">
           <label class="form-label">Foto do Documento *</label>
@@ -151,13 +151,13 @@
 
       <!-- PASSO 3 — Revisão -->
       <div id="step3" class="card hidden">
-        <h2 style="font-size:1.2rem; font-weight:700; margin-bottom:1.5rem;">✅ Passo 3 — Revisão e Publicação</h2>
+        <h2 style="font-size:1.2rem; font-weight:700; margin-bottom:1.5rem;">Passo 3 — Revisão e publicação</h2>
 
         <div class="alert alert-info">
-          🔒 O nome será parcialmente ocultado para proteger o proprietário
+          O nome será parcialmente ocultado para proteger o proprietário
         </div>
         <div class="alert alert-warning">
-          📸 A foto terá marca d'água aplicada automaticamente
+          A foto terá marca d'água aplicada automaticamente
         </div>
 
         <div class="card" style="background: var(--bg-light); box-shadow: none; border: 1px solid var(--border);">
@@ -184,7 +184,7 @@
 
         <div style="display:flex; justify-content:space-between; gap:1rem; margin-top:1.5rem;">
           <button id="btnPrev3" class="btn btn-outline">← Anterior</button>
-          <button id="btnPublicar" class="btn btn-success btn-lg">✅ Publicar Agora</button>
+          <button id="btnPublicar" class="btn btn-success btn-lg">Publicar Agora</button>
         </div>
       </div>
 
@@ -193,7 +193,6 @@
     <!-- Resultado de sucesso (depois de publicar) -->
     <div id="successContainer" class="hidden">
       <div class="card" style="text-align:center; border-top: 4px solid var(--success);">
-        <div style="font-size:4rem; margin-bottom:1rem;">🎉</div>
         <h2 style="font-size:1.5rem; font-weight:800; color:var(--success); margin-bottom:0.5rem;">
           Documento publicado com sucesso!
         </h2>
@@ -205,7 +204,18 @@
           <p style="font-size:1.4rem; font-weight:900; font-family:monospace; color:var(--primary);" id="newDocId">—</p>
           <span class="badge badge-pendente" style="margin-top:0.5rem;">Pendente</span>
         </div>
-        <a href="meus-achados.html" class="btn btn-primary btn-full">📋 Ver Meus Achados</a>
+        <div class="alert alert-info" style="text-align:left; margin-bottom:0.75rem;">
+          Leve o documento ao agente mais próximo para concluir a recepção.
+        </div>
+        <div class="card" style="text-align:left; background:var(--bg-light); box-shadow:none; border:1px solid var(--border); margin-bottom:1.5rem;">
+          <h3 style="font-size:1rem; margin-bottom:0.6rem; color:var(--text-gray);">Ponto recomendado para entrega</h3>
+          <p style="margin:0 0 0.35rem; font-weight:700;" id="recomendadoPontoNome">—</p>
+          <p style="margin:0 0 0.35rem; color:var(--text-gray);" id="recomendadoAgente">—</p>
+          <p style="margin:0 0 0.35rem; color:var(--text-gray);" id="recomendadoEndereco">—</p>
+          <p style="margin:0 0 0.35rem; color:var(--text-gray);" id="recomendadoHorario">—</p>
+          <p style="margin:0; color:var(--text-gray);" id="recomendadoTelefone">—</p>
+        </div>
+        <a href="meus-achados.html" class="btn btn-primary btn-full">Ver meus achados</a>
         <a href="publicar.html" class="btn btn-outline btn-full" style="margin-top:0.75rem;">Publicar outro achado</a>
       </div>
     </div>

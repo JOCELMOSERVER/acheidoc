@@ -12,9 +12,23 @@
 
   var params = new URLSearchParams(window.location.search);
   var docIdParam = params.get('id');
+  var flowParam = params.get('flow') || '';
 
-  // Pré-preencher ID do documento se vier da URL
+  // Inputs dos dois fluxos
   var codigoInput = document.getElementById('codigoInput');
+  var chaveEntregaInput = document.getElementById('chaveEntregaInput');
+
+  var receberCard = document.getElementById('receberCard');
+  var entregarCard = document.getElementById('entregarCard');
+  var docResumoCard = document.getElementById('docResumoCard');
+  var docResumoInfo = document.getElementById('docResumoInfo');
+
+  var receberErrorMsg = document.getElementById('receberErrorMsg');
+  var btnReceber = document.getElementById('btnReceber');
+  var receberChecklistSection = document.getElementById('receberChecklistSection');
+  var btnConfirmarRecepcao = document.getElementById('btnConfirmarRecepcao');
+  var receberSuccessSection = document.getElementById('receberSuccessSection');
+  var receberSuccessInfo = document.getElementById('receberSuccessInfo');
 
   // Botão validar
   var btnValidar = document.getElementById('btnValidar');
@@ -31,7 +45,71 @@
     document.getElementById('check3')
   ];
 
+  var receiveChecklist = [
+    document.getElementById('receiveCheck1'),
+    document.getElementById('receiveCheck2'),
+    document.getElementById('receiveCheck3')
+  ];
+
   var docValidado = null;
+  var docRecebido = null;
+
+  if (docIdParam && typeof DOCUMENTOS !== 'undefined') {
+    var docSelecionado = DOCUMENTOS.find(function (d) { return d.id === docIdParam; }) || null;
+    if (docSelecionado && docResumoCard && docResumoInfo) {
+      docResumoCard.classList.remove('hidden');
+      docResumoInfo.innerHTML = `
+        <strong>${docSelecionado.id}</strong><br>
+        ${docSelecionado.tipo} — ${docSelecionado.nomeParcial}<br>
+        Encontrador: ${docSelecionado.encontradoPor || '—'}
+      `;
+    }
+  }
+
+  if (flowParam === 'receber' && receberCard && entregarCard) {
+    receberCard.style.borderLeft = '4px solid var(--primary)';
+    entregarCard.classList.add('hidden');
+  } else if (flowParam === 'entregar' && receberCard && entregarCard) {
+    entregarCard.style.borderLeft = '4px solid var(--primary)';
+    receberCard.classList.add('hidden');
+  }
+
+  if (btnReceber) {
+    btnReceber.addEventListener('click', function () {
+      var chave = chaveEntregaInput ? chaveEntregaInput.value.trim().toUpperCase() : '';
+
+      if (!chave) {
+        showReceiveError('Por favor, insira a chave de entrega apresentada pelo encontrador.');
+        return;
+      }
+
+      if (receberErrorMsg) receberErrorMsg.classList.add('hidden');
+      if (receberChecklistSection) receberChecklistSection.classList.add('hidden');
+
+      if (typeof CHAVES_ENTREGA === 'undefined' || typeof DOCUMENTOS === 'undefined') return;
+
+      var docIdEncontrado = null;
+      Object.keys(CHAVES_ENTREGA).forEach(function (key) {
+        if (CHAVES_ENTREGA[key] === chave) {
+          docIdEncontrado = key;
+        }
+      });
+
+      if (!docIdEncontrado || (docIdParam && docIdEncontrado !== docIdParam)) {
+        showReceiveError('Chave de entrega inválida para este documento.');
+        return;
+      }
+
+      docRecebido = DOCUMENTOS.find(function (d) { return d.id === docIdEncontrado; }) || null;
+      if (!docRecebido) {
+        showReceiveError('Documento não encontrado para a chave informada.');
+        return;
+      }
+
+      if (receberChecklistSection) receberChecklistSection.classList.remove('hidden');
+      animarRecepcao();
+    });
+  }
 
   if (btnValidar) {
     btnValidar.addEventListener('click', function () {
@@ -56,7 +134,7 @@
       });
 
       if (!docIdEncontrado) {
-        showError('❌ Código inválido. Verifique e tente novamente.');
+        showError('Código inválido. Verifique e tente novamente.');
         return;
       }
 
@@ -68,11 +146,33 @@
     });
   }
 
+  function animarRecepcao() {
+    receiveChecklist.forEach(function (el) {
+      if (el) {
+        el.querySelector('.check-icon').className = 'check-icon pending';
+        el.querySelector('.check-icon').textContent = String(receiveChecklist.indexOf(el) + 1);
+      }
+    });
+
+    var delays = [350, 800, 1250];
+    receiveChecklist.forEach(function (el, i) {
+      if (!el) return;
+      setTimeout(function () {
+        el.querySelector('.check-icon').className = 'check-icon success';
+        el.querySelector('.check-icon').textContent = 'OK';
+      }, delays[i]);
+    });
+
+    setTimeout(function () {
+      if (btnConfirmarRecepcao) btnConfirmarRecepcao.classList.remove('hidden');
+    }, 1600);
+  }
+
   function animarChecklist() {
     checklist.forEach(function (el) {
       if (el) {
         el.querySelector('.check-icon').className = 'check-icon pending';
-        el.querySelector('.check-icon').textContent = '○';
+        el.querySelector('.check-icon').textContent = String(checklist.indexOf(el) + 1);
       }
     });
 
@@ -81,13 +181,31 @@
       if (!el) return;
       setTimeout(function () {
         el.querySelector('.check-icon').className = 'check-icon success';
-        el.querySelector('.check-icon').textContent = '✓';
+        el.querySelector('.check-icon').textContent = 'OK';
       }, delays[i]);
     });
 
     setTimeout(function () {
       if (btnAutorizar) btnAutorizar.classList.remove('hidden');
     }, 1800);
+  }
+
+  if (btnConfirmarRecepcao) {
+    btnConfirmarRecepcao.addEventListener('click', function () {
+      if (!docRecebido) return;
+
+      btnConfirmarRecepcao.disabled = true;
+      btnConfirmarRecepcao.innerHTML = '<span class="spinner"></span> A registar...';
+
+      setTimeout(function () {
+        docRecebido.status = 'DISPONIVEL_LEVANTAMENTO';
+        if (receberChecklistSection) receberChecklistSection.classList.add('hidden');
+        if (receberSuccessSection) receberSuccessSection.classList.remove('hidden');
+        if (receberSuccessInfo) {
+          receberSuccessInfo.textContent = docRecebido.id + ' pronto para ser levantado pelo dono no ponto.';
+        }
+      }, 1000);
+    });
   }
 
   if (btnAutorizar) {
@@ -114,6 +232,7 @@
       btnConfirmar.innerHTML = '<span class="spinner"></span> A registar...';
 
       setTimeout(function () {
+        if (docValidado) docValidado.status = 'ENTREGUE';
         if (confirmSection) confirmSection.classList.add('hidden');
         if (checklistSection) checklistSection.classList.add('hidden');
         if (successSection) successSection.classList.remove('hidden');
@@ -129,5 +248,14 @@
     if (checklistSection) checklistSection.classList.add('hidden');
     if (btnAutorizar) btnAutorizar.classList.add('hidden');
     if (confirmSection) confirmSection.classList.add('hidden');
+  }
+
+  function showReceiveError(msg) {
+    if (receberErrorMsg) {
+      receberErrorMsg.textContent = msg;
+      receberErrorMsg.classList.remove('hidden');
+    }
+    if (receberChecklistSection) receberChecklistSection.classList.add('hidden');
+    if (btnConfirmarRecepcao) btnConfirmarRecepcao.classList.add('hidden');
   }
 })();

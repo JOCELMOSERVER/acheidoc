@@ -14,7 +14,7 @@
 <!-- ══ NAVBAR AGENTE ══ -->
 <nav class="navbar">
   <div class="container navbar-inner">
-    <a href="../index.html" class="navbar-logo"><span class="logo-icon">📄</span>AcheiDoc</a>
+    <a href="../index.html" class="navbar-logo"><span class="logo-icon">AD</span>AcheiDoc</a>
     <div class="navbar-links">
       <a href="dashboard.html">Dashboard</a>
       <a href="validar.html" class="active">Validar Entrega</a>
@@ -26,25 +26,76 @@
     <div class="navbar-toggle" id="navbarToggle"><span></span><span></span><span></span></div>
   </div>
   <div class="navbar-mobile" id="navbarMobile">
-    <a href="dashboard.html">🏠 Dashboard</a>
-    <a href="validar.html" class="active">✅ Validar Entrega</a>
-    <a href="historico.html">📊 Histórico</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="validar.html" class="active">Validar entrega</a>
+    <a href="historico.html">Histórico</a>
   </div>
 </nav>
 
 <div class="page-header">
   <div class="container">
     <a href="dashboard.html" style="color:var(--primary); font-weight:600;">← Dashboard</a>
-    <h1 style="margin-top:0.5rem;">✅ Validar Entrega de Documento</h1>
-    <p>Verifique o código de resgate do cliente</p>
+    <h1 style="margin-top:0.5rem;">Validar entrega de documento</h1>
+    <p>Receba o documento do encontrador pela chave de entrega ou entregue ao dono com o código de resgate.</p>
   </div>
 </div>
 
 <main class="page-content">
   <div class="container" style="max-width:560px;">
 
+    <div id="docResumoCard" class="card mb-3 hidden" style="border-left:4px solid var(--primary);">
+      <h3 style="font-size:1rem; font-weight:700; margin-bottom:0.75rem;">Documento seleccionado</h3>
+      <div id="docResumoInfo" style="color:var(--text-gray);"></div>
+    </div>
+
+    <!-- Recepção do documento pelo agente -->
+    <div class="card mb-3" id="receberCard">
+      <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:1rem;">Receber do encontrador</h3>
+      <p style="color:var(--text-gray); margin-bottom:1rem; font-size:0.9rem;">
+        Confirme a chave de entrega apresentada pela pessoa que encontrou o documento antes de o receber no ponto.
+      </p>
+      <div style="display:flex; gap:0.75rem;">
+        <input type="text" id="chaveEntregaInput" class="form-input"
+          placeholder="Ex: RC11PT"
+          maxlength="6"
+          style="text-transform:uppercase; font-size:1.2rem; letter-spacing:0.18em; text-align:center; font-family:monospace; font-weight:700; flex:1;">
+        <button id="btnReceber" class="btn btn-primary btn-lg">Confirmar</button>
+      </div>
+      <div class="alert alert-info" style="margin-top:0.75rem; font-size:0.85rem;">
+        Solicite também o nome do encontrador e confirme o documento antes da recepção.
+      </div>
+    </div>
+
+    <div id="receberErrorMsg" class="alert alert-danger hidden"></div>
+
+    <div id="receberChecklistSection" class="card hidden mb-3">
+      <h3 style="font-size:1rem; font-weight:700; margin-bottom:1rem;">A validar recepção</h3>
+      <ul class="checklist">
+        <li id="receiveCheck1">
+          <div class="check-icon pending">1</div>
+          <span>Chave de entrega válida</span>
+        </li>
+        <li id="receiveCheck2">
+          <div class="check-icon pending">2</div>
+          <span>Documento corresponde ao registo</span>
+        </li>
+        <li id="receiveCheck3">
+          <div class="check-icon pending">3</div>
+          <span>Recepção no ponto confirmada</span>
+        </li>
+      </ul>
+      <button id="btnConfirmarRecepcao" class="btn btn-success btn-full btn-lg hidden" style="margin-top:1.5rem;">Registar recepção</button>
+    </div>
+
+    <div id="receberSuccessSection" class="card hidden mb-3" style="border-top:4px solid var(--success); text-align:center;">
+      <h2 style="font-size:1.35rem; font-weight:800; color:var(--success); margin-bottom:0.5rem;">Documento recebido no ponto</h2>
+      <p style="color:var(--text-gray); margin-bottom:1rem;">O documento foi entregue pelo encontrador e ficou disponível para levantamento do dono.</p>
+      <div style="background:#F0FDF4; border-radius:12px; padding:1rem; margin-bottom:1rem; color:var(--success-dark); font-weight:700;" id="receberSuccessInfo">—</div>
+      <a href="dashboard.html" class="btn btn-primary btn-full">Voltar ao dashboard</a>
+    </div>
+
     <!-- Campo do código -->
-    <div class="card mb-3">
+    <div class="card mb-3" id="entregarCard">
       <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:1rem;">Código de Resgate</h3>
       <p style="color:var(--text-gray); margin-bottom:1rem; font-size:0.9rem;">
         Solicite ao cliente o código de resgate de 6 caracteres recebido após o pagamento.
@@ -57,7 +108,7 @@
         <button id="btnValidar" class="btn btn-primary btn-lg">Validar</button>
       </div>
       <div class="alert alert-info" style="margin-top:0.75rem; font-size:0.85rem;">
-        💡 Código de teste: <strong>AB12CD</strong>
+        Código de teste: <strong>AB12CD</strong>
       </div>
     </div>
 
@@ -66,50 +117,43 @@
 
     <!-- Checklist de verificação -->
     <div id="checklistSection" class="card hidden mb-3">
-      <h3 style="font-size:1rem; font-weight:700; margin-bottom:1rem;">🔍 A verificar...</h3>
+      <h3 style="font-size:1rem; font-weight:700; margin-bottom:1rem;">A verificar</h3>
       <ul class="checklist">
         <li id="check1">
-          <div class="check-icon pending">○</div>
+          <div class="check-icon pending">1</div>
           <span>Código válido</span>
         </li>
         <li id="check2">
-          <div class="check-icon pending">○</div>
+          <div class="check-icon pending">2</div>
           <span>Pagamento confirmado</span>
         </li>
         <li id="check3">
-          <div class="check-icon pending">○</div>
+          <div class="check-icon pending">3</div>
           <span>Correspondência do documento confirmada</span>
         </li>
       </ul>
-      <button id="btnAutorizar" class="btn btn-success btn-full btn-lg hidden" style="margin-top:1.5rem;">
-        ✅ AUTORIZAR ENTREGA
-      </button>
+      <button id="btnAutorizar" class="btn btn-success btn-full btn-lg hidden" style="margin-top:1.5rem;">Autorizar entrega</button>
     </div>
 
     <!-- Confirmação -->
     <div id="confirmSection" class="card hidden mb-3" style="border-left: 4px solid var(--warning);">
-      <h3 style="font-size:1rem; font-weight:700; margin-bottom:0.75rem; color:var(--warning-dark);">⚠️ Confirmação Final</h3>
+      <h3 style="font-size:1rem; font-weight:700; margin-bottom:0.75rem; color:var(--warning-dark);">Confirmação final</h3>
       <p style="color:var(--text-gray); margin-bottom:1rem;">
         Confirme que entregou o documento físico ao dono, após verificar o documento de identificação.
       </p>
       <div id="docValidadoInfo"></div>
-      <button id="btnConfirmar" class="btn btn-success btn-full btn-lg" style="margin-top:1rem;">
-        ✔️ Confirmar Entrega ao Dono
-      </button>
+      <button id="btnConfirmar" class="btn btn-success btn-full btn-lg" style="margin-top:1rem;">Confirmar entrega ao dono</button>
     </div>
 
     <!-- Sucesso -->
     <div id="successSection" class="card hidden" style="text-align:center; border-top:4px solid var(--success);">
-      <div style="font-size:3.5rem; margin-bottom:0.75rem;">🎉</div>
       <h2 style="font-size:1.4rem; font-weight:800; color:var(--success); margin-bottom:0.5rem;">
         Entrega registada!
       </h2>
       <p style="color:var(--text-gray); margin-bottom:1rem;">
         Excelente trabalho! Os pontos foram creditados na sua conta.
       </p>
-      <div style="background:#DCFCE7; border-radius:12px; padding:1rem; font-size:1.5rem; font-weight:800; color:var(--success); margin-bottom:1.5rem;">
-        +30 pontos ganhos ⭐
-      </div>
+      <div style="background:#DCFCE7; border-radius:12px; padding:1rem; font-size:1.5rem; font-weight:800; color:var(--success); margin-bottom:1.5rem;">+30 pontos ganhos</div>
       <a href="dashboard.html" class="btn btn-primary btn-full">← Voltar ao Dashboard</a>
     </div>
 

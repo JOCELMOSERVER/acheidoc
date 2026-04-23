@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pagamentos — AcheiDoc Admin</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/navbar.css">
+  <link rel="stylesheet" href="../css/footer.css">
+  <link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+
+<!-- ══ NAVBAR ADMIN ══ -->
+<nav class="navbar" style="border-bottom: 3px solid #312E81;">
+  <div class="container navbar-inner">
+    <a href="../index.html" class="navbar-logo" style="color: #312E81;"><span class="logo-icon">AD</span>AcheiDoc <span style="font-size:0.75rem; background:#312E81; color:white; padding:2px 8px; border-radius:4px; margin-left:4px;">ADMIN</span></a>
+    <div class="navbar-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="revisar.html">Revisar Documentos</a>
+      <a href="pagamentos.html" class="active">Pagamentos</a>
+    </div>
+    <div class="navbar-right">
+      <span id="adminNome" style="font-weight:600; color:var(--text-dark);"></span>
+      <button id="btnLogout" class="btn btn-outline" style="font-size:0.85rem; padding:8px 14px;">Sair</button>
+    </div>
+    <div class="navbar-toggle" id="navbarToggle"><span></span><span></span><span></span></div>
+  </div>
+  <div class="navbar-mobile" id="navbarMobile">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="revisar.html">Revisar</a>
+    <a href="pagamentos.html" class="active">Pagamentos</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1>Gestão de pagamentos</h1>
+    <p>Controlo de pagamentos dos clientes via PayPay — Entidade e Referência</p>
+  </div>
+</div>
+
+<main class="page-content">
+  <div class="container">
+
+    <!-- Cards de resumo -->
+    <div class="grid-4 mb-4">
+      <div class="summary-card">
+        <div class="summary-icon yellow">P</div>
+        <div class="summary-info">
+          <h3 id="countPendentes">0</h3>
+          <p>Pendentes</p>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon green">OK</div>
+        <div class="summary-info">
+          <h3 id="countPagos">0</h3>
+          <p>Pagos</p>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon blue">Kz</div>
+        <div class="summary-info">
+          <h3 id="totalReceita">0 Kz</h3>
+          <p>Receita total</p>
+        </div>
+      </div>
+      <div class="summary-card" style="border-left: 4px solid #312E81; background: #F5F3FF;">
+        <div class="summary-icon" style="background:#EDE9FE; color:#312E81;">PP</div>
+        <div class="summary-info">
+          <h3 style="font-size:1.1rem; color:#312E81;" id="entidadeDisplay">00282</h3>
+          <p>Entidade PayPay</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filtros de status -->
+    <div class="filter-tabs mb-3">
+      <button class="filter-tab active" data-filter="TODOS">Todos</button>
+      <button class="filter-tab" data-filter="PENDENTE">Pendentes</button>
+      <button class="filter-tab" data-filter="PAGO">Pagos</button>
+      <button class="filter-tab" data-filter="CANCELADO">Cancelados</button>
+    </div>
+
+    <!-- Tabela de pagamentos -->
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>ID Pagamento</th>
+            <th>Documento</th>
+            <th>Utilizador</th>
+            <th>Entidade</th>
+            <th>Referência</th>
+            <th>Valor</th>
+            <th>Status</th>
+            <th>Data</th>
+            <th>Acção</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaPagamentos">
+          <!-- Preenchido pelo JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Modal: Confirmar pagamento -->
+    <div id="modalConfirmar" class="hidden" style="
+      position:fixed; inset:0; background:rgba(0,0,0,0.45);
+      display:flex; align-items:center; justify-content:center; z-index:999;">
+      <div class="card" style="max-width:460px; width:90%; padding:2rem;">
+        <h3 style="margin-bottom:1rem; font-size:1.1rem;">Confirmar recepção de pagamento</h3>
+
+        <!-- Dados PayPay em destaque -->
+        <div style="background:#F5F3FF; border:2px solid #7C3AED; border-radius:10px; padding:1.2rem; margin-bottom:1.2rem; text-align:center;">
+          <div style="font-size:0.78rem; color:#6B7280; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.25rem;">Entidade PayPay</div>
+          <div style="font-size:2rem; font-weight:700; color:#312E81; letter-spacing:0.15em;" id="modalEntidade">00282</div>
+          <div style="font-size:0.78rem; color:#6B7280; text-transform:uppercase; letter-spacing:0.08em; margin:0.75rem 0 0.25rem;">Referência</div>
+          <div style="font-size:1.6rem; font-weight:700; color:#7C3AED; letter-spacing:0.12em;" id="modalReferencia">— — —</div>
+          <div style="font-size:0.78rem; color:#6B7280; margin-top:0.75rem;">Valor: <strong id="modalValor" style="color:#111;">0 Kz</strong></div>
+        </div>
+
+        <table style="width:100%; border-collapse:collapse; font-size:0.9rem; margin-bottom:1.2rem;">
+          <tr>
+            <td style="padding:4px 0; color:var(--text-gray);">Pagamento</td>
+            <td style="padding:4px 0; font-weight:600;" id="modalPagId">—</td>
+          </tr>
+          <tr>
+            <td style="padding:4px 0; color:var(--text-gray);">Documento</td>
+            <td style="padding:4px 0;" id="modalDocId">—</td>
+          </tr>
+          <tr>
+            <td style="padding:4px 0; color:var(--text-gray);">Utilizador</td>
+            <td style="padding:4px 0;" id="modalUtilizador">—</td>
+          </tr>
+          <tr>
+            <td style="padding:4px 0; color:var(--text-gray);">Tipo doc.</td>
+            <td style="padding:4px 0;" id="modalTipoDoc">—</td>
+          </tr>
+        </table>
+
+        <div id="modalResult" class="hidden" style="margin-bottom:1rem;"></div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+          <button id="btnModalConfirmar" class="btn btn-success btn-lg">Confirmar pago</button>
+          <button id="btnModalCancelar" class="btn btn-outline btn-lg">Fechar</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© 2026 AcheiDoc — Painel Admin</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/mockData.js"></script>
+<script src="../js/navbar.js"></script>
+<script src="../js/admin-pagamentos.js"></script>
+</body>
+</html>

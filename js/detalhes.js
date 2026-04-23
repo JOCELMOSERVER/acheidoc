@@ -47,7 +47,7 @@
     // Desabilitar se já entregue
     if (doc.status === 'ENTREGUE') {
       btnResgatar.disabled = true;
-      btnResgatar.textContent = '✅ Documento já entregue';
+      btnResgatar.textContent = 'Documento já entregue';
       btnResgatar.classList.remove('btn-success');
       btnResgatar.classList.add('btn-neutral');
     }
@@ -66,7 +66,7 @@
     if (content) {
       content.innerHTML = `
         <div class="empty-state" style="padding: 4rem">
-          <div class="empty-icon">📄</div>
+          <div class="empty-icon">Sem registo</div>
           <h3>Documento não encontrado</h3>
           <p>O documento que procura não existe ou foi removido.</p>
           <a href="buscar.html" class="btn btn-primary mt-3">← Voltar à Busca</a>

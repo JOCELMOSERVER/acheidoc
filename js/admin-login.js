@@ -30,7 +30,7 @@
       });
 
       if (!admin) {
-        if (errorMsg) { errorMsg.textContent = '❌ Credenciais inválidas. Tente novamente.'; errorMsg.classList.remove('hidden'); }
+        if (errorMsg) { errorMsg.textContent = 'Credenciais inválidas. Tente novamente.'; errorMsg.classList.remove('hidden'); }
         return;
       }
 

@@ -3,6 +3,8 @@
    =========================== */
 
 (function () {
+  Auth.requireAuth();
+
   var searchInput = document.getElementById('searchInput');
   var tipoSelect = document.getElementById('tipoSelect');
   var localSelect = document.getElementById('localSelect');
@@ -22,7 +24,7 @@
     if (docs.length === 0) {
       resultsGrid.innerHTML = `
         <div class="empty-state" style="grid-column: 1/-1">
-          <div class="empty-icon">🔍</div>
+          <div class="empty-icon">Sem resultados</div>
           <h3>Nenhum documento encontrado</h3>
           <p>Tente ajustar os filtros ou pesquise por outro nome/tipo.</p>
         </div>`;

@@ -3,6 +3,8 @@
    =========================== */
 
 (function () {
+  Auth.requireAuth();
+
   var currentStep = 1;
   var totalSteps = 3;
   var formData = {};
@@ -136,6 +138,11 @@
   var formContainer = document.getElementById('formContainer');
   var successContainer = document.getElementById('successContainer');
   var newDocId = document.getElementById('newDocId');
+  var recomendadoPontoNome = document.getElementById('recomendadoPontoNome');
+  var recomendadoAgente = document.getElementById('recomendadoAgente');
+  var recomendadoEndereco = document.getElementById('recomendadoEndereco');
+  var recomendadoHorario = document.getElementById('recomendadoHorario');
+  var recomendadoTelefone = document.getElementById('recomendadoTelefone');
 
   if (btnPublicar) {
     btnPublicar.addEventListener('click', function () {
@@ -144,11 +151,48 @@
 
       setTimeout(function () {
         var id = 'DOC-2026-' + String(Math.floor(Math.random() * 999999)).padStart(6, '0');
+        var ponto = getNearestPoint(formData.municipio);
+
+        setEl('recomendadoPontoNome', ponto.nome);
+        setEl('recomendadoAgente', 'Agente responsável: ' + ponto.agente);
+        setEl('recomendadoEndereco', ponto.endereco);
+        setEl('recomendadoHorario', 'Horário: ' + ponto.horario);
+        setEl('recomendadoTelefone', 'Telefone: ' + ponto.telefone);
+
         if (formContainer) formContainer.classList.add('hidden');
         if (successContainer) successContainer.classList.remove('hidden');
         if (newDocId) newDocId.textContent = id;
       }, 1500);
     });
+  }
+
+  function normalizeText(value) {
+    return (value || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+  }
+
+  function getNearestPoint(municipio) {
+    if (!Array.isArray(PONTOS_ENTREGA) || PONTOS_ENTREGA.length === 0) {
+      return {
+        nome: 'Ponto de entrega a definir',
+        agente: 'Equipa AcheiDoc',
+        endereco: 'Confirme no suporte o ponto disponível.',
+        horario: 'Seg–Sex: 08h–17h',
+        telefone: '+244 000 000 000'
+      };
+    }
+
+    var municipioNorm = normalizeText(municipio);
+    var pontoExato = PONTOS_ENTREGA.find(function (p) {
+      var nomeNorm = normalizeText(p.nome);
+      var enderecoNorm = normalizeText(p.endereco);
+      return nomeNorm.includes(municipioNorm) || enderecoNorm.includes(municipioNorm);
+    });
+
+    if (pontoExato) return pontoExato;
+    return PONTOS_ENTREGA[0];
   }
 
   function setEl(id, val) {

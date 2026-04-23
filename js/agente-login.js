@@ -30,7 +30,7 @@
       });
 
       if (!agente) {
-        if (errorMsg) { errorMsg.textContent = '❌ Email ou senha incorrectos. Tente novamente.'; errorMsg.classList.remove('hidden'); }
+        if (errorMsg) { errorMsg.textContent = 'Email ou senha incorrectos. Tente novamente.'; errorMsg.classList.remove('hidden'); }
         return;
       }
 

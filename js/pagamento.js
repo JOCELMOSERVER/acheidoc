@@ -117,8 +117,8 @@
       btnCopiar.addEventListener('click', function () {
         if (navigator.clipboard) {
           navigator.clipboard.writeText(codigoEl.textContent).then(function () {
-            btnCopiar.textContent = '✅ Copiado!';
-            setTimeout(function () { btnCopiar.textContent = '📋 Copiar Código'; }, 2000);
+            btnCopiar.textContent = 'Código copiado';
+            setTimeout(function () { btnCopiar.textContent = 'Copiar código'; }, 2000);
           });
         } else {
           // Fallback
@@ -128,8 +128,8 @@
           ta.select();
           document.execCommand('copy');
           document.body.removeChild(ta);
-          btnCopiar.textContent = '✅ Copiado!';
-          setTimeout(function () { btnCopiar.textContent = '📋 Copiar Código'; }, 2000);
+          btnCopiar.textContent = 'Código copiado';
+          setTimeout(function () { btnCopiar.textContent = 'Copiar código'; }, 2000);
         }
       });
     }

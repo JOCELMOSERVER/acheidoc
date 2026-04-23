@@ -16,6 +16,24 @@
     });
   }
 
+  // Pesquisa mobile
+  const mobileSearchBtn = document.getElementById('mobileSearchBtn');
+  const mobileSearchInput = document.getElementById('mobileSearchInput');
+  if (mobileSearchBtn && mobileSearchInput) {
+    mobileSearchBtn.addEventListener('click', function () {
+      const q = mobileSearchInput.value.trim();
+      if (q) {
+        window.location.href = 'buscar.html?q=' + encodeURIComponent(q);
+      }
+    });
+    mobileSearchInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        mobileSearchBtn.click();
+      }
+    });
+  }
+
   // Login dropdown (agente/admin fallback, used when navUser is not present)
   if (loginBtn && loginDropdown) {
     loginBtn.addEventListener('click', function (e) {
@@ -45,9 +63,37 @@
     const user = Auth.getUser();
     const navLogin = document.getElementById('navLogin');
     const navUser = document.getElementById('navUser');
+    const mobileNavLogin = document.getElementById('mobileNavLogin');
+    const mobileNavUser = document.getElementById('mobileNavUser');
 
     if (user && user.role === 'utilizador') {
+      // Desktop
       if (navLogin) navLogin.style.display = 'none';
+      // Mobile
+      if (mobileNavLogin) mobileNavLogin.style.display = 'none';
+
+      // Construir menu mobile do utilizador
+      if (mobileNavUser) {
+        mobileNavUser.style.display = 'block';
+        var mUserLabel = document.createElement('div');
+        mUserLabel.style.cssText = 'padding:8px 14px;font-weight:600;color:var(--text-dark);font-size:0.95rem;';
+        mUserLabel.textContent = user.nome.split(' ')[0] + '  ' + user.pontos + ' pts';
+        var mLinkAchados = document.createElement('a');
+        mLinkAchados.href = 'meus-achados.html';
+        mLinkAchados.textContent = 'Meus achados';
+        var mLinkRecomp = document.createElement('a');
+        mLinkRecomp.href = 'recompensas.html';
+        mLinkRecomp.textContent = 'Recompensas';
+        var mLinkSair = document.createElement('a');
+        mLinkSair.href = '#';
+        mLinkSair.textContent = 'Sair';
+        mLinkSair.addEventListener('click', function (e) { e.preventDefault(); Auth.logout(); });
+        mobileNavUser.appendChild(mUserLabel);
+        mobileNavUser.appendChild(mLinkAchados);
+        mobileNavUser.appendChild(mLinkRecomp);
+        mobileNavUser.appendChild(mLinkSair);
+      }
+
       if (navUser) {
         navUser.style.display = 'flex';
 
@@ -65,7 +111,7 @@
 
         var avatar = document.createElement('span');
         avatar.className = 'nav-user-avatar';
-        avatar.textContent = '👤';
+        avatar.textContent = user.nome.trim().charAt(0).toUpperCase();
 
         var nome = document.createElement('span');
         nome.className = 'nav-user-nome';
@@ -73,7 +119,7 @@
 
         var pontos = document.createElement('span');
         pontos.className = 'nav-user-pontos';
-        pontos.textContent = '⭐ ' + user.pontos + ' pts';
+        pontos.textContent = user.pontos + ' pts';
 
         var arrow = document.createElement('span');
         arrow.textContent = '▼';
@@ -90,18 +136,18 @@
 
         var linkAchados = document.createElement('a');
         linkAchados.href = 'meus-achados.html';
-        linkAchados.textContent = '📋 Meus Achados';
+        linkAchados.textContent = 'Meus achados';
 
         var linkRecompensas = document.createElement('a');
         linkRecompensas.href = 'recompensas.html';
-        linkRecompensas.textContent = '🏆 Recompensas';
+        linkRecompensas.textContent = 'Recompensas';
 
         var hr = document.createElement('hr');
 
         var linkSair = document.createElement('a');
         linkSair.href = '#';
         linkSair.className = 'link-danger';
-        linkSair.textContent = '🚪 Sair';
+        linkSair.textContent = 'Sair';
         linkSair.addEventListener('click', function (e) {
           e.preventDefault();
           Auth.logout();

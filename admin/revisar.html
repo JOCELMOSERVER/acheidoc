@@ -14,10 +14,11 @@
 <!-- ══ NAVBAR ADMIN ══ -->
 <nav class="navbar" style="border-bottom: 3px solid #312E81;">
   <div class="container navbar-inner">
-    <a href="../index.html" class="navbar-logo" style="color: #312E81;"><span class="logo-icon">📄</span>AcheiDoc <span style="font-size:0.75rem; background:#312E81; color:white; padding:2px 8px; border-radius:4px; margin-left:4px;">ADMIN</span></a>
+    <a href="../index.html" class="navbar-logo" style="color: #312E81;"><span class="logo-icon">AD</span>AcheiDoc <span style="font-size:0.75rem; background:#312E81; color:white; padding:2px 8px; border-radius:4px; margin-left:4px;">ADMIN</span></a>
     <div class="navbar-links">
       <a href="dashboard.html">Dashboard</a>
       <a href="revisar.html" class="active">Revisar Documentos</a>
+      <a href="pagamentos.html">Pagamentos</a>
     </div>
     <div class="navbar-right">
       <button id="btnLogout" class="btn btn-outline" style="font-size:0.85rem; padding:8px 14px;">Sair</button>
@@ -25,15 +26,16 @@
     <div class="navbar-toggle" id="navbarToggle"><span></span><span></span><span></span></div>
   </div>
   <div class="navbar-mobile" id="navbarMobile">
-    <a href="dashboard.html">🏠 Dashboard</a>
-    <a href="revisar.html" class="active">📋 Revisar</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="revisar.html" class="active">Revisar</a>
+    <a href="pagamentos.html">Pagamentos</a>
   </div>
 </nav>
 
 <div class="page-header">
   <div class="container">
     <a href="dashboard.html" style="color: #312E81; font-weight:600;">← Dashboard</a>
-    <h1 style="margin-top:0.5rem;">📋 Revisar Documento</h1>
+    <h1 style="margin-top:0.5rem;">Revisar documento</h1>
   </div>
 </div>
 
@@ -59,14 +61,14 @@
 
         <!-- Análise da IA -->
         <div class="card">
-          <h3 style="font-size:1rem; font-weight:700; margin-bottom:1rem;">🤖 Análise Automática (IA)</h3>
+          <h3 style="font-size:1rem; font-weight:700; margin-bottom:1rem;">Análise automática</h3>
           <ul class="checklist">
-            <li><div class="check-icon success">✓</div><span>Qualidade da imagem: <strong>Boa</strong></span></li>
-            <li><div class="check-icon success">✓</div><span>Dados completos: <strong>Sim</strong></span></li>
-            <li><div class="check-icon success">✓</div><span>Possível fraude: <strong>Não detectado</strong></span></li>
-            <li><div class="check-icon success">✓</div><span>Duplicidade: <strong>Não encontrada</strong></span></li>
+            <li><div class="check-icon success">OK</div><span>Qualidade da imagem: <strong>Boa</strong></span></li>
+            <li><div class="check-icon success">OK</div><span>Dados completos: <strong>Sim</strong></span></li>
+            <li><div class="check-icon success">OK</div><span>Possível fraude: <strong>Não detectado</strong></span></li>
+            <li><div class="check-icon success">OK</div><span>Duplicidade: <strong>Não encontrada</strong></span></li>
             <li>
-              <div class="check-icon" style="background:#FEF3C7;">⚠</div>
+              <div class="check-icon" style="background:#FEF3C7; color:#92400E;">Aten</div>
               <span>Classificação de Risco: <span id="riscoBadge" class="badge badge-risco-baixo">—</span></span>
             </li>
           </ul>
@@ -74,7 +76,7 @@
 
         <!-- Dados do documento -->
         <div class="card">
-          <h3 style="font-size:1rem; font-weight:700; margin-bottom:1rem;">📋 Dados do Documento</h3>
+          <h3 style="font-size:1rem; font-weight:700; margin-bottom:1rem;">Dados do documento</h3>
           <table style="width:100%; border-collapse:collapse;">
             <tr>
               <td style="padding:6px 0; color:var(--text-gray); font-size:0.85rem; width:100px;">Tipo</td>
@@ -96,24 +98,18 @@
 
         <!-- Botões de acção -->
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.75rem;">
-          <button id="btnAprovar" class="btn btn-success btn-lg" style="grid-column:1/-1;">
-            ✅ APROVAR
-          </button>
-          <button id="btnRejeitar" class="btn btn-danger btn-lg">
-            ❌ REJEITAR
-          </button>
-          <button id="btnCorrigir" class="btn btn-warning btn-lg">
-            ✏️ CORRIGIR
-          </button>
+          <button id="btnAprovar" class="btn btn-success btn-lg" style="grid-column:1/-1;">Aprovar</button>
+          <button id="btnRejeitar" class="btn btn-danger btn-lg">Rejeitar</button>
+          <button id="btnCorrigir" class="btn btn-warning btn-lg">Solicitar correcção</button>
         </div>
 
         <!-- Secção de correcção -->
         <div id="corrigirSection" class="card hidden" style="border-left:4px solid var(--warning);">
-          <h4 style="margin-bottom:0.75rem;">✏️ Observação de Correcção</h4>
+          <h4 style="margin-bottom:0.75rem;">Observação de correcção</h4>
           <div class="form-group" style="margin-bottom:0.75rem;">
             <textarea id="obsCorrecao" class="form-input" placeholder="Descreva o que precisa ser corrigido pelo utilizador..." style="min-height:120px;"></textarea>
           </div>
-          <button id="btnSalvarCorrecao" class="btn btn-warning btn-full">Salvar Correcção</button>
+          <button id="btnSalvarCorrecao" class="btn btn-warning btn-full">Salvar correcção</button>
         </div>
 
       </div>

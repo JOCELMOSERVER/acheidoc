@@ -47,7 +47,7 @@
   var btnExportar = document.getElementById('btnExportar');
   if (btnExportar) {
     btnExportar.addEventListener('click', function () {
-      alert('📥 Exportação iniciada. O ficheiro CSV será gerado em breve.');
+      alert('Exportação iniciada. O ficheiro CSV será gerado em breve.');
     });
   }
 

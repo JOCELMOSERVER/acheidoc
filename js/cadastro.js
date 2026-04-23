@@ -2,8 +2,6 @@
    AcheiDoc — Cadastro JS
    =========================== */
 
-Auth.redirectIfLoggedIn();
-
 // Validação em tempo real da senha
 document.getElementById('inputSenha').addEventListener('input', function () {
   const forca = calcularForcaSenha(this.value);
@@ -16,13 +14,13 @@ document.getElementById('inputSenha').addEventListener('input', function () {
 document.getElementById('inputConfirmarSenha').addEventListener('input', function () {
   const senha = document.getElementById('inputSenha').value;
   const icone = document.getElementById('iconConfirmar');
-  icone.textContent = this.value === senha ? '✅' : '❌';
+  icone.textContent = this.value === senha ? 'Corresponde' : 'Diferente';
 });
 
 function calcularForcaSenha(senha) {
-  if (senha.length < 4) return { nivel: 'fraca', texto: '🔴 Senha fraca' };
-  if (senha.length < 8) return { nivel: 'media', texto: '🟡 Senha média' };
-  return { nivel: 'forte', texto: '🟢 Senha forte' };
+  if (senha.length < 4) return { nivel: 'fraca', texto: 'Senha fraca' };
+  if (senha.length < 8) return { nivel: 'media', texto: 'Senha média' };
+  return { nivel: 'forte', texto: 'Senha forte' };
 }
 
 // Submit
@@ -42,17 +40,17 @@ document.getElementById('formCadastro').addEventListener('submit', function (e) 
 
   // Validações
   if (senha !== confirmarSenha) {
-    alerta.textContent = '❌ As senhas não coincidem.';
+    alerta.textContent = 'As senhas não coincidem.';
     alerta.style.display = 'block';
     return;
   }
   if (!termos) {
-    alerta.textContent = '❌ Deve aceitar os Termos e Condições.';
+    alerta.textContent = 'Deve aceitar os Termos e Condições.';
     alerta.style.display = 'block';
     return;
   }
   if (UTILIZADORES.find(function (u) { return u.email === email; })) {
-    alerta.textContent = '❌ Este email já está registado.';
+    alerta.textContent = 'Este email já está registado.';
     alerta.style.display = 'block';
     return;
   }
@@ -85,4 +83,5 @@ document.getElementById('formCadastro').addEventListener('submit', function (e) 
 document.getElementById('btnTogglePasswordCadastro').addEventListener('click', function () {
   const input = document.getElementById('inputSenha');
   input.type = input.type === 'password' ? 'text' : 'password';
+  this.textContent = input.type === 'password' ? 'Ver' : 'Ocultar';
 });

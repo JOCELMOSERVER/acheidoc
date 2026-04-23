@@ -2,37 +2,6 @@
    AcheiDoc — Login JS
    =========================== */
 
-// Redirecionar se já logado
-Auth.redirectIfLoggedIn();
-
-let tabActual = 'utilizador';
-
-// Tabs
-document.querySelectorAll('.auth-tab').forEach(function (tab) {
-  tab.addEventListener('click', function () {
-    document.querySelectorAll('.auth-tab').forEach(function (t) { t.classList.remove('active'); });
-    tab.classList.add('active');
-    tabActual = tab.dataset.tab;
-
-    // Atualizar credenciais de teste
-    const creds = document.getElementById('credenciaisTeste');
-    const credTexts = {
-      utilizador: 'carlos@gmail.com / 1234',
-      agente: 'agente@acheidoc.ao / 1234',
-      admin: 'admin@acheidoc.ao / admin123'
-    };
-    const p = document.createElement('p');
-    const strong = document.createElement('strong');
-    strong.textContent = 'Teste: ';
-    p.appendChild(document.createTextNode('🧪 '));
-    p.appendChild(strong);
-    p.appendChild(document.createTextNode(credTexts[tabActual] || ''));
-    creds.textContent = '';
-    creds.appendChild(p);
-    creds.style.display = 'block';
-  });
-});
-
 // Submit do formulário
 document.getElementById('formLogin').addEventListener('submit', function (e) {
   e.preventDefault();
@@ -50,27 +19,16 @@ document.getElementById('formLogin').addEventListener('submit', function (e) {
   alertaSucesso.style.display = 'none';
 
   setTimeout(function () {
-    let utilizadorEncontrado = null;
-    let redirecionarPara = 'index.html';
+    var utilizadorEncontrado = UTILIZADORES.find(function (u) { return u.email === email && u.senha === senha; });
 
-    if (tabActual === 'utilizador') {
-      utilizadorEncontrado = UTILIZADORES.find(function (u) { return u.email === email && u.senha === senha; });
-      redirecionarPara = 'index.html';
-    } else if (tabActual === 'agente') {
-      utilizadorEncontrado = AGENTES.find(function (a) { return a.email === email && a.senha === senha; });
-      if (utilizadorEncontrado) utilizadorEncontrado.role = 'agente';
-      redirecionarPara = 'agente/dashboard.html';
-    } else if (tabActual === 'admin') {
-      if (email === 'admin@acheidoc.ao' && senha === 'admin123') {
-        utilizadorEncontrado = { id: 99, nome: 'Administrador', email: email, role: 'admin' };
-        redirecionarPara = 'admin/dashboard.html';
-      }
-    }
+    // Bloquear tentativas de login institucional nesta página
+    var isAgente = AGENTES.find(function (a) { return a.email === email; });
+    var isAdmin = ADMIN.find(function (a) { return a.email === email; });
 
     if (utilizadorEncontrado) {
-      if (!utilizadorEncontrado.role) utilizadorEncontrado.role = 'utilizador';
-      Auth.login(utilizadorEncontrado);
-      alertaSucesso.textContent = '✅ Login realizado com sucesso! A redirecionar...';
+      var sessao = Object.assign({}, utilizadorEncontrado, { role: 'utilizador' });
+      Auth.login(sessao);
+      alertaSucesso.textContent = 'Login realizado com sucesso. A redirecionar...';
       alertaSucesso.style.display = 'block';
 
       // Verificar redirect param — apenas permitir caminhos relativos seguros (.html)
@@ -81,10 +39,15 @@ document.getElementById('formLogin').addEventListener('submit', function (e) {
         : null;
 
       setTimeout(function () {
-        window.location.href = safeRedirect || redirecionarPara;
+        window.location.href = safeRedirect || 'index.html';
       }, 1000);
+    } else if (isAgente || isAdmin) {
+      alertaErro.textContent = 'Use o portal específico no final desta página (Agente ou Admin).';
+      alertaErro.style.display = 'block';
+      btnEntrar.textContent = 'Entrar';
+      btnEntrar.disabled = false;
     } else {
-      alertaErro.textContent = '❌ Email ou senha incorrectos. Tente novamente.';
+      alertaErro.textContent = 'Email ou senha incorrectos. Tente novamente.';
       alertaErro.style.display = 'block';
       btnEntrar.textContent = 'Entrar';
       btnEntrar.disabled = false;
@@ -96,4 +59,5 @@ document.getElementById('formLogin').addEventListener('submit', function (e) {
 document.getElementById('btnTogglePassword').addEventListener('click', function () {
   const input = document.getElementById('inputSenha');
   input.type = input.type === 'password' ? 'text' : 'password';
+  this.textContent = input.type === 'password' ? 'Ver' : 'Ocultar';
 });

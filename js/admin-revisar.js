@@ -52,7 +52,7 @@
     btnAprovar.addEventListener('click', function () {
       if (confirm('Confirmar aprovação e publicação do documento ' + doc.id + '?')) {
         doc.status = 'PUBLICADO';
-        showSuccessMsg('✅ Documento ' + doc.id + ' aprovado e publicado!', 'success');
+        showSuccessMsg('Documento ' + doc.id + ' aprovado e publicado.', 'success');
         disableActions();
       }
     });
@@ -64,7 +64,7 @@
     btnRejeitar.addEventListener('click', function () {
       if (confirm('Confirmar rejeição do documento ' + doc.id + '?')) {
         doc.status = 'REJEITADO';
-        showSuccessMsg('❌ Documento ' + doc.id + ' rejeitado.', 'danger');
+        showSuccessMsg('Documento ' + doc.id + ' rejeitado.', 'danger');
         disableActions();
       }
     });
@@ -89,7 +89,7 @@
         alert('Por favor, escreva a observação de correcção.');
         return;
       }
-      showSuccessMsg('✏️ Correcção registada para o documento ' + doc.id, 'warning');
+      showSuccessMsg('Correcção registada para o documento ' + doc.id + '.', 'warning');
       if (corrigirSection) corrigirSection.classList.add('hidden');
     });
   }
@@ -111,7 +111,7 @@
 
   function showNotFound() {
     var c = document.getElementById('mainContent');
-    if (c) c.innerHTML = `<div class="empty-state"><div class="empty-icon">📄</div><h3>Documento não encontrado</h3><p><a href="dashboard.html" class="btn btn-primary mt-3">← Voltar ao Dashboard</a></p></div>`;
+    if (c) c.innerHTML = `<div class="empty-state"><div class="empty-icon">Sem registo</div><h3>Documento não encontrado</h3><p><a href="dashboard.html" class="btn btn-primary mt-3">← Voltar ao Dashboard</a></p></div>`;
   }
 
   function setEl(id, val) {

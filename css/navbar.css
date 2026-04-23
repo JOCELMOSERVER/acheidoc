@@ -22,14 +22,25 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 1.4rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  color: var(--primary);
+  color: #12305f;
   text-decoration: none;
+  letter-spacing: -0.02em;
 }
 
 .navbar-logo span.logo-icon {
-  font-size: 1.6rem;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: #12305f;
+  color: white;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
 }
 
 /* Links centrais */
@@ -54,8 +65,8 @@
 }
 
 .navbar-links a.active {
-  background: #DBEAFE;
-  color: var(--primary);
+  background: #E8EEF8;
+  color: #12305f;
   font-weight: 600;
 }
 
@@ -72,7 +83,7 @@
   align-items: center;
   gap: 0.4rem;
   padding: 8px 18px;
-  background: var(--primary);
+  background: #12305f;
   color: white;
   border: none;
   border-radius: 8px;
@@ -83,7 +94,7 @@
 }
 
 .btn-login:hover {
-  background: var(--primary-dark);
+  background: #0F2850;
 }
 
 .btn-login .arrow {
@@ -226,16 +237,159 @@
    Responsividade
    =========================== */
 
+/* Barra de pesquisa na navbar */
+.navbar-search {
+  flex: 1;
+  max-width: 480px;
+  margin: 0 1.5rem;
+}
+
+.navbar-search .search-bar {
+  box-shadow: none;
+  border-radius: 10px;
+}
+
+.navbar-search .search-bar input {
+  padding: 10px 14px;
+  font-size: 0.92rem;
+  border-color: var(--border);
+}
+
+.navbar-search .search-bar button {
+  padding: 10px 16px;
+  font-size: 0.92rem;
+}
+
+/* Utilizador logado na navbar */
+.nav-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: background 0.15s;
+  font-size: 0.9rem;
+}
+
+.nav-user-info:hover {
+  background: var(--bg-light);
+}
+
+.nav-user-avatar {
+  font-size: 1.2rem;
+}
+
+.nav-user-nome {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.nav-user-pontos {
+  font-size: 0.8rem;
+  color: var(--text-gray);
+}
+
+.nav-user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  border: 1px solid var(--border);
+  min-width: 180px;
+  overflow: hidden;
+  z-index: 200;
+}
+
+.nav-user-dropdown a {
+  display: block;
+  padding: 10px 16px;
+  color: var(--text-dark);
+  font-weight: 500;
+  transition: background 0.15s;
+}
+
+.nav-user-dropdown a:hover {
+  background: var(--bg-light);
+}
+
+/* Barra de pesquisa dentro do menu mobile */
+.navbar-mobile .mobile-search {
+  padding: 0.5rem 14px 0.75rem;
+}
+
+.navbar-mobile .mobile-search .search-bar {
+  box-shadow: none;
+  border-radius: 10px;
+}
+
+.navbar-mobile .mobile-search .search-bar input {
+  padding: 10px 14px;
+  font-size: 0.92rem;
+}
+
+.navbar-mobile .mobile-search .search-bar button {
+  padding: 10px 14px;
+  font-size: 0.9rem;
+}
+
+/* Grade Como Funciona */
+.como-funciona-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 1024px) {
+  .navbar-search {
+    max-width: 320px;
+    margin: 0 1rem;
+  }
+
+  .como-funciona-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
   .navbar-links {
     display: none;
   }
 
-  .btn-login {
+  .navbar-right {
+    display: none;
+  }
+
+  .navbar-search {
     display: none;
   }
 
   .navbar-toggle {
     display: flex;
+  }
+
+  .navbar-logo {
+    font-size: 1.2rem;
+  }
+
+  .navbar-logo span.logo-icon {
+    font-size: 1.4rem;
+  }
+
+  .como-funciona-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-inner {
+    padding: 0 0.75rem;
+  }
+
+  .como-funciona-grid {
+    grid-template-columns: 1fr;
   }
 }

@@ -14,29 +14,29 @@
 <!-- ══ NAVBAR AGENTE ══ -->
 <nav class="navbar">
   <div class="container navbar-inner">
-    <a href="../index.html" class="navbar-logo"><span class="logo-icon">📄</span>AcheiDoc</a>
+    <a href="../index.html" class="navbar-logo"><span class="logo-icon">AD</span>AcheiDoc</a>
     <div class="navbar-links">
       <a href="dashboard.html" class="active">Dashboard</a>
       <a href="validar.html">Validar Entrega</a>
       <a href="historico.html">Histórico</a>
     </div>
     <div class="navbar-right">
-      <span id="agentePontosBadge" style="background:#FEF3C7; color:#92400E; padding:6px 14px; border-radius:20px; font-weight:700; font-size:0.9rem;">⭐ <span id="agentePontos">0</span></span>
+      <span id="agentePontosBadge" style="background:#FEF3C7; color:#92400E; padding:6px 14px; border-radius:20px; font-weight:700; font-size:0.9rem;"><span id="agentePontos">0</span> pts</span>
       <button id="btnLogout" class="btn btn-outline" style="font-size:0.85rem; padding:8px 14px;">Sair</button>
     </div>
     <div class="navbar-toggle" id="navbarToggle"><span></span><span></span><span></span></div>
   </div>
   <div class="navbar-mobile" id="navbarMobile">
-    <a href="dashboard.html" class="active">🏠 Dashboard</a>
-    <a href="validar.html">✅ Validar Entrega</a>
-    <a href="historico.html">📊 Histórico</a>
+    <a href="dashboard.html" class="active">Dashboard</a>
+    <a href="validar.html">Validar entrega</a>
+    <a href="historico.html">Histórico</a>
   </div>
 </nav>
 
 <!-- Cabeçalho -->
 <div class="page-header">
   <div class="container">
-    <h1>Bem-vindo, <span id="agenteNome">Agente</span> 👋</h1>
+    <h1>Bem-vindo, <span id="agenteNome">Agente</span></h1>
     <p>Ponto de Entrega: <strong id="agentePonto">—</strong></p>
   </div>
 </div>
@@ -47,31 +47,41 @@
     <!-- Cards de resumo -->
     <div class="grid-3 mb-4">
       <div class="summary-card">
-        <div class="summary-icon blue">📦</div>
+        <div class="summary-icon blue">Rec</div>
         <div class="summary-info">
-          <h3 id="totalDocs">—</h3>
-          <p>Documentos no Ponto</p>
+          <h3 id="totalReceber">—</h3>
+          <p>Por receber no ponto</p>
         </div>
       </div>
       <div class="summary-card">
-        <div class="summary-icon green">⭐</div>
+        <div class="summary-icon green">Disp</div>
+        <div class="summary-info">
+          <h3 id="totalDocs">—</h3>
+          <p>Prontos para entrega</p>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon yellow">Total</div>
         <div class="summary-info">
           <h3 id="agentePontosMes">—</h3>
           <p>Pontos este mês</p>
         </div>
       </div>
-      <div class="summary-card">
-        <div class="summary-icon yellow">🏆</div>
-        <div class="summary-info">
-          <h3 id="agenteTotal">—</h3>
-          <p>Total de pontos</p>
-        </div>
-      </div>
+    </div>
+
+    <div class="card mb-4" style="background:#F8FAFC; border-left:4px solid var(--primary);">
+      <h3 style="font-size:1.05rem; font-weight:700; margin-bottom:0.75rem;">Recepção no ponto de entrega</h3>
+      <p style="color:var(--text-gray); margin-bottom:0.75rem;">
+        O agente também recebe o documento físico da pessoa que o encontrou. Para isso, deve pedir a chave de entrega apresentada pelo encontrador.
+      </p>
+      <p style="color:var(--text-gray); font-size:0.92rem;">
+        Depois da confirmação, o documento passa a ficar disponível no ponto para futura entrega ao dono.
+      </p>
     </div>
 
     <!-- Pesquisar documento -->
     <div class="card mb-4">
-      <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:1rem;">🔍 Pesquisar Documento</h3>
+      <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:1rem;">Pesquisar documento</h3>
       <div style="display:flex; gap:0.75rem;">
         <input type="text" id="searchDoc" class="form-input" placeholder="Pesquisar por ID ou nome..." style="flex:1;">
         <button id="btnSearchDoc" class="btn btn-primary">Pesquisar</button>
@@ -79,9 +89,34 @@
       <div id="searchResult" class="hidden" style="margin-top:1rem;"></div>
     </div>
 
+    <!-- Documentos por receber -->
+    <div class="card mb-4">
+      <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:0.35rem;">Receber do encontrador</h3>
+      <p style="color:var(--text-gray); margin-bottom:1rem;">Documentos publicados e ainda não entregues fisicamente no ponto.</p>
+      <div class="table-wrapper" style="box-shadow:none;">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Tipo</th>
+              <th>Nome Parcial</th>
+              <th>Encontrador</th>
+              <th>Status</th>
+              <th>Data</th>
+              <th>Acção</th>
+            </tr>
+          </thead>
+          <tbody id="docsReceberBody">
+            <!-- Preenchido pelo JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- Documentos no ponto -->
     <div class="card">
-      <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:1rem;">📋 Documentos no Ponto</h3>
+      <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:0.35rem;">Entregar ao dono</h3>
+      <p style="color:var(--text-gray); margin-bottom:1rem;">Documentos já recebidos pelo agente e prontos para validação com o código do proprietário.</p>
       <div class="table-wrapper" style="box-shadow:none;">
         <table>
           <thead>
@@ -116,15 +151,20 @@
 <script src="../js/navbar.js"></script>
 <script src="../js/agente-dashboard.js"></script>
 <script>
-  // Contar documentos no ponto
+  // Contagens rápidas do dashboard
   (function () {
     var agenteLogado = JSON.parse(sessionStorage.getItem('agenteLogado') || 'null');
     if (!agenteLogado) return;
-    var count = DOCUMENTOS.filter(function (d) {
-      return d.pontoEntregaId === agenteLogado.pontoId && d.status !== 'ENTREGUE';
+    var countReceber = DOCUMENTOS.filter(function (d) {
+      return d.pontoEntregaId === agenteLogado.pontoId && d.status === 'PUBLICADO';
     }).length;
-    var el = document.getElementById('totalDocs');
-    if (el) el.textContent = count;
+    var countEntregar = DOCUMENTOS.filter(function (d) {
+      return d.pontoEntregaId === agenteLogado.pontoId && (d.status === 'DISPONIVEL_LEVANTAMENTO' || d.status === 'AGUARDANDO_ENTREGA');
+    }).length;
+    var receberEl = document.getElementById('totalReceber');
+    var entregarEl = document.getElementById('totalDocs');
+    if (receberEl) receberEl.textContent = countReceber;
+    if (entregarEl) entregarEl.textContent = countEntregar;
   })();
 </script>
 </body>

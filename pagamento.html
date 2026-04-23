@@ -14,7 +14,7 @@
 <!-- ══ NAVBAR ══ -->
 <nav class="navbar">
   <div class="container navbar-inner">
-    <a href="index.html" class="navbar-logo"><span class="logo-icon">📄</span>AcheiDoc</a>
+    <a href="index.html" class="navbar-logo"><span class="logo-icon">AD</span>AcheiDoc</a>
     <div class="navbar-links">
       <a href="index.html">Home</a>
       <a href="buscar.html">Buscar Documento</a>
@@ -30,18 +30,18 @@
     <div class="navbar-toggle" id="navbarToggle"><span></span><span></span><span></span></div>
   </div>
   <div class="navbar-mobile" id="navbarMobile">
-    <a href="index.html">🏠 Home</a>
-    <a href="buscar.html">🔍 Buscar Documento</a>
-    <a href="publicar.html">📤 Publicar Achado</a>
+    <a href="index.html">Home</a>
+    <a href="buscar.html">Buscar Documento</a>
+    <a href="publicar.html">Publicar Achado</a>
     <div class="mobile-divider"></div>
-    <a href="agente/login.html">🏪 Sou Agente</a>
-    <a href="admin/login.html">🛡️ Sou Admin</a>
+    <a href="agente/login.html">Agente</a>
+    <a href="admin/login.html">Admin</a>
   </div>
 </nav>
 
 <div class="page-header">
   <div class="container">
-    <h1>💳 Pagamento da Taxa de Resgate</h1>
+    <h1>Pagamento da taxa de resgate</h1>
     <p>Pague a taxa para obter o código de resgate e os dados completos</p>
   </div>
 </div>
@@ -70,12 +70,12 @@
         <h3 style="margin-bottom:1rem;">Escolha o método de pagamento</h3>
         <div class="payment-methods">
           <button class="payment-method-btn multicaixa" data-method="multicaixa">
-            <span class="pm-icon">💳</span>
+            <span class="pm-icon">MC</span>
             <span class="pm-name">Multicaixa Express</span>
             <span class="pm-desc">Pagamento instantâneo</span>
           </button>
           <button class="payment-method-btn unitel" data-method="unitel">
-            <span class="pm-icon">📱</span>
+            <span class="pm-icon">UM</span>
             <span class="pm-name">Unitel Money</span>
             <span class="pm-desc">Transferência móvel</span>
           </button>
@@ -90,14 +90,13 @@
       </div>
 
       <button id="btnConfirmar" class="btn btn-success btn-lg btn-full">
-        ✅ Confirmar Pagamento
+        Confirmar Pagamento
       </button>
     </div>
 
     <!-- Secção de sucesso -->
     <div id="successSection" class="hidden">
       <div class="rescue-code-card">
-        <div style="font-size:3rem; margin-bottom:0.5rem;">✅</div>
         <h2 style="font-size:1.5rem; font-weight:800; color: var(--success); margin-bottom:0.5rem;">
           Pagamento confirmado!
         </h2>
@@ -109,19 +108,17 @@
           Apresente este código no ponto de entrega juntamente com um documento de identificação.
         </p>
 
-        <button id="btnCopiarCodigo" class="btn btn-outline mb-2" style="width:100%;">📋 Copiar Código</button>
+        <button id="btnCopiarCodigo" class="btn btn-outline mb-2" style="width:100%;">Copiar Código</button>
 
         <div class="card" style="text-align:left; margin: 1rem 0; border-left: 4px solid var(--primary);">
-          <h4 style="font-size:0.9rem; color:var(--text-gray); margin-bottom:0.5rem;">📍 Ponto de Entrega</h4>
+          <h4 style="font-size:0.9rem; color:var(--text-gray); margin-bottom:0.5rem;">Ponto de entrega</h4>
           <p style="font-weight:700;" id="successPontoNome">—</p>
           <p style="font-size:0.9rem;" id="successPontoEndereco">—</p>
           <p style="font-size:0.85rem; color:var(--text-gray);" id="successPontoHorario">—</p>
           <p style="font-size:0.85rem; color:var(--text-gray);" id="successPontoTel">—</p>
         </div>
 
-        <button id="btnInstrucoes" class="btn btn-primary btn-full">
-          📍 Ver Instruções de Levantamento →
-        </button>
+        <button id="btnInstrucoes" class="btn btn-primary btn-full">Ver instruções de levantamento</button>
       </div>
     </div>
 

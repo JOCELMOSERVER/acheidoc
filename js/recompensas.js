@@ -76,7 +76,7 @@
       }
 
       if (modalOverlay) modalOverlay.classList.remove('active');
-      alert('✅ Resgate solicitado! ' + beneficio + '. Será processado em 24h.');
+      alert('Resgate solicitado: ' + beneficio + '. O pedido será processado em até 24 horas.');
     });
   }
 })();

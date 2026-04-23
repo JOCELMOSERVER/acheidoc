@@ -7,14 +7,14 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/components.css">
 </head>
-<body class="auth-body">
+<body class="auth-body auth-login-split">
 
   <div class="auth-container">
     <div class="auth-card">
 
       <!-- Logo -->
       <div class="auth-logo">
-        <span class="auth-logo-icon">📄</span>
+        <span class="auth-logo-icon">AD</span>
         <span class="auth-logo-text">AcheiDoc</span>
       </div>
 
@@ -28,19 +28,19 @@
       <!-- Formulário -->
       <form id="formCadastro">
         <div class="form-group">
-          <label class="form-label">👤 Nome Completo</label>
+          <label class="form-label">Nome Completo</label>
           <input type="text" id="inputNome" class="form-input" placeholder="O seu nome completo" required>
         </div>
         <div class="form-group">
-          <label class="form-label">📧 Email</label>
+          <label class="form-label">Email</label>
           <input type="email" id="inputEmail" class="form-input" placeholder="o-seu-email@gmail.com" required>
         </div>
         <div class="form-group">
-          <label class="form-label">📞 Telefone</label>
+          <label class="form-label">Telefone</label>
           <input type="tel" id="inputTelefone" class="form-input" placeholder="+244 9XX XXX XXX" required>
         </div>
         <div class="form-group">
-          <label class="form-label">📍 Município</label>
+          <label class="form-label">Município</label>
           <select id="inputMunicipio" class="form-input" required>
             <option value="">Seleccione o município</option>
             <option value="Luanda">Luanda</option>
@@ -53,15 +53,15 @@
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">🔒 Senha</label>
+          <label class="form-label">Senha</label>
           <div class="input-password-wrap">
             <input type="password" id="inputSenha" class="form-input" placeholder="Mínimo 4 caracteres" minlength="4" required>
-            <button type="button" class="btn-toggle-password" id="btnTogglePasswordCadastro">👁️</button>
+            <button type="button" class="btn-toggle-password" id="btnTogglePasswordCadastro">Ver</button>
           </div>
           <div id="forcaSenha" class="forca-senha"></div>
         </div>
         <div class="form-group">
-          <label class="form-label">🔒 Confirmar Senha</label>
+          <label class="form-label">Confirmar Senha</label>
           <div class="input-password-wrap">
             <input type="password" id="inputConfirmarSenha" class="form-input" placeholder="Repita a senha" required>
             <span id="iconConfirmar" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:1rem;"></span>
@@ -80,11 +80,10 @@
 
       <!-- Card de sucesso (oculto inicialmente) -->
       <div id="sucessoCadastro" style="display:none" class="auth-sucesso">
-        <div class="auth-sucesso-icon">🎉</div>
         <h2>Conta criada com sucesso!</h2>
         <p>Bem-vindo(a), <strong id="nomeBoasVindas"></strong>!</p>
         <p class="auth-subtitle">A sua conta foi criada. Pode agora publicar achados e buscar documentos.</p>
-        <a href="index.html" class="btn btn-primary btn-full btn-lg">Ir para o Início →</a>
+        <a href="index.html" class="btn btn-primary btn-full btn-lg">Ir para o início</a>
       </div>
 
       <!-- Divisor -->
