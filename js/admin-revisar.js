@@ -11,13 +11,14 @@
 
   var params = new URLSearchParams(window.location.search);
   var docId = params.get('id');
+  var documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
 
-  if (!docId || typeof DOCUMENTOS === 'undefined') {
+  if (!docId || !Array.isArray(documentos)) {
     showNotFound();
     return;
   }
 
-  var doc = DOCUMENTOS.find(function (d) { return d.id === docId; });
+  var doc = documentos.find(function (d) { return d.id === docId; });
   if (!doc) {
     showNotFound();
     return;
@@ -51,7 +52,12 @@
   if (btnAprovar) {
     btnAprovar.addEventListener('click', function () {
       if (confirm('Confirmar aprovação e publicação do documento ' + doc.id + '?')) {
-        doc.status = 'PUBLICADO';
+        doc = updateDocumentoById(doc.id, {
+          status: 'PUBLICADO',
+          observacaoCorrecao: '',
+          revistoPor: adminLogado.nome,
+          dataRevisao: new Date().toISOString().split('T')[0]
+        }) || doc;
         showSuccessMsg('Documento ' + doc.id + ' aprovado e publicado.', 'success');
         disableActions();
       }
@@ -63,7 +69,11 @@
   if (btnRejeitar) {
     btnRejeitar.addEventListener('click', function () {
       if (confirm('Confirmar rejeição do documento ' + doc.id + '?')) {
-        doc.status = 'REJEITADO';
+        doc = updateDocumentoById(doc.id, {
+          status: 'REJEITADO',
+          revistoPor: adminLogado.nome,
+          dataRevisao: new Date().toISOString().split('T')[0]
+        }) || doc;
         showSuccessMsg('Documento ' + doc.id + ' rejeitado.', 'danger');
         disableActions();
       }
@@ -89,8 +99,15 @@
         alert('Por favor, escreva a observação de correcção.');
         return;
       }
+      doc = updateDocumentoById(doc.id, {
+        status: 'CORRECAO_SOLICITADA',
+        observacaoCorrecao: text,
+        revistoPor: adminLogado.nome,
+        dataRevisao: new Date().toISOString().split('T')[0]
+      }) || doc;
       showSuccessMsg('Correcção registada para o documento ' + doc.id + '.', 'warning');
       if (corrigirSection) corrigirSection.classList.add('hidden');
+      disableActions();
     });
   }
 

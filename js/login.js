@@ -19,13 +19,40 @@ document.getElementById('formLogin').addEventListener('submit', function (e) {
   alertaSucesso.style.display = 'none';
 
   setTimeout(function () {
-    var utilizadorEncontrado = UTILIZADORES.find(function (u) { return u.email === email && u.senha === senha; });
+    var utilizadoresGeridos = [];
+    try {
+      var fromStorage = JSON.parse(localStorage.getItem('acheidoc_admin_utilizadores') || 'null');
+      utilizadoresGeridos = Array.isArray(fromStorage) && fromStorage.length ? fromStorage : UTILIZADORES;
+    } catch (err) {
+      utilizadoresGeridos = UTILIZADORES;
+    }
+
+    var pwdOverrides = {};
+    try {
+      pwdOverrides = JSON.parse(localStorage.getItem('acheidoc_password_overrides_utilizadores') || '{}') || {};
+    } catch (err) {
+      pwdOverrides = {};
+    }
+
+    var utilizadorEncontrado = utilizadoresGeridos.find(function (u) {
+      if (u.email !== email) return false;
+      var senhaReal = pwdOverrides[String(u.email || '').toLowerCase()] || u.senha;
+      return senhaReal === senha;
+    });
 
     // Bloquear tentativas de login institucional nesta página
     var isAgente = AGENTES.find(function (a) { return a.email === email; });
     var isAdmin = ADMIN.find(function (a) { return a.email === email; });
 
     if (utilizadorEncontrado) {
+      if (utilizadorEncontrado.status === 'BLOQUEADO') {
+        alertaErro.textContent = 'A sua conta está bloqueada. Contacte o suporte da plataforma.';
+        alertaErro.style.display = 'block';
+        btnEntrar.textContent = 'Entrar';
+        btnEntrar.disabled = false;
+        return;
+      }
+
       var sessao = Object.assign({}, utilizadorEncontrado, { role: 'utilizador' });
       Auth.login(sessao);
       alertaSucesso.textContent = 'Login realizado com sucesso. A redirecionar...';

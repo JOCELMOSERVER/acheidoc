@@ -36,13 +36,14 @@
   }
 
   function applyFilters() {
-    if (typeof DOCUMENTOS === 'undefined') return;
+    var documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
+    if (!Array.isArray(documentos)) return;
 
     var text = (searchInput ? searchInput.value.trim().toLowerCase() : '');
     var tipo = (tipoSelect ? tipoSelect.value : '');
     var local = (localSelect ? localSelect.value : '');
 
-    var filtered = DOCUMENTOS.filter(function (d) {
+    var filtered = documentos.filter(function (d) {
       var matchText = !text ||
         d.nomeParcial.toLowerCase().includes(text) ||
         d.tipo.toLowerCase().includes(text) ||

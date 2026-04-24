@@ -2,13 +2,39 @@
    AcheiDoc — Dados Simulados
    =========================== */
 
+function createDocMockImage(typeLabel, toneA, toneB) {
+  var safeLabel = String(typeLabel || 'Documento').replace(/[&<>]/g, '');
+  var svg = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 520'>" +
+    "<defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>" +
+    "<stop offset='0%' stop-color='" + toneA + "'/>" +
+    "<stop offset='100%' stop-color='" + toneB + "'/>" +
+    "</linearGradient></defs>" +
+    "<rect width='800' height='520' rx='28' fill='url(%23g)'/>" +
+    "<rect x='36' y='36' width='728' height='448' rx='24' fill='rgba(255,255,255,0.88)'/>" +
+    "<rect x='72' y='88' width='196' height='236' rx='18' fill='rgba(18,48,95,0.12)'/>" +
+    "<rect x='300' y='102' width='264' height='22' rx='11' fill='rgba(18,48,95,0.18)'/>" +
+    "<rect x='300' y='146' width='344' height='16' rx='8' fill='rgba(18,48,95,0.12)'/>" +
+    "<rect x='300' y='184' width='304' height='16' rx='8' fill='rgba(18,48,95,0.12)'/>" +
+    "<rect x='72' y='360' width='572' height='18' rx='9' fill='rgba(18,48,95,0.1)'/>" +
+    "<rect x='72' y='396' width='412' height='18' rx='9' fill='rgba(18,48,95,0.1)'/>" +
+    "<text x='300' y='286' font-size='42' font-family='Arial, sans-serif' font-weight='700' fill='%2312305f'>" + safeLabel + "</text>" +
+    "<text x='404' y='288' transform='rotate(-24 404 288)' text-anchor='middle' font-size='62' font-family='Arial, sans-serif' font-weight='700' fill='rgba(18,48,95,0.12)'>ACHEIDOC</text>" +
+    "</svg>";
+  return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+}
+
+var STORAGE_KEYS = {
+  documentos: 'acheidoc_documentos',
+  pagamentos: 'acheidoc_pagamentos'
+};
+
 const DOCUMENTOS = [
   {
     id: 'DOC-2026-000001',
     tipo: 'Bilhete de Identidade',
     nomeCompleto: 'Carlos Alberto Mendes Ferreira',
     nomeParcial: 'Carlos A*** F*****',
-    foto: 'https://via.placeholder.com/300x200?text=BI+%5BMarca+D%27Agua%5D',
+    foto: createDocMockImage('Bilhete de Identidade', '#dbeafe', '#bfdbfe'),
     localEncontrado: 'Largo do Kinaxixi, Luanda',
     localParcial: 'Largo do ***, Luanda',
     dataCriacao: '2026-04-20',
@@ -24,7 +50,7 @@ const DOCUMENTOS = [
     tipo: 'Carta de Condução',
     nomeCompleto: 'Maria Isabel Neto Cardoso',
     nomeParcial: 'Maria I*** C*****',
-    foto: 'https://via.placeholder.com/300x200?text=CC+%5BMarca+D%27Agua%5D',
+    foto: createDocMockImage('Carta de Conducao', '#fde68a', '#f59e0b'),
     localEncontrado: 'Av. 4 de Fevereiro, Luanda',
     localParcial: 'Av. *** de Fevereiro, Luanda',
     dataCriacao: '2026-04-21',
@@ -40,7 +66,7 @@ const DOCUMENTOS = [
     tipo: 'Passaporte',
     nomeCompleto: 'João Paulo Silva Domingos',
     nomeParcial: 'João P*** D*****',
-    foto: 'https://via.placeholder.com/300x200?text=Passaporte+%5BMarca+D%27Agua%5D',
+    foto: createDocMockImage('Passaporte', '#fecaca', '#f97316'),
     localEncontrado: 'Aeroporto Internacional 4 de Fevereiro',
     localParcial: 'Aeroporto ***, Luanda',
     dataCriacao: '2026-04-19',
@@ -56,7 +82,7 @@ const DOCUMENTOS = [
     tipo: 'Cartão Bancário',
     nomeCompleto: 'Ana Beatriz Lopes Teixeira',
     nomeParcial: 'Ana B*** T*****',
-    foto: 'https://via.placeholder.com/300x200?text=Cartao+%5BMarca+D%27Agua%5D',
+    foto: createDocMockImage('Cartao Bancario', '#ddd6fe', '#a78bfa'),
     localEncontrado: 'Shopping Belas, Luanda',
     localParcial: 'Shopping ***, Luanda',
     dataCriacao: '2026-04-22',
@@ -72,7 +98,7 @@ const DOCUMENTOS = [
     tipo: 'Bilhete de Identidade',
     nomeCompleto: 'Pedro António Gomes Nkosi',
     nomeParcial: 'Pedro A*** N****',
-    foto: 'https://via.placeholder.com/300x200?text=BI+%5BMarca+D%27Agua%5D',
+    foto: createDocMockImage('Bilhete de Identidade', '#dcfce7', '#86efac'),
     localEncontrado: 'Mercado do Rocha Pinto, Viana',
     localParcial: 'Mercado ***, Viana',
     dataCriacao: '2026-04-18',
@@ -113,8 +139,26 @@ const PONTOS_ENTREGA = [
 ];
 
 const AGENTES = [
-  { id: 1, nome: 'Manuel Sebastião', email: 'agente@acheidoc.ao', senha: '1234', pontoId: 1, pontos: 340 },
-  { id: 2, nome: 'Filomena Dias', email: 'filomena@acheidoc.ao', senha: '1234', pontoId: 2, pontos: 210 }
+  {
+    id: 1,
+    nome: 'Manuel Sebastião',
+    email: 'agente@acheidoc.ao',
+    senha: '1234',
+    pontoId: 1,
+    pontos: 340,
+    status: 'ATIVO',
+    ultimaActividade: '2026-04-24'
+  },
+  {
+    id: 2,
+    nome: 'Filomena Dias',
+    email: 'filomena@acheidoc.ao',
+    senha: '1234',
+    pontoId: 2,
+    pontos: 210,
+    status: 'ATIVO',
+    ultimaActividade: '2026-04-23'
+  }
 ];
 
 const ADMIN = [
@@ -223,6 +267,7 @@ const UTILIZADORES = [
     telefone: '+244 923 111 222',
     municipio: 'Luanda',
     dataCadastro: '2026-01-15',
+    status: 'ATIVO',
     pontos: 120,
     documentosPublicados: ['DOC-2026-000001'],
     documentosResgatados: []
@@ -235,6 +280,7 @@ const UTILIZADORES = [
     telefone: '+244 912 333 444',
     municipio: 'Viana',
     dataCadastro: '2026-02-20',
+    status: 'ATIVO',
     pontos: 60,
     documentosPublicados: [],
     documentosResgatados: ['DOC-2026-000002']
@@ -246,6 +292,7 @@ const UTILIZADORES = [
 function getStatusLabel(status) {
   const map = {
     'PENDENTE': 'Pendente',
+    'CORRECAO_SOLICITADA': 'Correcao Solicitada',
     'PUBLICADO': 'Publicado',
     'AGUARDANDO_ENTREGA': 'Aguardando Entrega',
     'DISPONIVEL_LEVANTAMENTO': 'Disponível p/ Levantamento',
@@ -258,6 +305,7 @@ function getStatusLabel(status) {
 function getStatusBadgeClass(status) {
   const map = {
     'PENDENTE': 'badge-pendente',
+    'CORRECAO_SOLICITADA': 'badge-aguardando',
     'PUBLICADO': 'badge-publicado',
     'AGUARDANDO_ENTREGA': 'badge-aguardando',
     'DISPONIVEL_LEVANTAMENTO': 'badge-disponivel',
@@ -305,4 +353,77 @@ function buildDocCard(doc, basePath) {
       </div>
     </div>
   `;
+}
+
+function cloneData(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function getStoredCollection(storageKey, fallbackData) {
+  var fromStorage = null;
+
+  try {
+    fromStorage = JSON.parse(localStorage.getItem(storageKey) || 'null');
+  } catch (error) {
+    fromStorage = null;
+  }
+
+  if (Array.isArray(fromStorage) && fromStorage.length) {
+    return fromStorage;
+  }
+
+  var seeded = cloneData(fallbackData);
+  try {
+    localStorage.setItem(storageKey, JSON.stringify(seeded));
+  } catch (error) {
+    return cloneData(fallbackData);
+  }
+
+  return seeded;
+}
+
+function saveStoredCollection(storageKey, data) {
+  localStorage.setItem(storageKey, JSON.stringify(data));
+  return data;
+}
+
+function getDocumentosData() {
+  return getStoredCollection(STORAGE_KEYS.documentos, DOCUMENTOS);
+}
+
+function saveDocumentosData(documentos) {
+  return saveStoredCollection(STORAGE_KEYS.documentos, documentos);
+}
+
+function getPagamentosData() {
+  return getStoredCollection(STORAGE_KEYS.pagamentos, PAGAMENTOS);
+}
+
+function savePagamentosData(pagamentos) {
+  return saveStoredCollection(STORAGE_KEYS.pagamentos, pagamentos);
+}
+
+function updateDocumentoById(docId, patch) {
+  var documentos = getDocumentosData().map(function (doc) {
+    if (doc.id !== docId) return doc;
+    return Object.assign({}, doc, patch);
+  });
+  saveDocumentosData(documentos);
+  return documentos.find(function (doc) { return doc.id === docId; }) || null;
+}
+
+function upsertPagamentoRecord(record) {
+  var pagamentos = getPagamentosData();
+  var existingIndex = pagamentos.findIndex(function (item) {
+    return item.id === record.id || item.docId === record.docId;
+  });
+
+  if (existingIndex >= 0) {
+    pagamentos[existingIndex] = Object.assign({}, pagamentos[existingIndex], record);
+  } else {
+    pagamentos.unshift(record);
+  }
+
+  savePagamentosData(pagamentos);
+  return record;
 }

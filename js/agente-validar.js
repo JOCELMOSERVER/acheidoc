@@ -53,9 +53,10 @@
 
   var docValidado = null;
   var docRecebido = null;
+  var documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
 
-  if (docIdParam && typeof DOCUMENTOS !== 'undefined') {
-    var docSelecionado = DOCUMENTOS.find(function (d) { return d.id === docIdParam; }) || null;
+  if (docIdParam && Array.isArray(documentos)) {
+    var docSelecionado = documentos.find(function (d) { return d.id === docIdParam; }) || null;
     if (docSelecionado && docResumoCard && docResumoInfo) {
       docResumoCard.classList.remove('hidden');
       docResumoInfo.innerHTML = `
@@ -86,7 +87,7 @@
       if (receberErrorMsg) receberErrorMsg.classList.add('hidden');
       if (receberChecklistSection) receberChecklistSection.classList.add('hidden');
 
-      if (typeof CHAVES_ENTREGA === 'undefined' || typeof DOCUMENTOS === 'undefined') return;
+      if (typeof CHAVES_ENTREGA === 'undefined' || !Array.isArray(documentos)) return;
 
       var docIdEncontrado = null;
       Object.keys(CHAVES_ENTREGA).forEach(function (key) {
@@ -100,7 +101,7 @@
         return;
       }
 
-      docRecebido = DOCUMENTOS.find(function (d) { return d.id === docIdEncontrado; }) || null;
+      docRecebido = documentos.find(function (d) { return d.id === docIdEncontrado; }) || null;
       if (!docRecebido) {
         showReceiveError('Documento não encontrado para a chave informada.');
         return;
@@ -138,7 +139,7 @@
         return;
       }
 
-      docValidado = DOCUMENTOS ? DOCUMENTOS.find(function (d) { return d.id === docIdEncontrado; }) : null;
+      docValidado = Array.isArray(documentos) ? documentos.find(function (d) { return d.id === docIdEncontrado; }) : null;
 
       // Animar checklist
       if (checklistSection) checklistSection.classList.remove('hidden');
@@ -198,7 +199,9 @@
       btnConfirmarRecepcao.innerHTML = '<span class="spinner"></span> A registar...';
 
       setTimeout(function () {
-        docRecebido.status = 'DISPONIVEL_LEVANTAMENTO';
+        docRecebido = updateDocumentoById(docRecebido.id, {
+          status: 'DISPONIVEL_LEVANTAMENTO'
+        }) || docRecebido;
         if (receberChecklistSection) receberChecklistSection.classList.add('hidden');
         if (receberSuccessSection) receberSuccessSection.classList.remove('hidden');
         if (receberSuccessInfo) {
@@ -232,7 +235,11 @@
       btnConfirmar.innerHTML = '<span class="spinner"></span> A registar...';
 
       setTimeout(function () {
-        if (docValidado) docValidado.status = 'ENTREGUE';
+        if (docValidado) {
+          docValidado = updateDocumentoById(docValidado.id, {
+            status: 'ENTREGUE'
+          }) || docValidado;
+        }
         if (confirmSection) confirmSection.classList.add('hidden');
         if (checklistSection) checklistSection.classList.add('hidden');
         if (successSection) successSection.classList.remove('hidden');

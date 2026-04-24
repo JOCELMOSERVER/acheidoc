@@ -12,6 +12,7 @@
 
   // Cabeçalho
   setEl('agenteNome', agenteLogado.nome);
+  var documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
 
   if (typeof PONTOS_ENTREGA !== 'undefined') {
     var ponto = PONTOS_ENTREGA.find(function (p) { return p.id === agenteLogado.pontoId; });
@@ -25,8 +26,8 @@
 
   // Documentos aguardando recepção física pelo agente
   var docsReceberBody = document.getElementById('docsReceberBody');
-  if (docsReceberBody && typeof DOCUMENTOS !== 'undefined') {
-    var docsReceber = DOCUMENTOS.filter(function (d) {
+  if (docsReceberBody && Array.isArray(documentos)) {
+    var docsReceber = documentos.filter(function (d) {
       return d.pontoEntregaId === agenteLogado.pontoId && d.status === 'PUBLICADO';
     });
 
@@ -52,8 +53,8 @@
 
   // Documentos no ponto prontos para entrega ao dono
   var tabelaBody = document.getElementById('docsTabelaBody');
-  if (tabelaBody && typeof DOCUMENTOS !== 'undefined') {
-    var docs = DOCUMENTOS.filter(function (d) {
+  if (tabelaBody && Array.isArray(documentos)) {
+    var docs = documentos.filter(function (d) {
       return d.pontoEntregaId === agenteLogado.pontoId &&
         (d.status === 'DISPONIVEL_LEVANTAMENTO' || d.status === 'AGUARDANDO_ENTREGA');
     });
@@ -87,7 +88,7 @@
       var q = searchInput.value.trim().toLowerCase();
       if (!q) return;
 
-      var found = DOCUMENTOS.find(function (d) {
+      var found = documentos.find(function (d) {
         return d.id.toLowerCase() === q ||
           d.nomeParcial.toLowerCase().includes(q) ||
           d.nomeCompleto.toLowerCase().includes(q);

@@ -35,10 +35,11 @@
 
   // ── Documentos recentes ──
   var recentGrid = document.getElementById('recentDocs');
-  if (recentGrid && typeof DOCUMENTOS !== 'undefined') {
-    var publicados = DOCUMENTOS.filter(function (d) { return d.status === 'PUBLICADO'; }).slice(0, 4);
+  var documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
+  if (recentGrid && Array.isArray(documentos)) {
+    var publicados = documentos.filter(function (d) { return d.status === 'PUBLICADO'; }).slice(0, 4);
     if (publicados.length === 0) {
-      publicados = DOCUMENTOS.slice(0, 4);
+      publicados = documentos.slice(0, 4);
     }
     recentGrid.innerHTML = publicados.map(function (d) { return buildDocCard(d, ''); }).join('');
   }

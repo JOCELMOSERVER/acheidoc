@@ -25,12 +25,34 @@
 
       if (typeof AGENTES === 'undefined') return;
 
-      var agente = AGENTES.find(function (a) {
-        return a.email === email && a.senha === senha;
+      var agentesGeridos = [];
+      try {
+        var fromStorage = JSON.parse(localStorage.getItem('acheidoc_admin_agentes') || 'null');
+        agentesGeridos = Array.isArray(fromStorage) && fromStorage.length ? fromStorage : AGENTES;
+      } catch (err) {
+        agentesGeridos = AGENTES;
+      }
+
+      var pwdOverrides = {};
+      try {
+        pwdOverrides = JSON.parse(localStorage.getItem('acheidoc_password_overrides_agentes') || '{}') || {};
+      } catch (err) {
+        pwdOverrides = {};
+      }
+
+      var agente = agentesGeridos.find(function (a) {
+        if (a.email !== email) return false;
+        var senhaReal = pwdOverrides[String(a.email || '').toLowerCase()] || a.senha;
+        return senhaReal === senha;
       });
 
       if (!agente) {
         if (errorMsg) { errorMsg.textContent = 'Email ou senha incorrectos. Tente novamente.'; errorMsg.classList.remove('hidden'); }
+        return;
+      }
+
+      if (agente.status === 'INATIVO') {
+        if (errorMsg) { errorMsg.textContent = 'A sua conta de agente está inactiva. Contacte o administrador.'; errorMsg.classList.remove('hidden'); }
         return;
       }
 

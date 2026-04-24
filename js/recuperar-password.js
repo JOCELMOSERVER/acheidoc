@@ -1,0 +1,103 @@
+/* ===========================
+   AcheiDoc — Recuperar Password (Utilizador)
+   =========================== */
+
+(function () {
+  var STORAGE_USERS = 'acheidoc_admin_utilizadores';
+  var STORAGE_PWD = 'acheidoc_password_overrides_utilizadores';
+
+  var form = document.getElementById('formRecuperar');
+  var alertErro = document.getElementById('alertErro');
+  var alertOk = document.getElementById('alertOk');
+
+  if (!form) return;
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    hideAlerts();
+
+    var validacao = validateIdentityAndPassword();
+    if (!validacao.ok) {
+      return showErro(validacao.msg);
+    }
+
+    var overrides = safeParse(localStorage.getItem(STORAGE_PWD)) || {};
+    overrides[validacao.email] = validacao.novaSenha;
+    localStorage.setItem(STORAGE_PWD, JSON.stringify(overrides));
+
+    showOk('Email enviado para ' + validacao.email + ' com a nova palavra-passe.');
+    form.reset();
+
+    setTimeout(function () {
+      window.location.href = 'login.html';
+    }, 1200);
+  });
+
+  function validateIdentityAndPassword() {
+    var email = val('inputEmail').toLowerCase();
+    var telefone = normalizePhone(val('inputTelefone'));
+    var novaSenha = val('inputNovaSenha');
+    var confirmar = val('inputConfirmarSenha');
+
+    if (!email || !telefone || !novaSenha || !confirmar) {
+      return { ok: false, msg: 'Preencha todos os campos.' };
+    }
+    if (novaSenha.length < 4) {
+      return { ok: false, msg: 'A nova palavra-passe deve ter pelo menos 4 caracteres.' };
+    }
+    if (novaSenha !== confirmar) {
+      return { ok: false, msg: 'A confirmação da palavra-passe não coincide.' };
+    }
+
+    var lista = getUsers();
+    var user = lista.find(function (u) {
+      return String(u.email || '').toLowerCase() === email
+        && normalizePhone(String(u.telefone || '')) === telefone;
+    });
+
+    if (!user) {
+      return { ok: false, msg: 'Não encontramos uma conta com esse email e telefone.' };
+    }
+
+    return { ok: true, email: email, novaSenha: novaSenha };
+  }
+
+  function getUsers() {
+    var fromAdmin = safeParse(localStorage.getItem(STORAGE_USERS));
+    if (Array.isArray(fromAdmin) && fromAdmin.length) return fromAdmin;
+    return Array.isArray(UTILIZADORES) ? UTILIZADORES : [];
+  }
+
+  function normalizePhone(v) {
+    return String(v || '').replace(/\s+/g, '').replace(/\-/g, '');
+  }
+
+  function val(id) {
+    var el = document.getElementById(id);
+    return el ? el.value.trim() : '';
+  }
+
+  function showErro(msg) {
+    if (alertErro) {
+      alertErro.textContent = msg;
+      alertErro.classList.remove('hidden');
+    }
+  }
+
+  function showOk(msg) {
+    if (alertOk) {
+      alertOk.textContent = msg;
+      alertOk.classList.remove('hidden');
+    }
+  }
+
+  function hideAlerts() {
+    if (alertErro) alertErro.classList.add('hidden');
+    if (alertOk) alertOk.classList.add('hidden');
+  }
+
+  function safeParse(raw) {
+    try { return raw ? JSON.parse(raw) : null; }
+    catch (e) { return null; }
+  }
+})();

@@ -13,7 +13,7 @@
   setEl('adminNome', adminLogado.nome);
 
   /* ── Dados ── */
-  var pagamentos = typeof PAGAMENTOS !== 'undefined' ? PAGAMENTOS.slice() : [];
+  var pagamentos = typeof getPagamentosData === 'function' ? getPagamentosData() : (typeof PAGAMENTOS !== 'undefined' ? PAGAMENTOS.slice() : []);
   var filtroAtual = 'TODOS';
 
   /* ── Resumo ── */
@@ -47,10 +47,10 @@
 
     tabelaBody.innerHTML = lista.map(function (p) {
       var badgeCls = p.status === 'PAGO'
-        ? 'badge-success'
+        ? 'badge-entregue'
         : p.status === 'PENDENTE'
-          ? 'badge-warning'
-          : 'badge-danger';
+          ? 'badge-aguardando'
+          : 'badge-rejeitado';
       var statusLabel = p.status === 'PAGO' ? 'Pago'
         : p.status === 'PENDENTE' ? 'Pendente' : 'Cancelado';
 
@@ -142,6 +142,9 @@
         if (p) {
           p.status = 'PAGO';
           p.dataPagamento = new Date().toISOString().split('T')[0];
+          if (typeof savePagamentosData === 'function') {
+            savePagamentosData(pagamentos);
+          }
         }
 
         /* Feedback no modal */

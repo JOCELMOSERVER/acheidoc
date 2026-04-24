@@ -25,8 +25,17 @@
 
       if (typeof ADMIN === 'undefined') return;
 
+      var pwdOverrides = {};
+      try {
+        pwdOverrides = JSON.parse(localStorage.getItem('acheidoc_password_overrides_admin') || '{}') || {};
+      } catch (err) {
+        pwdOverrides = {};
+      }
+
       var admin = ADMIN.find(function (a) {
-        return a.email === email && a.senha === senha;
+        if (a.email !== email) return false;
+        var senhaReal = pwdOverrides[String(a.email || '').toLowerCase()] || a.senha;
+        return senhaReal === senha;
       });
 
       if (!admin) {

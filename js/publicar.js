@@ -152,6 +152,30 @@
       setTimeout(function () {
         var id = 'DOC-2026-' + String(Math.floor(Math.random() * 999999)).padStart(6, '0');
         var ponto = getNearestPoint(formData.municipio);
+        var utilizador = typeof Auth !== 'undefined' && typeof Auth.getUser === 'function'
+          ? Auth.getUser()
+          : null;
+
+        if (typeof getDocumentosData === 'function' && typeof saveDocumentosData === 'function') {
+          var documentos = getDocumentosData();
+          documentos.unshift({
+            id: id,
+            tipo: formData.tipo,
+            nomeCompleto: formData.nome,
+            nomeParcial: mascaraNome(formData.nome),
+            foto: formData.fotoUrl || createDocMockImage(formData.tipo || 'Documento', '#dbeafe', '#bfdbfe'),
+            localEncontrado: formData.local + ', ' + formData.municipio,
+            localParcial: formData.local + ', ' + formData.municipio,
+            dataCriacao: new Date().toISOString().split('T')[0],
+            status: 'PENDENTE',
+            risco: 'MEDIO',
+            taxaKz: 500,
+            pontoEntregaId: ponto.id || 1,
+            encontradoPor: utilizador && utilizador.nome ? utilizador.nome : 'Utilizador AcheiDoc',
+            contactoEncontrador: utilizador && utilizador.telefone ? utilizador.telefone : '+244 000 000 000'
+          });
+          saveDocumentosData(documentos);
+        }
 
         setEl('recomendadoPontoNome', ponto.nome);
         setEl('recomendadoAgente', 'Agente responsável: ' + ponto.agente);

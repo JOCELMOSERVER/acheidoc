@@ -5,13 +5,14 @@
 (function () {
   var params = new URLSearchParams(window.location.search);
   var docId = params.get('id');
+  var documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
 
-  if (!docId || typeof DOCUMENTOS === 'undefined') {
+  if (!docId || !Array.isArray(documentos)) {
     showNotFound();
     return;
   }
 
-  var doc = DOCUMENTOS.find(function (d) { return d.id === docId; });
+  var doc = documentos.find(function (d) { return d.id === docId; });
   if (!doc) {
     showNotFound();
     return;

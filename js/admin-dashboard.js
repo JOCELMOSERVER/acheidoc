@@ -12,11 +12,12 @@
   setEl('adminNome', adminLogado.nome);
 
   var filtroAtual = 'TODOS';
+  var documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
 
   // Contadores por risco
   var contagemAlto = 0, contagemMedio = 0, contagemBaixo = 0, aprovados = 0;
-  if (typeof DOCUMENTOS !== 'undefined') {
-    DOCUMENTOS.forEach(function (d) {
+  if (Array.isArray(documentos)) {
+    documentos.forEach(function (d) {
       if (d.risco === 'ALTO') contagemAlto++;
       else if (d.risco === 'MEDIO') contagemMedio++;
       else if (d.risco === 'BAIXO') contagemBaixo++;
@@ -33,9 +34,9 @@
   var tabelaBody = document.getElementById('tabelaBody');
 
   function renderTabela(filtro) {
-    if (!tabelaBody || typeof DOCUMENTOS === 'undefined') return;
+    if (!tabelaBody || !Array.isArray(documentos)) return;
 
-    var docs = DOCUMENTOS.filter(function (d) {
+    var docs = documentos.filter(function (d) {
       if (filtro === 'TODOS') return true;
       return d.risco === filtro;
     });

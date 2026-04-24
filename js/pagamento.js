@@ -5,10 +5,15 @@
 (function () {
   var params = new URLSearchParams(window.location.search);
   var docId = params.get('id');
+  var documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
+  var pagamentos = typeof getPagamentosData === 'function' ? getPagamentosData() : PAGAMENTOS;
+  var utilizadorLogado = typeof Auth !== 'undefined' && typeof Auth.getUser === 'function'
+    ? Auth.getUser()
+    : null;
 
   var doc = null;
-  if (docId && typeof DOCUMENTOS !== 'undefined') {
-    doc = DOCUMENTOS.find(function (d) { return d.id === docId; });
+  if (docId && Array.isArray(documentos)) {
+    doc = documentos.find(function (d) { return d.id === docId; });
   }
 
   // Exibir valor da taxa
@@ -67,9 +72,44 @@
       btnConfirmar.innerHTML = '<span class="spinner"></span> A processar...';
 
       setTimeout(function () {
+        registarPagamento(phone);
         showSuccess();
       }, 2000);
     });
+  }
+
+  function registarPagamento(phone) {
+    if (!doc) return;
+
+    var existing = Array.isArray(pagamentos)
+      ? pagamentos.find(function (item) { return item.docId === doc.id; })
+      : null;
+    var now = new Date().toISOString().split('T')[0];
+    var record = {
+      id: existing ? existing.id : buildPagamentoId(),
+      docId: doc.id,
+      utilizador: utilizadorLogado && utilizadorLogado.nome ? utilizadorLogado.nome : 'Cliente AcheiDoc',
+      email: utilizadorLogado && utilizadorLogado.email ? utilizadorLogado.email : 'cliente@acheidoc.ao',
+      tipoDoc: doc.tipo,
+      valor: doc.taxaKz,
+      entidade: typeof PAYPAY_ENTIDADE !== 'undefined' ? PAYPAY_ENTIDADE : '00282',
+      referencia: existing && existing.referencia ? existing.referencia : buildReferencia(doc.id),
+      status: 'PAGO',
+      dataCriacao: existing && existing.dataCriacao ? existing.dataCriacao : now,
+      dataPagamento: now,
+      telefonePagamento: phone
+    };
+
+    upsertPagamentoRecord(record);
+  }
+
+  function buildPagamentoId() {
+    return 'PAG-' + Date.now();
+  }
+
+  function buildReferencia(docIdValue) {
+    var numeric = String(docIdValue || '').replace(/\D/g, '').slice(-9);
+    return numeric.replace(/(\d{3})(?=\d)/g, '$1 ').trim();
   }
 
   function showSuccess() {
