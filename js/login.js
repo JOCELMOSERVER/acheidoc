@@ -18,7 +18,35 @@ document.getElementById('formLogin').addEventListener('submit', function (e) {
   alertaErro.style.display = 'none';
   alertaSucesso.style.display = 'none';
 
-  setTimeout(function () {
+  setTimeout(async function () {
+    if (typeof Api !== 'undefined' && Api.auth && Api.auth.login) {
+      try {
+        var response = await Api.auth.login(email, senha);
+        var userApi = response && response.utilizador ? response.utilizador : null;
+        var tokenApi = response && response.token ? response.token : null;
+
+        if (userApi && tokenApi) {
+          var sessaoApi = Object.assign({}, userApi, { role: 'utilizador' });
+          Auth.login(sessaoApi, tokenApi);
+          alertaSucesso.textContent = 'Login realizado com sucesso. A redirecionar...';
+          alertaSucesso.style.display = 'block';
+
+          const params = new URLSearchParams(window.location.search);
+          const redirectParam = params.get('redirect');
+          const safeRedirect = (redirectParam && /^(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_-]+\.html$/.test(redirectParam))
+            ? redirectParam
+            : null;
+
+          setTimeout(function () {
+            window.location.href = safeRedirect || 'index.html';
+          }, 900);
+          return;
+        }
+      } catch (apiErr) {
+        // Fallback para modo mock/local quando a API estiver indisponível.
+      }
+    }
+
     var utilizadoresGeridos = [];
     try {
       var fromStorage = JSON.parse(localStorage.getItem('acheidoc_admin_utilizadores') || 'null');

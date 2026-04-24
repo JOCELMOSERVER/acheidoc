@@ -145,18 +145,37 @@
   var recomendadoTelefone = document.getElementById('recomendadoTelefone');
 
   if (btnPublicar) {
-    btnPublicar.addEventListener('click', function () {
+    btnPublicar.addEventListener('click', async function () {
       btnPublicar.disabled = true;
       btnPublicar.innerHTML = '<span class="spinner"></span> A publicar...';
 
-      setTimeout(function () {
+      setTimeout(async function () {
         var id = 'DOC-2026-' + String(Math.floor(Math.random() * 999999)).padStart(6, '0');
         var ponto = getNearestPoint(formData.municipio);
         var utilizador = typeof Auth !== 'undefined' && typeof Auth.getUser === 'function'
           ? Auth.getUser()
           : null;
 
-        if (typeof getDocumentosData === 'function' && typeof saveDocumentosData === 'function') {
+        if (typeof Api !== 'undefined' && Api.documentos && Api.documentos.create) {
+          try {
+            var response = await Api.documentos.create({
+              tipo: formData.tipo,
+              nome_proprietario: formData.nome,
+              morada: formData.local,
+              provincia: formData.municipio,
+              foto_url: formData.fotoUrl || null
+            });
+
+            if (response && response.documento && response.documento.id) {
+              id = response.documento.id;
+            }
+          } catch (apiErr) {
+            alert(apiErr && apiErr.message ? apiErr.message : 'Falha ao publicar no servidor.');
+            btnPublicar.disabled = false;
+            btnPublicar.textContent = 'Publicar Documento';
+            return;
+          }
+        } else if (typeof getDocumentosData === 'function' && typeof saveDocumentosData === 'function') {
           var documentos = getDocumentosData();
           documentos.unshift({
             id: id,

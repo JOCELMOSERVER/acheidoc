@@ -13,8 +13,28 @@
   setEl('adminNome', adminLogado.nome);
 
   /* ── Dados ── */
-  var pagamentos = typeof getPagamentosData === 'function' ? getPagamentosData() : (typeof PAGAMENTOS !== 'undefined' ? PAGAMENTOS.slice() : []);
+  var pagamentos = [];
   var filtroAtual = 'TODOS';
+
+  function normStatus(v) {
+    if (v === 'AGUARDANDO') return 'PENDENTE';
+    return v || 'PENDENTE';
+  }
+
+  function toLegacyPagamento(p) {
+    return {
+      id: p.id,
+      docId: p.doc_id || p.docId,
+      utilizador: p.utilizador_nome || p.utilizador || 'Cliente',
+      tipoDoc: p.tipo || p.tipoDoc || 'Documento',
+      entidade: p.entidade || '00282',
+      referencia: p.referencia || '—',
+      valor: Number(p.valor || 0),
+      status: normStatus(p.status),
+      dataCriacao: (p.criado_em || p.dataCriacao || '').slice(0, 10),
+      dataPagamento: (p.confirmado_em || p.dataPagamento || '').slice(0, 10)
+    };
+  }
 
   /* ── Resumo ── */
   function calcularResumo() {
@@ -136,15 +156,35 @@
       btnModalConfirmar.disabled = true;
       btnModalConfirmar.innerHTML = '<span class="spinner"></span> A registar...';
 
-      setTimeout(function () {
+      setTimeout(async function () {
         /* Actualizar o objecto na lista em memória */
         var p = pagamentos.find(function (x) { return x.id === pagamentoSelecionadoId; });
-        if (p) {
-          p.status = 'PAGO';
-          p.dataPagamento = new Date().toISOString().split('T')[0];
-          if (typeof savePagamentosData === 'function') {
-            savePagamentosData(pagamentos);
+        try {
+          if (typeof Api !== 'undefined' && Api.pagamentos && Api.pagamentos.adminConfirmar) {
+            var response = await Api.pagamentos.adminConfirmar(pagamentoSelecionadoId);
+            if (response && response.pagamento) {
+              var updated = toLegacyPagamento(response.pagamento);
+              pagamentos = pagamentos.map(function (item) {
+                return item.id === updated.id ? updated : item;
+              });
+            }
+          } else if (p) {
+            p.status = 'PAGO';
+            p.dataPagamento = new Date().toISOString().split('T')[0];
+            if (typeof savePagamentosData === 'function') {
+              savePagamentosData(pagamentos);
+            }
           }
+        } catch (apiErr) {
+          var failEl = document.getElementById('modalResult');
+          if (failEl) {
+            failEl.className = 'alert alert-danger';
+            failEl.textContent = apiErr && apiErr.message ? apiErr.message : 'Falha ao confirmar pagamento.';
+            failEl.classList.remove('hidden');
+          }
+          btnModalConfirmar.disabled = false;
+          btnModalConfirmar.textContent = 'Confirmar pago';
+          return;
         }
 
         /* Feedback no modal */
@@ -188,7 +228,28 @@
   }
 
   /* ── Render inicial ── */
-  renderTabela('TODOS');
+  async function loadPagamentos() {
+    if (typeof Api !== 'undefined' && Api.pagamentos && Api.pagamentos.adminList) {
+      try {
+        var response = await Api.pagamentos.adminList({ page: 1, limit: 200 });
+        pagamentos = (response && response.pagamentos ? response.pagamentos : []).map(toLegacyPagamento);
+        calcularResumo();
+        renderTabela(filtroAtual);
+        return;
+      } catch (apiErr) {
+        // fallback local
+      }
+    }
+
+    pagamentos = typeof getPagamentosData === 'function'
+      ? getPagamentosData()
+      : (typeof PAGAMENTOS !== 'undefined' ? PAGAMENTOS.slice() : []);
+    pagamentos = pagamentos.map(toLegacyPagamento);
+    calcularResumo();
+    renderTabela(filtroAtual);
+  }
+
+  loadPagamentos();
 
   /* ── Helpers ── */
   function setEl(id, val) {

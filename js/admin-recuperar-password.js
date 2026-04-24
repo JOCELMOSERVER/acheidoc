@@ -11,12 +11,29 @@
 
   if (!form) return;
 
-  form.addEventListener('submit', function (e) {
+  form.addEventListener('submit', async function (e) {
     e.preventDefault();
     hideAlerts();
 
     var validacao = validateIdentityAndPassword();
     if (!validacao.ok) return showError(validacao.msg);
+
+    if (typeof Api !== 'undefined' && Api.adminAuth && Api.adminAuth.recover) {
+      try {
+        await Api.adminAuth.recover(validacao.email);
+        var otp = window.prompt('Introduza o código OTP enviado para o email:');
+        if (!otp) return showError('Código OTP obrigatório.');
+        await Api.adminAuth.resetPassword(validacao.email, otp.trim(), validacao.novaSenha);
+        showOk('Password actualizada com sucesso.');
+        form.reset();
+        setTimeout(function () {
+          window.location.href = 'login.html';
+        }, 1200);
+        return;
+      } catch (apiErr) {
+        return showError(apiErr && apiErr.message ? apiErr.message : 'Erro ao recuperar password do admin.');
+      }
+    }
 
     var overrides = safeParse(localStorage.getItem(STORAGE_PWD)) || {};
     overrides[validacao.email] = validacao.novaSenha;

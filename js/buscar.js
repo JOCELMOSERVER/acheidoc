@@ -35,25 +35,57 @@
     if (resultsCount) resultsCount.textContent = docs.length + ' resultado(s) encontrado(s)';
   }
 
-  function applyFilters() {
-    var documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
-    if (!Array.isArray(documentos)) return;
+  function toLegacyDoc(item) {
+    return {
+      id: item.id,
+      tipo: item.tipo,
+      nomeParcial: item.nome_proprietario || 'Proprietário',
+      foto: item.foto_url || createDocMockImage(item.tipo || 'Documento', '#dbeafe', '#bfdbfe'),
+      localParcial: item.provincia || 'Luanda',
+      localEncontrado: item.provincia || 'Luanda',
+      dataCriacao: item.data_publicacao ? String(item.data_publicacao).slice(0, 10) : new Date().toISOString().slice(0, 10),
+      status: item.status || 'PUBLICADO'
+    };
+  }
+
+  async function applyFilters() {
+    var documentos = null;
 
     var text = (searchInput ? searchInput.value.trim().toLowerCase() : '');
     var tipo = (tipoSelect ? tipoSelect.value : '');
     var local = (localSelect ? localSelect.value : '');
 
+    if (typeof Api !== 'undefined' && Api.documentos && Api.documentos.list) {
+      try {
+        var response = await Api.documentos.list({
+          search: text || '',
+          tipo: tipo || '',
+          provincia: local || '',
+          page: 1,
+          limit: 50
+        });
+        documentos = (response && response.documentos ? response.documentos : []).map(toLegacyDoc);
+      } catch (apiErr) {
+        documentos = null;
+      }
+    }
+
+    if (!Array.isArray(documentos)) {
+      documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
+    }
+    if (!Array.isArray(documentos)) return;
+
     var filtered = documentos.filter(function (d) {
       var matchText = !text ||
-        d.nomeParcial.toLowerCase().includes(text) ||
-        d.tipo.toLowerCase().includes(text) ||
-        d.localParcial.toLowerCase().includes(text);
+        String(d.nomeParcial || '').toLowerCase().includes(text) ||
+        String(d.tipo || '').toLowerCase().includes(text) ||
+        String(d.localParcial || '').toLowerCase().includes(text);
 
       var matchTipo = !tipo || d.tipo === tipo;
 
       var matchLocal = !local ||
-        d.localParcial.toLowerCase().includes(local.toLowerCase()) ||
-        d.localEncontrado.toLowerCase().includes(local.toLowerCase());
+        String(d.localParcial || '').toLowerCase().includes(local.toLowerCase()) ||
+        String(d.localEncontrado || '').toLowerCase().includes(local.toLowerCase());
 
       return matchText && matchTipo && matchLocal;
     });

@@ -4,13 +4,19 @@
 
 const Auth = {
   // Guardar utilizador na sessão (localStorage)
-  login(utilizador) {
+  login(utilizador, token) {
     localStorage.setItem('acheidoc_user', JSON.stringify(utilizador));
+    if (token && typeof Api !== 'undefined' && Api.setToken) {
+      Api.setToken(token);
+    }
   },
 
   // Remover sessão
   logout() {
     localStorage.removeItem('acheidoc_user');
+    if (typeof Api !== 'undefined' && Api.clearToken) {
+      Api.clearToken();
+    }
     window.location.href = 'index.html';
   },
 

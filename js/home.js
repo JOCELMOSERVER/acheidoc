@@ -35,14 +35,41 @@
 
   // ── Documentos recentes ──
   var recentGrid = document.getElementById('recentDocs');
-  var documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
-  if (recentGrid && Array.isArray(documentos)) {
+
+  function toLegacyDoc(item) {
+    return {
+      id: item.id,
+      tipo: item.tipo,
+      nomeParcial: item.nome_proprietario || 'Proprietário',
+      foto: item.foto_url || createDocMockImage(item.tipo || 'Documento', '#dbeafe', '#bfdbfe'),
+      localParcial: item.provincia || 'Luanda',
+      dataCriacao: item.data_publicacao ? String(item.data_publicacao).slice(0, 10) : new Date().toISOString().slice(0, 10),
+      status: item.status || 'PUBLICADO'
+    };
+  }
+
+  (async function loadRecentDocs() {
+    if (!recentGrid) return;
+
+    if (typeof Api !== 'undefined' && Api.documentos && Api.documentos.list) {
+      try {
+        var response = await Api.documentos.list({ limit: 4, page: 1 });
+        var apiDocs = (response && response.documentos ? response.documentos : []).map(toLegacyDoc);
+        recentGrid.innerHTML = apiDocs.map(function (d) { return buildDocCard(d, ''); }).join('');
+        return;
+      } catch (apiErr) {
+        // fallback local
+      }
+    }
+
+    var documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
+    if (!Array.isArray(documentos)) return;
     var publicados = documentos.filter(function (d) { return d.status === 'PUBLICADO'; }).slice(0, 4);
     if (publicados.length === 0) {
       publicados = documentos.slice(0, 4);
     }
     recentGrid.innerHTML = publicados.map(function (d) { return buildDocCard(d, ''); }).join('');
-  }
+  })();
 
   // ── Busca rápida ──
   var quickSearchForm = document.getElementById('quickSearchForm');

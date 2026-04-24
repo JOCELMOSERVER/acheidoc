@@ -12,26 +12,40 @@
   setEl('adminNome', adminLogado.nome);
 
   var filtroAtual = 'TODOS';
-  var documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
+  var documentos = [];
 
-  // Contadores por risco
-  var contagemAlto = 0, contagemMedio = 0, contagemBaixo = 0, aprovados = 0;
-  if (Array.isArray(documentos)) {
+  // Tabela
+  var tabelaBody = document.getElementById('tabelaBody');
+
+  function toLegacyDoc(item) {
+    return {
+      id: item.id,
+      tipo: item.tipo,
+      nomeParcial: item.nome_proprietario || 'Proprietário',
+      risco: item.risco || 'MEDIO',
+      dataCriacao: (item.criado_em || item.data_publicacao || '').slice(0, 10),
+      status: item.status || 'PENDENTE'
+    };
+  }
+
+  function renderResumo() {
+    var contagemAlto = 0;
+    var contagemMedio = 0;
+    var contagemBaixo = 0;
+    var aprovados = 0;
+
     documentos.forEach(function (d) {
       if (d.risco === 'ALTO') contagemAlto++;
       else if (d.risco === 'MEDIO') contagemMedio++;
       else if (d.risco === 'BAIXO') contagemBaixo++;
       if (d.status === 'PUBLICADO') aprovados++;
     });
+
+    setEl('countAlto', contagemAlto);
+    setEl('countMedio', contagemMedio);
+    setEl('countBaixo', contagemBaixo);
+    setEl('countAprovados', aprovados);
   }
-
-  setEl('countAlto', contagemAlto);
-  setEl('countMedio', contagemMedio);
-  setEl('countBaixo', contagemBaixo);
-  setEl('countAprovados', aprovados);
-
-  // Tabela
-  var tabelaBody = document.getElementById('tabelaBody');
 
   function renderTabela(filtro) {
     if (!tabelaBody || !Array.isArray(documentos)) return;
@@ -83,7 +97,26 @@
     });
   }
 
-  renderTabela('TODOS');
+  async function loadData() {
+    if (typeof Api !== 'undefined' && Api.documentos && Api.documentos.adminList) {
+      try {
+        var response = await Api.documentos.adminList({ page: 1, limit: 200 });
+        documentos = (response && response.documentos ? response.documentos : []).map(toLegacyDoc);
+        renderResumo();
+        renderTabela(filtroAtual);
+        return;
+      } catch (apiErr) {
+        // fallback local
+      }
+    }
+
+    documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
+    if (!Array.isArray(documentos)) documentos = [];
+    renderResumo();
+    renderTabela(filtroAtual);
+  }
+
+  loadData();
 
   function setEl(id, val) {
     var el = document.getElementById(id);

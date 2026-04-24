@@ -53,17 +53,16 @@
 
   var docValidado = null;
   var docRecebido = null;
-  var documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
+  var documentos = [];
+  var apiMode = typeof Api !== 'undefined' && Api.documentos && Api.documentos.agenteUpdate;
 
-  if (docIdParam && Array.isArray(documentos)) {
-    var docSelecionado = documentos.find(function (d) { return d.id === docIdParam; }) || null;
+  function renderResumoDoc(docSelecionado) {
     if (docSelecionado && docResumoCard && docResumoInfo) {
       docResumoCard.classList.remove('hidden');
-      docResumoInfo.innerHTML = `
-        <strong>${docSelecionado.id}</strong><br>
-        ${docSelecionado.tipo} — ${docSelecionado.nomeParcial}<br>
-        Encontrador: ${docSelecionado.encontradoPor || '—'}
-      `;
+      docResumoInfo.innerHTML =
+        '<strong>' + docSelecionado.id + '</strong><br>' +
+        docSelecionado.tipo + ' — ' + docSelecionado.nomeParcial + '<br>' +
+        'Encontrador: ' + (docSelecionado.encontradoPor || '—');
     }
   }
 
@@ -86,6 +85,13 @@
 
       if (receberErrorMsg) receberErrorMsg.classList.add('hidden');
       if (receberChecklistSection) receberChecklistSection.classList.add('hidden');
+
+      if (apiMode && docIdParam) {
+        docRecebido = documentos.find(function (d) { return d.id === docIdParam; }) || { id: docIdParam, tipo: 'Documento', nomeParcial: 'Proprietário' };
+        if (receberChecklistSection) receberChecklistSection.classList.remove('hidden');
+        animarRecepcao();
+        return;
+      }
 
       if (typeof CHAVES_ENTREGA === 'undefined' || !Array.isArray(documentos)) return;
 
@@ -139,7 +145,11 @@
         return;
       }
 
-      docValidado = Array.isArray(documentos) ? documentos.find(function (d) { return d.id === docIdEncontrado; }) : null;
+      if (apiMode && docIdParam) {
+        docValidado = documentos.find(function (d) { return d.id === docIdParam; }) || { id: docIdParam, tipo: 'Documento', nomeParcial: 'Proprietário' };
+      } else {
+        docValidado = Array.isArray(documentos) ? documentos.find(function (d) { return d.id === docIdEncontrado; }) : null;
+      }
 
       // Animar checklist
       if (checklistSection) checklistSection.classList.remove('hidden');
@@ -198,10 +208,22 @@
       btnConfirmarRecepcao.disabled = true;
       btnConfirmarRecepcao.innerHTML = '<span class="spinner"></span> A registar...';
 
-      setTimeout(function () {
-        docRecebido = updateDocumentoById(docRecebido.id, {
-          status: 'DISPONIVEL_LEVANTAMENTO'
-        }) || docRecebido;
+      setTimeout(async function () {
+        try {
+          if (apiMode) {
+            await Api.documentos.agenteUpdate(docRecebido.id, 'DISPONIVEL_LEVANTAMENTO');
+            docRecebido.status = 'DISPONIVEL_LEVANTAMENTO';
+          } else {
+            docRecebido = updateDocumentoById(docRecebido.id, {
+              status: 'DISPONIVEL_LEVANTAMENTO'
+            }) || docRecebido;
+          }
+        } catch (apiErr) {
+          showReceiveError(apiErr && apiErr.message ? apiErr.message : 'Falha ao registar recepção.');
+          btnConfirmarRecepcao.disabled = false;
+          btnConfirmarRecepcao.textContent = 'Confirmar recepção';
+          return;
+        }
         if (receberChecklistSection) receberChecklistSection.classList.add('hidden');
         if (receberSuccessSection) receberSuccessSection.classList.remove('hidden');
         if (receberSuccessInfo) {
@@ -234,11 +256,23 @@
       btnConfirmar.disabled = true;
       btnConfirmar.innerHTML = '<span class="spinner"></span> A registar...';
 
-      setTimeout(function () {
-        if (docValidado) {
-          docValidado = updateDocumentoById(docValidado.id, {
-            status: 'ENTREGUE'
-          }) || docValidado;
+      setTimeout(async function () {
+        try {
+          if (docValidado) {
+            if (apiMode) {
+              await Api.documentos.agenteUpdate(docValidado.id, 'ENTREGUE');
+              docValidado.status = 'ENTREGUE';
+            } else {
+              docValidado = updateDocumentoById(docValidado.id, {
+                status: 'ENTREGUE'
+              }) || docValidado;
+            }
+          }
+        } catch (apiErr) {
+          showError(apiErr && apiErr.message ? apiErr.message : 'Falha ao confirmar entrega.');
+          btnConfirmar.disabled = false;
+          btnConfirmar.textContent = 'Confirmar entrega';
+          return;
         }
         if (confirmSection) confirmSection.classList.add('hidden');
         if (checklistSection) checklistSection.classList.add('hidden');
@@ -246,6 +280,34 @@
       }, 1000);
     });
   }
+
+  function toLegacyDoc(item) {
+    return {
+      id: item.id,
+      tipo: item.tipo,
+      nomeParcial: item.nome_proprietario || 'Proprietário',
+      status: item.status || 'PENDENTE',
+      encontradoPor: item.publicado_por_nome || 'Utilizador'
+    };
+  }
+
+  (async function initData() {
+    if (apiMode && Api.documentos.agenteLista) {
+      try {
+        var response = await Api.documentos.agenteLista();
+        documentos = (response && response.documentos ? response.documentos : []).map(toLegacyDoc);
+      } catch (err) {
+        documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
+      }
+    } else {
+      documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
+    }
+
+    if (docIdParam && Array.isArray(documentos)) {
+      var docSelecionado = documentos.find(function (d) { return d.id === docIdParam; }) || null;
+      renderResumoDoc(docSelecionado);
+    }
+  })();
 
   function showError(msg) {
     if (errorMsg) {

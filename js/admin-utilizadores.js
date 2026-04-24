@@ -12,16 +12,14 @@
 
   setEl('adminNome', adminLogado.nome);
 
-  var utilizadores = loadUtilizadores();
+  var utilizadores = [];
   var filtroAtual = 'TODOS';
   var tabela = document.getElementById('tabelaUtilizadores');
 
-  renderResumo();
-  renderTabela('TODOS');
   bindFiltros();
   bindLogout();
 
-  function loadUtilizadores() {
+  function loadUtilizadoresLocal() {
     var saved = safeParse(localStorage.getItem(STORAGE_KEY));
     if (Array.isArray(saved) && saved.length) return saved;
 
@@ -91,50 +89,63 @@
 
     tabela.querySelectorAll('.btn-toggle-user').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        var userId = Number(btn.getAttribute('data-id'));
+        var userId = btn.getAttribute('data-id');
         toggleUserStatus(userId);
       });
     });
 
     tabela.querySelectorAll('.btn-points-plus').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        var userId = Number(btn.getAttribute('data-id'));
+        var userId = btn.getAttribute('data-id');
         changeUserPoints(userId, 10);
       });
     });
 
     tabela.querySelectorAll('.btn-points-minus').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        var userId = Number(btn.getAttribute('data-id'));
+        var userId = btn.getAttribute('data-id');
         changeUserPoints(userId, -10);
       });
     });
   }
 
-  function toggleUserStatus(userId) {
+  async function toggleUserStatus(userId) {
+    var alvo = utilizadores.find(function (u) { return String(u.id) === String(userId); });
+    if (!alvo) return;
+
+    var nextStatus = alvo.status === 'BLOQUEADO' ? 'ATIVO' : 'BLOQUEADO';
+
+    if (typeof Api !== 'undefined' && Api.adminUtilizadores && Api.adminUtilizadores.updateStatus) {
+      try {
+        await Api.adminUtilizadores.updateStatus(userId, nextStatus);
+      } catch (apiErr) {
+        alert(apiErr && apiErr.message ? apiErr.message : 'Falha ao actualizar estado do utilizador.');
+        return;
+      }
+    }
+
     utilizadores = utilizadores.map(function (u) {
-      if (u.id !== userId) return u;
-      var nextStatus = u.status === 'BLOQUEADO' ? 'ATIVO' : 'BLOQUEADO';
+      if (String(u.id) !== String(userId)) return u;
       return Object.assign({}, u, { status: nextStatus });
     });
 
     saveUtilizadores();
-
-    var sessaoAtual = safeParse(localStorage.getItem('acheidoc_user'));
-    if (sessaoAtual && sessaoAtual.id === userId) {
-      var actual = utilizadores.find(function (u) { return u.id === userId; });
-      if (actual && actual.status === 'BLOQUEADO') {
-        localStorage.removeItem('acheidoc_user');
-      }
-    }
-
     renderResumo();
     renderTabela(filtroAtual);
   }
 
-  function changeUserPoints(userId, delta) {
+  async function changeUserPoints(userId, delta) {
+    if (typeof Api !== 'undefined' && Api.adminUtilizadores && Api.adminUtilizadores.addPontos) {
+      try {
+        await Api.adminUtilizadores.addPontos(userId, delta);
+      } catch (apiErr) {
+        alert(apiErr && apiErr.message ? apiErr.message : 'Falha ao alterar pontos do utilizador.');
+        return;
+      }
+    }
+
     utilizadores = utilizadores.map(function (u) {
-      if (u.id !== userId) return u;
+      if (String(u.id) !== String(userId)) return u;
       var nextPoints = Number(u.pontos || 0) + delta;
       return Object.assign({}, u, { pontos: Math.max(0, nextPoints) });
     });
@@ -160,9 +171,33 @@
     if (!btnLogout) return;
     btnLogout.addEventListener('click', function () {
       sessionStorage.removeItem('adminLogado');
+      if (typeof Api !== 'undefined' && Api.clearToken) Api.clearToken();
       window.location.href = 'login.html';
     });
   }
+
+  (async function init() {
+    if (typeof Api !== 'undefined' && Api.adminUtilizadores && Api.adminUtilizadores.list) {
+      try {
+        var response = await Api.adminUtilizadores.list({ page: 1, limit: 200 });
+        utilizadores = (response && response.utilizadores ? response.utilizadores : []).map(function (u) {
+          return Object.assign({}, u, {
+            municipio: u.municipio || u.provincia || '—',
+            status: u.status || 'ATIVO'
+          });
+        });
+        renderResumo();
+        renderTabela(filtroAtual);
+        return;
+      } catch (apiErr) {
+        // fallback local
+      }
+    }
+
+    utilizadores = loadUtilizadoresLocal();
+    renderResumo();
+    renderTabela(filtroAtual);
+  })();
 
   function setEl(id, val) {
     var el = document.getElementById(id);

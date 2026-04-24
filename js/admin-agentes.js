@@ -12,16 +12,14 @@
 
   setEl('adminNome', adminLogado.nome);
 
-  var agentes = loadAgentes();
+  var agentes = [];
   var filtroAtual = 'TODOS';
   var tabela = document.getElementById('tabelaAgentes');
 
-  renderResumo();
-  renderTabela('TODOS');
   bindFiltros();
   bindLogout();
 
-  function loadAgentes() {
+  function loadAgentesLocal() {
     var saved = safeParse(localStorage.getItem(STORAGE_KEY));
     if (Array.isArray(saved) && saved.length) return saved;
 
@@ -100,30 +98,43 @@
 
     tabela.querySelectorAll('.btn-toggle-agent').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        var agentId = Number(btn.getAttribute('data-id'));
+        var agentId = btn.getAttribute('data-id');
         toggleAgentStatus(agentId);
       });
     });
 
     tabela.querySelectorAll('.btn-agent-points-plus').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        var agentId = Number(btn.getAttribute('data-id'));
+        var agentId = btn.getAttribute('data-id');
         changeAgentPoints(agentId, 10);
       });
     });
 
     tabela.querySelectorAll('.btn-agent-points-minus').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        var agentId = Number(btn.getAttribute('data-id'));
+        var agentId = btn.getAttribute('data-id');
         changeAgentPoints(agentId, -10);
       });
     });
   }
 
-  function toggleAgentStatus(agentId) {
+  async function toggleAgentStatus(agentId) {
+    var alvo = agentes.find(function (a) { return String(a.id) === String(agentId); });
+    if (!alvo) return;
+
+    var nextStatus = alvo.status === 'ATIVO' ? 'INATIVO' : 'ATIVO';
+
+    if (typeof Api !== 'undefined' && Api.adminAgentes && Api.adminAgentes.updateStatus) {
+      try {
+        await Api.adminAgentes.updateStatus(agentId, nextStatus);
+      } catch (apiErr) {
+        alert(apiErr && apiErr.message ? apiErr.message : 'Falha ao actualizar estado do agente.');
+        return;
+      }
+    }
+
     agentes = agentes.map(function (a) {
-      if (a.id !== agentId) return a;
-      var nextStatus = a.status === 'ATIVO' ? 'INATIVO' : 'ATIVO';
+      if (String(a.id) !== String(agentId)) return a;
       return Object.assign({}, a, {
         status: nextStatus,
         ultimaActividade: new Date().toISOString().split('T')[0]
@@ -131,22 +142,22 @@
     });
 
     saveAgentes();
-
-    var sessaoAgente = safeParse(sessionStorage.getItem('agenteLogado'));
-    if (sessaoAgente && sessaoAgente.id === agentId) {
-      var actual = agentes.find(function (a) { return a.id === agentId; });
-      if (actual && actual.status === 'INATIVO') {
-        sessionStorage.removeItem('agenteLogado');
-      }
-    }
-
     renderResumo();
     renderTabela(filtroAtual);
   }
 
-  function changeAgentPoints(agentId, delta) {
+  async function changeAgentPoints(agentId, delta) {
+    if (typeof Api !== 'undefined' && Api.adminAgentes && Api.adminAgentes.addPontos) {
+      try {
+        await Api.adminAgentes.addPontos(agentId, delta);
+      } catch (apiErr) {
+        alert(apiErr && apiErr.message ? apiErr.message : 'Falha ao alterar pontos do agente.');
+        return;
+      }
+    }
+
     agentes = agentes.map(function (a) {
-      if (a.id !== agentId) return a;
+      if (String(a.id) !== String(agentId)) return a;
       var nextPoints = Number(a.pontos || 0) + delta;
       return Object.assign({}, a, {
         pontos: Math.max(0, nextPoints),
@@ -175,9 +186,33 @@
     if (!btnLogout) return;
     btnLogout.addEventListener('click', function () {
       sessionStorage.removeItem('adminLogado');
+      if (typeof Api !== 'undefined' && Api.clearToken) Api.clearToken();
       window.location.href = 'login.html';
     });
   }
+
+  (async function init() {
+    if (typeof Api !== 'undefined' && Api.adminAgentes && Api.adminAgentes.list) {
+      try {
+        var response = await Api.adminAgentes.list({ page: 1, limit: 200 });
+        agentes = (response && response.agentes ? response.agentes : []).map(function (a) {
+          return Object.assign({}, a, {
+            ultimaActividade: (a.criado_em || '').slice(0, 10) || new Date().toISOString().slice(0, 10),
+            pontoId: a.pontoId || null
+          });
+        });
+        renderResumo();
+        renderTabela(filtroAtual);
+        return;
+      } catch (apiErr) {
+        // fallback local
+      }
+    }
+
+    agentes = loadAgentesLocal();
+    renderResumo();
+    renderTabela(filtroAtual);
+  })();
 
   function setEl(id, val) {
     var el = document.getElementById(id);

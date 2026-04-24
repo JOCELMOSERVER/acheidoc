@@ -12,7 +12,7 @@
 
   // Cabeçalho
   setEl('agenteNome', agenteLogado.nome);
-  var documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
+  var documentos = [];
 
   if (typeof PONTOS_ENTREGA !== 'undefined') {
     var ponto = PONTOS_ENTREGA.find(function (p) { return p.id === agenteLogado.pontoId; });
@@ -21,62 +21,14 @@
     }
   }
 
-  setEl('agentePontos', agenteLogado.pontos);
+  setEl('agentePontos', agenteLogado.pontos || 0);
   setEl('agentePontosMes', '+120 pts');
 
   // Documentos aguardando recepção física pelo agente
   var docsReceberBody = document.getElementById('docsReceberBody');
-  if (docsReceberBody && Array.isArray(documentos)) {
-    var docsReceber = documentos.filter(function (d) {
-      return d.pontoEntregaId === agenteLogado.pontoId && d.status === 'PUBLICADO';
-    });
-
-    if (docsReceber.length === 0) {
-      docsReceberBody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding: 2rem; color: var(--text-gray);">Nenhum documento pendente de recepção neste ponto.</td></tr>`;
-    } else {
-      docsReceberBody.innerHTML = docsReceber.map(function (d) {
-        return `
-          <tr>
-            <td><code>${d.id}</code></td>
-            <td>${d.tipo}</td>
-            <td>${d.nomeParcial}</td>
-            <td>${d.encontradoPor || '—'}</td>
-            <td><span class="badge ${getStatusBadgeClass(d.status)}">${getStatusLabel(d.status)}</span></td>
-            <td>${formatDate(d.dataCriacao)}</td>
-            <td>
-              <a href="validar.html?id=${d.id}&flow=receber" class="btn btn-primary btn-sm">Receber documento</a>
-            </td>
-          </tr>`;
-      }).join('');
-    }
-  }
 
   // Documentos no ponto prontos para entrega ao dono
   var tabelaBody = document.getElementById('docsTabelaBody');
-  if (tabelaBody && Array.isArray(documentos)) {
-    var docs = documentos.filter(function (d) {
-      return d.pontoEntregaId === agenteLogado.pontoId &&
-        (d.status === 'DISPONIVEL_LEVANTAMENTO' || d.status === 'AGUARDANDO_ENTREGA');
-    });
-
-    if (docs.length === 0) {
-      tabelaBody.innerHTML = `<tr><td colspan="6" class="text-center" style="padding: 2rem; color: var(--text-gray);">Nenhum documento no seu ponto de entrega.</td></tr>`;
-    } else {
-      tabelaBody.innerHTML = docs.map(function (d) {
-        return `
-          <tr>
-            <td><code>${d.id}</code></td>
-            <td>${d.tipo}</td>
-            <td>${d.nomeParcial}</td>
-            <td><span class="badge ${getStatusBadgeClass(d.status)}">${getStatusLabel(d.status)}</span></td>
-            <td>${formatDate(d.dataCriacao)}</td>
-            <td>
-              <a href="validar.html?id=${d.id}&flow=entregar" class="btn btn-success btn-sm">Entregar ao dono</a>
-            </td>
-          </tr>`;
-      }).join('');
-    }
-  }
 
   // Pesquisar documento
   var searchInput = document.getElementById('searchDoc');
@@ -89,9 +41,9 @@
       if (!q) return;
 
       var found = documentos.find(function (d) {
-        return d.id.toLowerCase() === q ||
-          d.nomeParcial.toLowerCase().includes(q) ||
-          d.nomeCompleto.toLowerCase().includes(q);
+        return String(d.id || '').toLowerCase() === q ||
+          String(d.nomeParcial || '').toLowerCase().includes(q) ||
+          String(d.nomeCompleto || '').toLowerCase().includes(q);
       });
 
       if (found) {
@@ -113,14 +65,85 @@
     });
   }
 
+  function toLegacyDoc(item) {
+    return {
+      id: item.id,
+      tipo: item.tipo,
+      nomeParcial: item.nome_proprietario || 'Proprietário',
+      nomeCompleto: item.nome_proprietario || 'Proprietário',
+      status: item.status || 'PENDENTE',
+      dataCriacao: (item.criado_em || item.data_publicacao || '').slice(0, 10),
+      encontradoPor: item.publicado_por_nome || 'Utilizador'
+    };
+  }
+
+  function renderTabelas() {
+    if (docsReceberBody) {
+      var docsReceber = documentos.filter(function (d) { return d.status === 'PUBLICADO'; });
+      if (!docsReceber.length) {
+        docsReceberBody.innerHTML = '<tr><td colspan="7" class="text-center" style="padding: 2rem; color: var(--text-gray);">Nenhum documento pendente de recepção.</td></tr>';
+      } else {
+        docsReceberBody.innerHTML = docsReceber.map(function (d) {
+          return '<tr>' +
+            '<td><code>' + d.id + '</code></td>' +
+            '<td>' + d.tipo + '</td>' +
+            '<td>' + d.nomeParcial + '</td>' +
+            '<td>' + (d.encontradoPor || '—') + '</td>' +
+            '<td><span class="badge ' + getStatusBadgeClass(d.status) + '">' + getStatusLabel(d.status) + '</span></td>' +
+            '<td>' + formatDate(d.dataCriacao) + '</td>' +
+            '<td><a href="validar.html?id=' + d.id + '&flow=receber" class="btn btn-primary btn-sm">Receber documento</a></td>' +
+            '</tr>';
+        }).join('');
+      }
+    }
+
+    if (tabelaBody) {
+      var docsEntregar = documentos.filter(function (d) { return d.status === 'DISPONIVEL_LEVANTAMENTO'; });
+      if (!docsEntregar.length) {
+        tabelaBody.innerHTML = '<tr><td colspan="6" class="text-center" style="padding: 2rem; color: var(--text-gray);">Nenhum documento pronto para entrega.</td></tr>';
+      } else {
+        tabelaBody.innerHTML = docsEntregar.map(function (d) {
+          return '<tr>' +
+            '<td><code>' + d.id + '</code></td>' +
+            '<td>' + d.tipo + '</td>' +
+            '<td>' + d.nomeParcial + '</td>' +
+            '<td><span class="badge ' + getStatusBadgeClass(d.status) + '">' + getStatusLabel(d.status) + '</span></td>' +
+            '<td>' + formatDate(d.dataCriacao) + '</td>' +
+            '<td><a href="validar.html?id=' + d.id + '&flow=entregar" class="btn btn-success btn-sm">Entregar ao dono</a></td>' +
+            '</tr>';
+        }).join('');
+      }
+    }
+  }
+
+  async function loadDocumentos() {
+    if (typeof Api !== 'undefined' && Api.documentos && Api.documentos.agenteLista) {
+      try {
+        var response = await Api.documentos.agenteLista();
+        documentos = (response && response.documentos ? response.documentos : []).map(toLegacyDoc);
+        renderTabelas();
+        return;
+      } catch (apiErr) {
+        // fallback local
+      }
+    }
+
+    documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
+    if (!Array.isArray(documentos)) documentos = [];
+    renderTabelas();
+  }
+
   // Logout
   var btnLogout = document.getElementById('btnLogout');
   if (btnLogout) {
     btnLogout.addEventListener('click', function () {
       sessionStorage.removeItem('agenteLogado');
+      if (typeof Api !== 'undefined' && Api.clearToken) Api.clearToken();
       window.location.href = 'login.html';
     });
   }
+
+  loadDocumentos();
 
   function setEl(id, val) {
     var el = document.getElementById(id);

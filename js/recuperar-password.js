@@ -12,13 +12,34 @@
 
   if (!form) return;
 
-  form.addEventListener('submit', function (e) {
+  form.addEventListener('submit', async function (e) {
     e.preventDefault();
     hideAlerts();
 
     var validacao = validateIdentityAndPassword();
     if (!validacao.ok) {
       return showErro(validacao.msg);
+    }
+
+    if (typeof Api !== 'undefined' && Api.auth && Api.auth.recover) {
+      try {
+        await Api.auth.recover(validacao.email);
+        var otp = window.prompt('Introduza o código OTP enviado para o seu email:');
+        if (!otp) {
+          return showErro('Código OTP obrigatório para redefinir a palavra-passe.');
+        }
+
+        await Api.auth.resetPassword(validacao.email, otp.trim(), validacao.novaSenha);
+        showOk('Palavra-passe actualizada com sucesso.');
+        form.reset();
+
+        setTimeout(function () {
+          window.location.href = 'login.html';
+        }, 1200);
+        return;
+      } catch (apiErr) {
+        return showErro(apiErr && apiErr.message ? apiErr.message : 'Erro ao recuperar password no servidor.');
+      }
     }
 
     var overrides = safeParse(localStorage.getItem(STORAGE_PWD)) || {};
@@ -34,12 +55,13 @@
   });
 
   function validateIdentityAndPassword() {
+    var isApiMode = typeof Api !== 'undefined' && Api.auth && Api.auth.recover;
     var email = val('inputEmail').toLowerCase();
     var telefone = normalizePhone(val('inputTelefone'));
     var novaSenha = val('inputNovaSenha');
     var confirmar = val('inputConfirmarSenha');
 
-    if (!email || !telefone || !novaSenha || !confirmar) {
+    if (!email || !novaSenha || !confirmar || (!isApiMode && !telefone)) {
       return { ok: false, msg: 'Preencha todos os campos.' };
     }
     if (novaSenha.length < 4) {
@@ -49,14 +71,16 @@
       return { ok: false, msg: 'A confirmação da palavra-passe não coincide.' };
     }
 
-    var lista = getUsers();
-    var user = lista.find(function (u) {
-      return String(u.email || '').toLowerCase() === email
-        && normalizePhone(String(u.telefone || '')) === telefone;
-    });
+    if (!isApiMode) {
+      var lista = getUsers();
+      var user = lista.find(function (u) {
+        return String(u.email || '').toLowerCase() === email
+          && normalizePhone(String(u.telefone || '')) === telefone;
+      });
 
-    if (!user) {
-      return { ok: false, msg: 'Não encontramos uma conta com esse email e telefone.' };
+      if (!user) {
+        return { ok: false, msg: 'Não encontramos uma conta com esse email e telefone.' };
+      }
     }
 
     return { ok: true, email: email, novaSenha: novaSenha };

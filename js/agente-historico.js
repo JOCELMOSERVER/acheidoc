@@ -12,27 +12,51 @@
 
   setEl('agenteNome', agenteLogado.nome);
 
-  // Renderizar histórico
   var tabelaBody = document.getElementById('historicoBody');
-  if (tabelaBody && typeof HISTORICO_PONTOS !== 'undefined') {
-    tabelaBody.innerHTML = HISTORICO_PONTOS.map(function (h) {
-      var positivo = h.pontos > 0;
-      return `
-        <tr>
-          <td>${formatDate(h.data)}</td>
-          <td>${h.docId}</td>
-          <td>${getTipoDoc(h.docId)}</td>
-          <td>${h.acao}</td>
-          <td style="font-weight:700; color: ${positivo ? 'var(--success)' : 'var(--danger)'};">
-            ${positivo ? '+' : ''}${h.pontos}
-          </td>
-        </tr>`;
+
+  function renderHistorico(lista) {
+    if (!tabelaBody) return;
+    tabelaBody.innerHTML = lista.map(function (h) {
+      var positivo = Number(h.pontos || 0) > 0;
+      return '<tr>' +
+        '<td>' + formatDate(h.data) + '</td>' +
+        '<td>' + h.docId + '</td>' +
+        '<td>' + (h.tipoDoc || getTipoDoc(h.docId)) + '</td>' +
+        '<td>' + h.acao + '</td>' +
+        '<td style="font-weight:700; color: ' + (positivo ? 'var(--success)' : 'var(--danger)') + ';">' +
+        (positivo ? '+' : '') + h.pontos +
+        '</td>' +
+        '</tr>';
     }).join('');
 
-    // Total
-    var total = HISTORICO_PONTOS.reduce(function (acc, h) { return acc + h.pontos; }, 0);
+    var total = lista.reduce(function (acc, h) { return acc + Number(h.pontos || 0); }, 0);
     setEl('totalPontosHistorico', total + ' pts');
   }
+
+  (async function loadHistorico() {
+    if (typeof Api !== 'undefined' && Api.documentos && Api.documentos.agenteLista) {
+      try {
+        var response = await Api.documentos.agenteLista({ status: 'ENTREGUE' });
+        var listaApi = (response && response.documentos ? response.documentos : []).map(function (d) {
+          return {
+            data: (d.criado_em || d.data_publicacao || '').slice(0, 10),
+            docId: d.id,
+            tipoDoc: d.tipo,
+            acao: 'Entrega confirmada ao dono',
+            pontos: 10
+          };
+        });
+        renderHistorico(listaApi);
+        return;
+      } catch (err) {
+        // fallback local
+      }
+    }
+
+    if (typeof HISTORICO_PONTOS !== 'undefined') {
+      renderHistorico(HISTORICO_PONTOS);
+    }
+  })();
 
   // Filtro por mês
   var mesSelect = document.getElementById('mesSelect');
@@ -56,6 +80,7 @@
   if (btnLogout) {
     btnLogout.addEventListener('click', function () {
       sessionStorage.removeItem('agenteLogado');
+      if (typeof Api !== 'undefined' && Api.clearToken) Api.clearToken();
       window.location.href = 'login.html';
     });
   }

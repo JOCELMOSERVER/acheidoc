@@ -3,6 +3,8 @@
    =========================== */
 
 (function () {
+  Auth.requireAuth();
+
   var params = new URLSearchParams(window.location.search);
   var docId = params.get('id');
   var documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
@@ -12,12 +14,23 @@
     : null;
 
   var doc = null;
-  if (docId && Array.isArray(documentos)) {
-    doc = documentos.find(function (d) { return d.id === docId; });
+
+  function toLegacyDoc(item) {
+    return {
+      id: item.id,
+      tipo: item.tipo,
+      nomeParcial: item.nome_proprietario || 'Proprietário',
+      foto: item.foto_url || createDocMockImage(item.tipo || 'Documento', '#dbeafe', '#bfdbfe'),
+      localParcial: item.provincia || 'Luanda',
+      dataCriacao: item.data_publicacao ? String(item.data_publicacao).slice(0, 10) : new Date().toISOString().slice(0, 10),
+      status: item.status || 'PUBLICADO',
+      taxaKz: 500,
+      pontoEntregaId: 1
+    };
   }
 
-  // Exibir valor da taxa
-  if (doc) {
+  function renderDocPagamento() {
+    if (!doc) return;
     var taxaEl = document.getElementById('taxaValor');
     if (taxaEl) taxaEl.textContent = doc.taxaKz.toLocaleString('pt-AO') + ' Kz';
 
@@ -27,6 +40,26 @@
     var docNomeEl = document.getElementById('pagDocNome');
     if (docNomeEl) docNomeEl.textContent = doc.nomeParcial;
   }
+
+  (async function loadDoc() {
+    if (!docId) return;
+
+    if (typeof Api !== 'undefined' && Api.documentos && Api.documentos.detail) {
+      try {
+        var response = await Api.documentos.detail(docId);
+        doc = response && response.documento ? toLegacyDoc(response.documento) : null;
+        renderDocPagamento();
+        return;
+      } catch (apiErr) {
+        doc = null;
+      }
+    }
+
+    if (Array.isArray(documentos)) {
+      doc = documentos.find(function (d) { return d.id === docId; }) || null;
+      renderDocPagamento();
+    }
+  })();
 
   // Seleção do método de pagamento
   var methodBtns = document.querySelectorAll('.payment-method-btn');
@@ -55,7 +88,7 @@
   var successSection = document.getElementById('successSection');
 
   if (btnConfirmar) {
-    btnConfirmar.addEventListener('click', function () {
+    btnConfirmar.addEventListener('click', async function () {
       if (!selectedMethod) {
         alert('Por favor, seleccione um método de pagamento.');
         return;
@@ -71,15 +104,34 @@
       btnConfirmar.disabled = true;
       btnConfirmar.innerHTML = '<span class="spinner"></span> A processar...';
 
-      setTimeout(function () {
-        registarPagamento(phone);
+      setTimeout(async function () {
+        var ok = await registarPagamento(phone);
+        if (!ok) {
+          btnConfirmar.disabled = false;
+          btnConfirmar.textContent = 'Confirmar pagamento';
+          return;
+        }
         showSuccess();
       }, 2000);
     });
   }
 
-  function registarPagamento(phone) {
-    if (!doc) return;
+  async function registarPagamento(phone) {
+    if (!doc) return false;
+
+    if (typeof Api !== 'undefined' && Api.pagamentos && Api.pagamentos.create) {
+      try {
+        await Api.pagamentos.create({
+          doc_id: doc.id,
+          telefone: phone,
+          valor: doc.taxaKz
+        });
+        return true;
+      } catch (apiErr) {
+        alert(apiErr && apiErr.message ? apiErr.message : 'Falha ao registar pagamento no servidor.');
+        return false;
+      }
+    }
 
     var existing = Array.isArray(pagamentos)
       ? pagamentos.find(function (item) { return item.docId === doc.id; })
@@ -101,6 +153,7 @@
     };
 
     upsertPagamentoRecord(record);
+    return true;
   }
 
   function buildPagamentoId() {
