@@ -55,25 +55,16 @@ document.getElementById('formCadastro').addEventListener('submit', async functio
     return;
   }
 
-  // Tentar fluxo real da API (registo + verificação OTP)
+  // Tentar fluxo real da API (registo directo)
   try {
-    await Api.auth.register({
+    var registerResp = await Api.auth.register({
       nome: nome,
       email: email,
       telefone: telefone,
       password: senha
     });
-
-    var otp = window.prompt('Introduza o código OTP enviado para o seu email:');
-    if (!otp) {
-      alerta.textContent = 'Código OTP obrigatório para concluir o cadastro.';
-      alerta.style.display = 'block';
-      return;
-    }
-
-    var verifyResp = await Api.auth.verifyEmail(email, otp.trim());
-    var tokenApi = verifyResp && verifyResp.token ? verifyResp.token : null;
-    var userApi = verifyResp && verifyResp.utilizador ? verifyResp.utilizador : null;
+    var tokenApi = registerResp && registerResp.token ? registerResp.token : null;
+    var userApi = registerResp && registerResp.utilizador ? registerResp.utilizador : null;
 
     if (!userApi || !tokenApi) {
       throw new Error('Resposta inválida do servidor no cadastro.');

@@ -75,13 +75,6 @@
           body: JSON.stringify(payload)
         });
       },
-      verifyEmail: function (email, otp) {
-        return request('/api/auth/verify-email', {
-          method: 'POST',
-          skipAuth: true,
-          body: JSON.stringify({ email: email, otp: otp })
-        });
-      },
       recover: function (email) {
         return request('/api/auth/recover', {
           method: 'POST',
@@ -89,11 +82,11 @@
           body: JSON.stringify({ email: email })
         });
       },
-      resetPassword: function (email, otp, novaPassword) {
+      resetPassword: function (email, novaPassword) {
         return request('/api/auth/reset-password', {
           method: 'POST',
           skipAuth: true,
-          body: JSON.stringify({ email: email, otp: otp, novaPassword: novaPassword })
+          body: JSON.stringify({ email: email, novaPassword: novaPassword })
         });
       }
     },
@@ -113,11 +106,11 @@
           body: JSON.stringify({ email: email })
         });
       },
-      resetPassword: function (email, otp, novaPassword) {
+      resetPassword: function (email, novaPassword) {
         return request('/api/agente/auth/reset-password', {
           method: 'POST',
           skipAuth: true,
-          body: JSON.stringify({ email: email, otp: otp, novaPassword: novaPassword })
+          body: JSON.stringify({ email: email, novaPassword: novaPassword })
         });
       }
     },
@@ -137,11 +130,11 @@
           body: JSON.stringify({ email: email })
         });
       },
-      resetPassword: function (email, otp, novaPassword) {
+      resetPassword: function (email, novaPassword) {
         return request('/api/admin/auth/reset-password', {
           method: 'POST',
           skipAuth: true,
-          body: JSON.stringify({ email: email, otp: otp, novaPassword: novaPassword })
+          body: JSON.stringify({ email: email, novaPassword: novaPassword })
         });
       }
     },

@@ -25,12 +25,7 @@
 
     try {
       await Api.auth.recover(validacao.email);
-      var otp = window.prompt('Introduza o código OTP enviado para o seu email:');
-      if (!otp) {
-        return showErro('Código OTP obrigatório para redefinir a palavra-passe.');
-      }
-
-      await Api.auth.resetPassword(validacao.email, otp.trim(), validacao.novaSenha);
+      await Api.auth.resetPassword(validacao.email, validacao.novaSenha);
       showOk('Palavra-passe actualizada com sucesso.');
       form.reset();
 

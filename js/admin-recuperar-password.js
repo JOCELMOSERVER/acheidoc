@@ -22,9 +22,7 @@
 
     try {
       await Api.adminAuth.recover(validacao.email);
-      var otp = window.prompt('Introduza o código OTP enviado para o email:');
-      if (!otp) return showError('Código OTP obrigatório.');
-      await Api.adminAuth.resetPassword(validacao.email, otp.trim(), validacao.novaSenha);
+      await Api.adminAuth.resetPassword(validacao.email, validacao.novaSenha);
       showOk('Password actualizada com sucesso.');
       form.reset();
       setTimeout(function () {
