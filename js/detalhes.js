@@ -10,12 +10,16 @@
     return;
   }
 
+  function defaultDocImage() {
+    return 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="480"><rect width="100%" height="100%" fill="%23e5e7eb"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="28" fill="%236b7280">Documento</text></svg>';
+  }
+
   function toLegacyDoc(item) {
     return {
       id: item.id,
       tipo: item.tipo,
       nomeParcial: item.nome_proprietario || 'Proprietário',
-      foto: item.foto_url || createDocMockImage(item.tipo || 'Documento', '#dbeafe', '#bfdbfe'),
+      foto: item.foto_url || defaultDocImage(),
       localParcial: item.provincia || 'Luanda',
       dataCriacao: item.data_publicacao ? String(item.data_publicacao).slice(0, 10) : new Date().toISOString().slice(0, 10),
       status: item.status || 'PUBLICADO',
@@ -59,32 +63,22 @@
   }
 
   (async function loadDoc() {
-    if (typeof Api !== 'undefined' && Api.documentos && Api.documentos.detail) {
-      try {
-        var response = await Api.documentos.detail(docId);
-        var apiDoc = response && response.documento ? toLegacyDoc(response.documento) : null;
-        if (apiDoc) {
-          renderDoc(apiDoc);
-          return;
-        }
-      } catch (apiErr) {
-        // fallback local
+    if (!(typeof Api !== 'undefined' && Api.documentos && Api.documentos.detail)) {
+      showNotFound();
+      return;
+    }
+
+    try {
+      var response = await Api.documentos.detail(docId);
+      var apiDoc = response && response.documento ? toLegacyDoc(response.documento) : null;
+      if (!apiDoc) {
+        showNotFound();
+        return;
       }
-    }
-
-    var documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
-    if (!Array.isArray(documentos)) {
+      renderDoc(apiDoc);
+    } catch (apiErr) {
       showNotFound();
-      return;
     }
-
-    var doc = documentos.find(function (d) { return d.id === docId; });
-    if (!doc) {
-      showNotFound();
-      return;
-    }
-
-    renderDoc(doc);
   })();
 
   function setEl(id, text) {

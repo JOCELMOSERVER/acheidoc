@@ -3,8 +3,6 @@
    =========================== */
 
 (function () {
-  var STORAGE_USERS = 'acheidoc_admin_utilizadores';
-  var STORAGE_PWD = 'acheidoc_password_overrides_utilizadores';
 
   var form = document.getElementById('formRecuperar');
   var alertErro = document.getElementById('alertErro');
@@ -21,41 +19,31 @@
       return showErro(validacao.msg);
     }
 
-    if (typeof Api !== 'undefined' && Api.auth && Api.auth.recover) {
-      try {
-        await Api.auth.recover(validacao.email);
-        var otp = window.prompt('Introduza o código OTP enviado para o seu email:');
-        if (!otp) {
-          return showErro('Código OTP obrigatório para redefinir a palavra-passe.');
-        }
-
-        await Api.auth.resetPassword(validacao.email, otp.trim(), validacao.novaSenha);
-        showOk('Palavra-passe actualizada com sucesso.');
-        form.reset();
-
-        setTimeout(function () {
-          window.location.href = 'login.html';
-        }, 1200);
-        return;
-      } catch (apiErr) {
-        return showErro(apiErr && apiErr.message ? apiErr.message : 'Erro ao recuperar password no servidor.');
-      }
+    if (!(typeof Api !== 'undefined' && Api.auth && Api.auth.recover)) {
+      return showErro('Serviço de recuperação indisponível. Verifique a API.');
     }
 
-    var overrides = safeParse(localStorage.getItem(STORAGE_PWD)) || {};
-    overrides[validacao.email] = validacao.novaSenha;
-    localStorage.setItem(STORAGE_PWD, JSON.stringify(overrides));
+    try {
+      await Api.auth.recover(validacao.email);
+      var otp = window.prompt('Introduza o código OTP enviado para o seu email:');
+      if (!otp) {
+        return showErro('Código OTP obrigatório para redefinir a palavra-passe.');
+      }
 
-    showOk('Email enviado para ' + validacao.email + ' com a nova palavra-passe.');
-    form.reset();
+      await Api.auth.resetPassword(validacao.email, otp.trim(), validacao.novaSenha);
+      showOk('Palavra-passe actualizada com sucesso.');
+      form.reset();
 
-    setTimeout(function () {
-      window.location.href = 'login.html';
-    }, 1200);
+      setTimeout(function () {
+        window.location.href = 'login.html';
+      }, 1200);
+    } catch (apiErr) {
+      return showErro(apiErr && apiErr.message ? apiErr.message : 'Erro ao recuperar password no servidor.');
+    }
   });
 
   function validateIdentityAndPassword() {
-    var isApiMode = typeof Api !== 'undefined' && Api.auth && Api.auth.recover;
+    var isApiMode = true;
     var email = val('inputEmail').toLowerCase();
     var telefone = normalizePhone(val('inputTelefone'));
     var novaSenha = val('inputNovaSenha');
@@ -84,12 +72,6 @@
     }
 
     return { ok: true, email: email, novaSenha: novaSenha };
-  }
-
-  function getUsers() {
-    var fromAdmin = safeParse(localStorage.getItem(STORAGE_USERS));
-    if (Array.isArray(fromAdmin) && fromAdmin.length) return fromAdmin;
-    return Array.isArray(UTILIZADORES) ? UTILIZADORES : [];
   }
 
   function normalizePhone(v) {

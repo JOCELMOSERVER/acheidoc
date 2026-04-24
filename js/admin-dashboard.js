@@ -98,22 +98,19 @@
   }
 
   async function loadData() {
-    if (typeof Api !== 'undefined' && Api.documentos && Api.documentos.adminList) {
-      try {
-        var response = await Api.documentos.adminList({ page: 1, limit: 200 });
-        documentos = (response && response.documentos ? response.documentos : []).map(toLegacyDoc);
-        renderResumo();
-        renderTabela(filtroAtual);
-        return;
-      } catch (apiErr) {
-        // fallback local
-      }
+    if (!(typeof Api !== 'undefined' && Api.documentos && Api.documentos.adminList)) {
+      alert('API de documentos indisponível.');
+      return;
     }
 
-    documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
-    if (!Array.isArray(documentos)) documentos = [];
-    renderResumo();
-    renderTabela(filtroAtual);
+    try {
+      var response = await Api.documentos.adminList({ page: 1, limit: 200 });
+      documentos = (response && response.documentos ? response.documentos : []).map(toLegacyDoc);
+      renderResumo();
+      renderTabela(filtroAtual);
+    } catch (apiErr) {
+      alert(apiErr && apiErr.message ? apiErr.message : 'Falha ao carregar documentos.');
+    }
   }
 
   loadData();

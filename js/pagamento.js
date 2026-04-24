@@ -7,20 +7,22 @@
 
   var params = new URLSearchParams(window.location.search);
   var docId = params.get('id');
-  var documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
-  var pagamentos = typeof getPagamentosData === 'function' ? getPagamentosData() : PAGAMENTOS;
   var utilizadorLogado = typeof Auth !== 'undefined' && typeof Auth.getUser === 'function'
     ? Auth.getUser()
     : null;
 
   var doc = null;
 
+  function defaultDocImage() {
+    return 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="480"><rect width="100%" height="100%" fill="%23e5e7eb"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="28" fill="%236b7280">Documento</text></svg>';
+  }
+
   function toLegacyDoc(item) {
     return {
       id: item.id,
       tipo: item.tipo,
       nomeParcial: item.nome_proprietario || 'Proprietário',
-      foto: item.foto_url || createDocMockImage(item.tipo || 'Documento', '#dbeafe', '#bfdbfe'),
+      foto: item.foto_url || defaultDocImage(),
       localParcial: item.provincia || 'Luanda',
       dataCriacao: item.data_publicacao ? String(item.data_publicacao).slice(0, 10) : new Date().toISOString().slice(0, 10),
       status: item.status || 'PUBLICADO',
@@ -44,20 +46,17 @@
   (async function loadDoc() {
     if (!docId) return;
 
-    if (typeof Api !== 'undefined' && Api.documentos && Api.documentos.detail) {
-      try {
-        var response = await Api.documentos.detail(docId);
-        doc = response && response.documento ? toLegacyDoc(response.documento) : null;
-        renderDocPagamento();
-        return;
-      } catch (apiErr) {
-        doc = null;
-      }
+    if (!(typeof Api !== 'undefined' && Api.documentos && Api.documentos.detail)) {
+      alert('API de documentos indisponível.');
+      return;
     }
 
-    if (Array.isArray(documentos)) {
-      doc = documentos.find(function (d) { return d.id === docId; }) || null;
+    try {
+      var response = await Api.documentos.detail(docId);
+      doc = response && response.documento ? toLegacyDoc(response.documento) : null;
       renderDocPagamento();
+    } catch (apiErr) {
+      alert('Não foi possível carregar os dados do documento.');
     }
   })();
 
@@ -105,13 +104,13 @@
       btnConfirmar.innerHTML = '<span class="spinner"></span> A processar...';
 
       setTimeout(async function () {
-        var ok = await registarPagamento(phone);
-        if (!ok) {
+        var pagamentoCriado = await registarPagamento(phone);
+        if (!pagamentoCriado) {
           btnConfirmar.disabled = false;
           btnConfirmar.textContent = 'Confirmar pagamento';
           return;
         }
-        showSuccess();
+        showSuccess(pagamentoCriado);
       }, 2000);
     });
   }
@@ -119,88 +118,66 @@
   async function registarPagamento(phone) {
     if (!doc) return false;
 
-    if (typeof Api !== 'undefined' && Api.pagamentos && Api.pagamentos.create) {
-      try {
-        await Api.pagamentos.create({
-          doc_id: doc.id,
-          telefone: phone,
-          valor: doc.taxaKz
-        });
-        return true;
-      } catch (apiErr) {
-        alert(apiErr && apiErr.message ? apiErr.message : 'Falha ao registar pagamento no servidor.');
-        return false;
-      }
+    if (!(typeof Api !== 'undefined' && Api.pagamentos && Api.pagamentos.create)) {
+      alert('API de pagamentos indisponível.');
+      return false;
     }
 
-    var existing = Array.isArray(pagamentos)
-      ? pagamentos.find(function (item) { return item.docId === doc.id; })
-      : null;
-    var now = new Date().toISOString().split('T')[0];
-    var record = {
-      id: existing ? existing.id : buildPagamentoId(),
-      docId: doc.id,
-      utilizador: utilizadorLogado && utilizadorLogado.nome ? utilizadorLogado.nome : 'Cliente AcheiDoc',
-      email: utilizadorLogado && utilizadorLogado.email ? utilizadorLogado.email : 'cliente@acheidoc.ao',
-      tipoDoc: doc.tipo,
-      valor: doc.taxaKz,
-      entidade: typeof PAYPAY_ENTIDADE !== 'undefined' ? PAYPAY_ENTIDADE : '00282',
-      referencia: existing && existing.referencia ? existing.referencia : buildReferencia(doc.id),
-      status: 'PAGO',
-      dataCriacao: existing && existing.dataCriacao ? existing.dataCriacao : now,
-      dataPagamento: now,
-      telefonePagamento: phone
-    };
-
-    upsertPagamentoRecord(record);
-    return true;
+    try {
+      return await Api.pagamentos.create({
+        doc_id: doc.id,
+        telefone: phone,
+        valor: doc.taxaKz
+      });
+    } catch (apiErr) {
+      alert(apiErr && apiErr.message ? apiErr.message : 'Falha ao registar pagamento no servidor.');
+      return null;
+    }
   }
 
-  function buildPagamentoId() {
-    return 'PAG-' + Date.now();
-  }
-
-  function buildReferencia(docIdValue) {
-    var numeric = String(docIdValue || '').replace(/\D/g, '').slice(-9);
-    return numeric.replace(/(\d{3})(?=\d)/g, '$1 ').trim();
-  }
-
-  function showSuccess() {
+  function showSuccess(payload) {
     if (paymentForm) paymentForm.classList.add('hidden');
     if (successSection) successSection.classList.remove('hidden');
 
     // Código de resgate
     var codigoEl = document.getElementById('codigoResgate');
-    var codigo = '';
-    if (docId && typeof CODIGOS_RESGATE !== 'undefined' && CODIGOS_RESGATE[docId]) {
-      codigo = CODIGOS_RESGATE[docId];
-    } else {
-      // Gerar código aleatório
-      codigo = Math.random().toString(36).substring(2, 8).toUpperCase();
+    var pagamento = payload && payload.pagamento ? payload.pagamento : null;
+    var pontoEntrega = payload && payload.ponto_entrega ? payload.ponto_entrega : null;
+    var codigo = payload && payload.codigo_resgate ? String(payload.codigo_resgate) : '';
+    if (!pagamento || !codigo || !pontoEntrega || !pontoEntrega.nome || !pontoEntrega.endereco || !pontoEntrega.telefone) {
+      alert('Pagamento registado, mas o servidor não devolveu os dados de levantamento necessários.');
+      window.location.reload();
+      return;
     }
     if (codigoEl) codigoEl.textContent = codigo;
 
     // Ponto de entrega
-    if (doc && typeof PONTOS_ENTREGA !== 'undefined') {
-      var ponto = PONTOS_ENTREGA.find(function (p) { return p.id === doc.pontoEntregaId; });
-      if (ponto) {
-        setEl('successPontoNome', ponto.nome);
-        setEl('successPontoEndereco', ponto.endereco);
-        setEl('successPontoHorario', ponto.horario);
-        setEl('successPontoTel', ponto.telefone);
-      }
-    }
+    var pontoNome = pontoEntrega.nome;
+    var pontoEndereco = pontoEntrega.endereco;
+    var pontoHorario = pontoEntrega.horario || '-';
+    var pontoTel = pontoEntrega.telefone;
+    var pontoAgente = pontoEntrega.agente_nome || '-';
+
+    setEl('successPontoNome', pontoNome);
+    setEl('successPontoEndereco', pontoEndereco);
+    setEl('successPontoHorario', pontoHorario);
+    setEl('successPontoTel', pontoTel);
 
     // Botão ver instruções
     var btnInstrucoes = document.getElementById('btnInstrucoes');
     if (btnInstrucoes) {
       btnInstrucoes.addEventListener('click', function () {
-        var url = 'ponto-entrega.html';
-        if (docId) {
-          var codigo = codigoEl ? codigoEl.textContent : '';
-          url += '?id=' + encodeURIComponent(docId) + '&codigo=' + encodeURIComponent(codigo);
-        }
-        window.location.assign(url);
+        var codigoAtual = codigoEl ? codigoEl.textContent : '';
+        var qs = new URLSearchParams({
+          id: docId || '',
+          codigo: codigoAtual,
+          pontoNome: pontoNome,
+          pontoEndereco: pontoEndereco,
+          pontoHorario: pontoHorario,
+          pontoTelefone: pontoTel,
+          pontoAgente: pontoAgente
+        }).toString();
+        window.location.assign('ponto-entrega.html?' + qs);
       });
     }
 

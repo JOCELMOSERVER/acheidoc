@@ -93,54 +93,9 @@
     </div>
   </div>
 </footer>
-
-<script src="js/mockData.js"></script>
+<script src="js/api.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/navbar.js"></script>
-<script>
-(function () {
-  var tabelaBody = document.getElementById('achadosTabela');
-  var filterTabs = document.querySelectorAll('.filter-tab');
-  var filtroAtual = '';
-
-  function renderTabela(filtro) {
-    if (!tabelaBody) return;
-    var docs = DOCUMENTOS.filter(function (d) {
-      return !filtro || d.status === filtro;
-    });
-
-    if (docs.length === 0) {
-      tabelaBody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-gray);">Nenhum achado encontrado.</td></tr>`;
-      return;
-    }
-
-    tabelaBody.innerHTML = docs.map(function (d) {
-      var pontos = d.status === 'ENTREGUE' ? '+60 pts' : d.status === 'AGUARDANDO_ENTREGA' ? '+10 pts' : '—';
-      var cor = pontos !== '—' ? 'color:var(--success); font-weight:700;' : '';
-      return `
-        <tr>
-          <td><code>${d.id}</code></td>
-          <td>${d.tipo}</td>
-          <td>${d.nomeParcial}</td>
-          <td><span class="badge ${getStatusBadgeClass(d.status)}">${getStatusLabel(d.status)}</span></td>
-          <td>${formatDate(d.dataCriacao)}</td>
-          <td style="${cor}">${pontos}</td>
-          <td><a href="detalhes.html?id=${d.id}" class="btn btn-outline btn-sm">Ver</a></td>
-        </tr>`;
-    }).join('');
-  }
-
-  filterTabs.forEach(function (tab) {
-    tab.addEventListener('click', function () {
-      filterTabs.forEach(function (t) { t.classList.remove('active'); });
-      tab.classList.add('active');
-      filtroAtual = tab.getAttribute('data-filter') || '';
-      renderTabela(filtroAtual);
-    });
-  });
-
-  renderTabela('');
-})();
-</script>
+<script src="js/meus-achados.js"></script>
 </body>
 </html>

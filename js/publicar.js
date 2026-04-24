@@ -110,7 +110,7 @@
       reader.onload = function (e) {
         fotoPreviewImg.src = e.target.result;
         fotoPreview.classList.remove('hidden');
-        formData.fotoUrl = e.target.result;
+        formData.fotoPreview = e.target.result;
       };
       reader.readAsDataURL(file);
     });
@@ -150,54 +150,49 @@
       btnPublicar.innerHTML = '<span class="spinner"></span> A publicar...';
 
       setTimeout(async function () {
-        var id = 'DOC-2026-' + String(Math.floor(Math.random() * 999999)).padStart(6, '0');
-        var ponto = getNearestPoint(formData.municipio);
-        var utilizador = typeof Auth !== 'undefined' && typeof Auth.getUser === 'function'
-          ? Auth.getUser()
-          : null;
+        var id = '';
+        var ponto = null;
 
-        if (typeof Api !== 'undefined' && Api.documentos && Api.documentos.create) {
-          try {
-            var response = await Api.documentos.create({
-              tipo: formData.tipo,
-              nome_proprietario: formData.nome,
-              morada: formData.local,
-              provincia: formData.municipio,
-              foto_url: formData.fotoUrl || null
-            });
+        if (!(typeof Api !== 'undefined' && Api.documentos && Api.documentos.createWithFile)) {
+          alert('API de documentos indisponível.');
+          btnPublicar.disabled = false;
+          btnPublicar.textContent = 'Publicar Documento';
+          return;
+        }
 
-            if (response && response.documento && response.documento.id) {
-              id = response.documento.id;
-            }
-          } catch (apiErr) {
-            alert(apiErr && apiErr.message ? apiErr.message : 'Falha ao publicar no servidor.');
-            btnPublicar.disabled = false;
-            btnPublicar.textContent = 'Publicar Documento';
-            return;
+        try {
+          var formDataAPI = new FormData();
+          formDataAPI.append('tipo', formData.tipo);
+          formDataAPI.append('nome_proprietario', formData.nome);
+          formDataAPI.append('morada', formData.local);
+          formDataAPI.append('provincia', formData.municipio);
+          
+          if (fotoInput && fotoInput.files && fotoInput.files[0]) {
+            formDataAPI.append('foto', fotoInput.files[0]);
           }
-        } else if (typeof getDocumentosData === 'function' && typeof saveDocumentosData === 'function') {
-          var documentos = getDocumentosData();
-          documentos.unshift({
-            id: id,
-            tipo: formData.tipo,
-            nomeCompleto: formData.nome,
-            nomeParcial: mascaraNome(formData.nome),
-            foto: formData.fotoUrl || createDocMockImage(formData.tipo || 'Documento', '#dbeafe', '#bfdbfe'),
-            localEncontrado: formData.local + ', ' + formData.municipio,
-            localParcial: formData.local + ', ' + formData.municipio,
-            dataCriacao: new Date().toISOString().split('T')[0],
-            status: 'PENDENTE',
-            risco: 'MEDIO',
-            taxaKz: 500,
-            pontoEntregaId: ponto.id || 1,
-            encontradoPor: utilizador && utilizador.nome ? utilizador.nome : 'Utilizador AcheiDoc',
-            contactoEncontrador: utilizador && utilizador.telefone ? utilizador.telefone : '+244 000 000 000'
-          });
-          saveDocumentosData(documentos);
+
+          var response = await Api.documentos.createWithFile(formDataAPI);
+
+          if (response && response.documento && response.documento.id) {
+            id = response.documento.id;
+          }
+
+          if (response && response.ponto_entrega) {
+            ponto = response.ponto_entrega;
+          }
+
+          if (!id || !ponto || !ponto.nome || !ponto.endereco || !ponto.telefone) {
+            throw new Error('Resposta incompleta do servidor ao publicar documento.');
+          }
+        } catch (apiErr) {
+          alert(apiErr && apiErr.message ? apiErr.message : 'Falha ao publicar no servidor.');
+          btnPublicar.disabled = false;
+          btnPublicar.textContent = 'Publicar Documento';
+          return;
         }
 
         setEl('recomendadoPontoNome', ponto.nome);
-        setEl('recomendadoAgente', 'Agente responsável: ' + ponto.agente);
+        setEl('recomendadoAgente', 'Agente responsável: ' + (ponto.agente_nome || ponto.agente || '-'));
         setEl('recomendadoEndereco', ponto.endereco);
         setEl('recomendadoHorario', 'Horário: ' + ponto.horario);
         setEl('recomendadoTelefone', 'Telefone: ' + ponto.telefone);
@@ -207,35 +202,6 @@
         if (newDocId) newDocId.textContent = id;
       }, 1500);
     });
-  }
-
-  function normalizeText(value) {
-    return (value || '')
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '');
-  }
-
-  function getNearestPoint(municipio) {
-    if (!Array.isArray(PONTOS_ENTREGA) || PONTOS_ENTREGA.length === 0) {
-      return {
-        nome: 'Ponto de entrega a definir',
-        agente: 'Equipa AcheiDoc',
-        endereco: 'Confirme no suporte o ponto disponível.',
-        horario: 'Seg–Sex: 08h–17h',
-        telefone: '+244 000 000 000'
-      };
-    }
-
-    var municipioNorm = normalizeText(municipio);
-    var pontoExato = PONTOS_ENTREGA.find(function (p) {
-      var nomeNorm = normalizeText(p.nome);
-      var enderecoNorm = normalizeText(p.endereco);
-      return nomeNorm.includes(municipioNorm) || enderecoNorm.includes(municipioNorm);
-    });
-
-    if (pontoExato) return pontoExato;
-    return PONTOS_ENTREGA[0];
   }
 
   function setEl(id, val) {

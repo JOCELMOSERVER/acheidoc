@@ -34,46 +34,29 @@
   }
 
   (async function loadHistorico() {
-    if (typeof Api !== 'undefined' && Api.documentos && Api.documentos.agenteLista) {
-      try {
-        var response = await Api.documentos.agenteLista({ status: 'ENTREGUE' });
-        var listaApi = (response && response.documentos ? response.documentos : []).map(function (d) {
-          return {
-            data: (d.criado_em || d.data_publicacao || '').slice(0, 10),
-            docId: d.id,
-            tipoDoc: d.tipo,
-            acao: 'Entrega confirmada ao dono',
-            pontos: 10
-          };
-        });
-        renderHistorico(listaApi);
-        return;
-      } catch (err) {
-        // fallback local
-      }
+    if (!(typeof Api !== 'undefined' && Api.documentos && Api.documentos.agenteLista)) {
+      alert('API de histórico indisponível.');
+      return;
     }
 
-    if (typeof HISTORICO_PONTOS !== 'undefined') {
-      renderHistorico(HISTORICO_PONTOS);
+    try {
+      var response = await Api.documentos.agenteLista({ status: 'ENTREGUE' });
+      var listaApi = (response && response.documentos ? response.documentos : []).map(function (d) {
+        return {
+          data: (d.criado_em || d.data_publicacao || '').slice(0, 10),
+          docId: d.id,
+          tipoDoc: d.tipo,
+          acao: 'Entrega confirmada ao dono',
+          pontos: 10
+        };
+      });
+      renderHistorico(listaApi);
+    } catch (err) {
+      alert(err && err.message ? err.message : 'Falha ao carregar histórico.');
     }
   })();
 
-  // Filtro por mês
-  var mesSelect = document.getElementById('mesSelect');
-  if (mesSelect) {
-    mesSelect.addEventListener('change', function () {
-      // Simulação do filtro: sem efeito real nos dados mock
-      alert('Filtro por mês: ' + (mesSelect.value || 'Todos os meses'));
-    });
-  }
-
-  // Exportar (simulado)
-  var btnExportar = document.getElementById('btnExportar');
-  if (btnExportar) {
-    btnExportar.addEventListener('click', function () {
-      alert('Exportação iniciada. O ficheiro CSV será gerado em breve.');
-    });
-  }
+  // Filtro por mês e exportação dependem de endpoint dedicado.
 
   // Logout
   var btnLogout = document.getElementById('btnLogout');
@@ -86,9 +69,7 @@
   }
 
   function getTipoDoc(docId) {
-    if (typeof DOCUMENTOS === 'undefined') return '—';
-    var doc = DOCUMENTOS.find(function (d) { return d.id === docId; });
-    return doc ? doc.tipo : '—';
+    return '—';
   }
 
   function setEl(id, val) {

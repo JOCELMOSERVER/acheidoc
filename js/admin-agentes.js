@@ -3,7 +3,6 @@
    =========================== */
 
 (function () {
-  var STORAGE_KEY = 'acheidoc_admin_agentes';
   var adminLogado = JSON.parse(sessionStorage.getItem('adminLogado') || 'null');
   if (!adminLogado) {
     window.location.href = 'login.html';
@@ -19,29 +18,10 @@
   bindFiltros();
   bindLogout();
 
-  function loadAgentesLocal() {
-    var saved = safeParse(localStorage.getItem(STORAGE_KEY));
-    if (Array.isArray(saved) && saved.length) return saved;
-
-    var base = Array.isArray(AGENTES) ? AGENTES : [];
-    var seeded = base.map(function (a) {
-      return Object.assign({}, a, {
-        status: a.status || 'ATIVO',
-        ultimaActividade: a.ultimaActividade || new Date().toISOString().split('T')[0]
-      });
-    });
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(seeded));
-    return seeded;
-  }
-
-  function saveAgentes() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(agentes));
-  }
-
   function getPontoNome(pontoId) {
-    if (!Array.isArray(PONTOS_ENTREGA)) return '—';
-    var ponto = PONTOS_ENTREGA.find(function (p) { return p.id === pontoId; });
-    return ponto ? ponto.nome : '—';
+    var agente = agentes.find(function (item) { return String(item.pontoId) === String(pontoId); });
+    if (agente && agente.pontoNome) return agente.pontoNome;
+    return pontoId ? 'Ponto ' + pontoId : '—';
   }
 
   function renderResumo() {
@@ -124,50 +104,42 @@
 
     var nextStatus = alvo.status === 'ATIVO' ? 'INATIVO' : 'ATIVO';
 
-    if (typeof Api !== 'undefined' && Api.adminAgentes && Api.adminAgentes.updateStatus) {
-      try {
-        await Api.adminAgentes.updateStatus(agentId, nextStatus);
-      } catch (apiErr) {
-        alert(apiErr && apiErr.message ? apiErr.message : 'Falha ao actualizar estado do agente.');
-        return;
-      }
+    if (!(typeof Api !== 'undefined' && Api.adminAgentes && Api.adminAgentes.updateStatus)) {
+      alert('API de agentes indisponível.');
+      return;
     }
 
-    agentes = agentes.map(function (a) {
-      if (String(a.id) !== String(agentId)) return a;
-      return Object.assign({}, a, {
-        status: nextStatus,
-        ultimaActividade: new Date().toISOString().split('T')[0]
+    try {
+      await Api.adminAgentes.updateStatus(agentId, nextStatus);
+      agentes = agentes.map(function (a) {
+        if (String(a.id) !== String(agentId)) return a;
+        return Object.assign({}, a, { status: nextStatus });
       });
-    });
-
-    saveAgentes();
-    renderResumo();
-    renderTabela(filtroAtual);
+      renderResumo();
+      renderTabela(filtroAtual);
+    } catch (apiErr) {
+      alert(apiErr && apiErr.message ? apiErr.message : 'Falha ao actualizar estado do agente.');
+    }
   }
 
   async function changeAgentPoints(agentId, delta) {
-    if (typeof Api !== 'undefined' && Api.adminAgentes && Api.adminAgentes.addPontos) {
-      try {
-        await Api.adminAgentes.addPontos(agentId, delta);
-      } catch (apiErr) {
-        alert(apiErr && apiErr.message ? apiErr.message : 'Falha ao alterar pontos do agente.');
-        return;
-      }
+    if (!(typeof Api !== 'undefined' && Api.adminAgentes && Api.adminAgentes.addPontos)) {
+      alert('API de agentes indisponível.');
+      return;
     }
 
-    agentes = agentes.map(function (a) {
-      if (String(a.id) !== String(agentId)) return a;
-      var nextPoints = Number(a.pontos || 0) + delta;
-      return Object.assign({}, a, {
-        pontos: Math.max(0, nextPoints),
-        ultimaActividade: new Date().toISOString().split('T')[0]
+    try {
+      await Api.adminAgentes.addPontos(agentId, delta);
+      agentes = agentes.map(function (a) {
+        if (String(a.id) !== String(agentId)) return a;
+        var nextPoints = Number(a.pontos || 0) + delta;
+        return Object.assign({}, a, { pontos: Math.max(0, nextPoints) });
       });
-    });
-
-    saveAgentes();
-    renderResumo();
-    renderTabela(filtroAtual);
+      renderResumo();
+      renderTabela(filtroAtual);
+    } catch (apiErr) {
+      alert(apiErr && apiErr.message ? apiErr.message : 'Falha ao alterar pontos do agente.');
+    }
   }
 
   function bindFiltros() {
@@ -192,26 +164,25 @@
   }
 
   (async function init() {
-    if (typeof Api !== 'undefined' && Api.adminAgentes && Api.adminAgentes.list) {
-      try {
-        var response = await Api.adminAgentes.list({ page: 1, limit: 200 });
-        agentes = (response && response.agentes ? response.agentes : []).map(function (a) {
-          return Object.assign({}, a, {
-            ultimaActividade: (a.criado_em || '').slice(0, 10) || new Date().toISOString().slice(0, 10),
-            pontoId: a.pontoId || null
-          });
-        });
-        renderResumo();
-        renderTabela(filtroAtual);
-        return;
-      } catch (apiErr) {
-        // fallback local
-      }
+    if (!(typeof Api !== 'undefined' && Api.adminAgentes && Api.adminAgentes.list)) {
+      alert('API de agentes indisponível.');
+      return;
     }
 
-    agentes = loadAgentesLocal();
-    renderResumo();
-    renderTabela(filtroAtual);
+    try {
+      var response = await Api.adminAgentes.list({ page: 1, limit: 200 });
+      agentes = (response && response.agentes ? response.agentes : []).map(function (a) {
+        return Object.assign({}, a, {
+          ultimaActividade: (a.criado_em || '').slice(0, 10) || new Date().toISOString().slice(0, 10),
+          pontoId: a.ponto_id || a.pontoId || null,
+          pontoNome: a.ponto_nome || a.pontoNome || null
+        });
+      });
+      renderResumo();
+      renderTabela(filtroAtual);
+    } catch (apiErr) {
+      alert(apiErr && apiErr.message ? apiErr.message : 'Falha ao carregar agentes.');
+    }
   })();
 
   function setEl(id, val) {

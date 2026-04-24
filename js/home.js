@@ -36,12 +36,16 @@
   // ── Documentos recentes ──
   var recentGrid = document.getElementById('recentDocs');
 
+  function defaultDocImage() {
+    return 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="480"><rect width="100%" height="100%" fill="%23e5e7eb"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="28" fill="%236b7280">Documento</text></svg>';
+  }
+
   function toLegacyDoc(item) {
     return {
       id: item.id,
       tipo: item.tipo,
       nomeParcial: item.nome_proprietario || 'Proprietário',
-      foto: item.foto_url || createDocMockImage(item.tipo || 'Documento', '#dbeafe', '#bfdbfe'),
+      foto: item.foto_url || defaultDocImage(),
       localParcial: item.provincia || 'Luanda',
       dataCriacao: item.data_publicacao ? String(item.data_publicacao).slice(0, 10) : new Date().toISOString().slice(0, 10),
       status: item.status || 'PUBLICADO'
@@ -51,24 +55,18 @@
   (async function loadRecentDocs() {
     if (!recentGrid) return;
 
-    if (typeof Api !== 'undefined' && Api.documentos && Api.documentos.list) {
-      try {
-        var response = await Api.documentos.list({ limit: 4, page: 1 });
-        var apiDocs = (response && response.documentos ? response.documentos : []).map(toLegacyDoc);
-        recentGrid.innerHTML = apiDocs.map(function (d) { return buildDocCard(d, ''); }).join('');
-        return;
-      } catch (apiErr) {
-        // fallback local
-      }
+    if (!(typeof Api !== 'undefined' && Api.documentos && Api.documentos.list)) {
+      recentGrid.innerHTML = '<p class="text-gray">API de documentos indisponível.</p>';
+      return;
     }
 
-    var documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
-    if (!Array.isArray(documentos)) return;
-    var publicados = documentos.filter(function (d) { return d.status === 'PUBLICADO'; }).slice(0, 4);
-    if (publicados.length === 0) {
-      publicados = documentos.slice(0, 4);
+    try {
+      var response = await Api.documentos.list({ limit: 4, page: 1 });
+      var apiDocs = (response && response.documentos ? response.documentos : []).map(toLegacyDoc);
+      recentGrid.innerHTML = apiDocs.map(function (d) { return buildDocCard(d, ''); }).join('');
+    } catch (apiErr) {
+      recentGrid.innerHTML = '<p class="text-gray">Não foi possível carregar documentos recentes.</p>';
     }
-    recentGrid.innerHTML = publicados.map(function (d) { return buildDocCard(d, ''); }).join('');
   })();
 
   // ── Busca rápida ──

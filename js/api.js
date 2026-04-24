@@ -154,10 +154,20 @@
       detail: function (id) {
         return request('/api/documentos/' + encodeURIComponent(id), { method: 'GET', skipAuth: true });
       },
+      myList: function (query) {
+        var qs = query ? ('?' + new URLSearchParams(query).toString()) : '';
+        return request('/api/documentos/meus' + qs, { method: 'GET' });
+      },
       create: function (payload) {
         return request('/api/documentos', {
           method: 'POST',
           body: JSON.stringify(payload)
+        });
+      },
+      createWithFile: function (formData) {
+        return request('/api/documentos', {
+          method: 'POST',
+          body: formData
         });
       },
       adminList: function (query) {
@@ -204,6 +214,31 @@
       adminRejeitar: function (id) {
         return request('/api/pagamentos/admin/' + encodeURIComponent(id) + '/rejeitar', {
           method: 'PATCH'
+        });
+      }
+    },
+
+    pontosEntrega: {
+      list: function () {
+        return request('/api/pontos-entrega', { method: 'GET', skipAuth: true });
+      },
+      nearest: function (query) {
+        var qs = query ? ('?' + new URLSearchParams(query).toString()) : '';
+        return request('/api/pontos-entrega/nearest' + qs, { method: 'GET', skipAuth: true });
+      },
+      byDocumento: function (id) {
+        return request('/api/pontos-entrega/documento/' + encodeURIComponent(id), { method: 'GET', skipAuth: true });
+      }
+    },
+
+    recompensas: {
+      summary: function () {
+        return request('/api/recompensas', { method: 'GET' });
+      },
+      redeem: function (beneficioCodigo) {
+        return request('/api/recompensas/resgatar', {
+          method: 'POST',
+          body: JSON.stringify({ beneficio_codigo: beneficioCodigo })
         });
       }
     },

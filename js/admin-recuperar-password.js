@@ -3,8 +3,6 @@
    =========================== */
 
 (function () {
-  var STORAGE_PWD = 'acheidoc_password_overrides_admin';
-
   var form = document.getElementById('formRecuperar');
   var errorMsg = document.getElementById('errorMsg');
   var okMsg = document.getElementById('okMsg');
@@ -18,32 +16,23 @@
     var validacao = validateIdentityAndPassword();
     if (!validacao.ok) return showError(validacao.msg);
 
-    if (typeof Api !== 'undefined' && Api.adminAuth && Api.adminAuth.recover) {
-      try {
-        await Api.adminAuth.recover(validacao.email);
-        var otp = window.prompt('Introduza o código OTP enviado para o email:');
-        if (!otp) return showError('Código OTP obrigatório.');
-        await Api.adminAuth.resetPassword(validacao.email, otp.trim(), validacao.novaSenha);
-        showOk('Password actualizada com sucesso.');
-        form.reset();
-        setTimeout(function () {
-          window.location.href = 'login.html';
-        }, 1200);
-        return;
-      } catch (apiErr) {
-        return showError(apiErr && apiErr.message ? apiErr.message : 'Erro ao recuperar password do admin.');
-      }
+    if (!(typeof Api !== 'undefined' && Api.adminAuth && Api.adminAuth.recover)) {
+      return showError('Serviço de recuperação admin indisponível. Verifique a API.');
     }
 
-    var overrides = safeParse(localStorage.getItem(STORAGE_PWD)) || {};
-    overrides[validacao.email] = validacao.novaSenha;
-    localStorage.setItem(STORAGE_PWD, JSON.stringify(overrides));
-
-    showOk('Email enviado para ' + validacao.email + ' com a nova password.');
-    form.reset();
-    setTimeout(function () {
-      window.location.href = 'login.html';
-    }, 1200);
+    try {
+      await Api.adminAuth.recover(validacao.email);
+      var otp = window.prompt('Introduza o código OTP enviado para o email:');
+      if (!otp) return showError('Código OTP obrigatório.');
+      await Api.adminAuth.resetPassword(validacao.email, otp.trim(), validacao.novaSenha);
+      showOk('Password actualizada com sucesso.');
+      form.reset();
+      setTimeout(function () {
+        window.location.href = 'login.html';
+      }, 1200);
+    } catch (apiErr) {
+      return showError(apiErr && apiErr.message ? apiErr.message : 'Erro ao recuperar password do admin.');
+    }
   });
 
   function validateIdentityAndPassword() {
@@ -59,13 +48,6 @@
     }
     if (novaSenha !== confirmar) {
       return { ok: false, msg: 'A confirmação da password não coincide.' };
-    }
-
-    var admin = Array.isArray(ADMIN)
-      ? ADMIN.find(function (a) { return String(a.email || '').toLowerCase() === email; })
-      : null;
-    if (!admin) {
-      return { ok: false, msg: 'Email de administrador não encontrado.' };
     }
 
     return { ok: true, email: email, novaSenha: novaSenha };
@@ -93,8 +75,4 @@
     if (okMsg) okMsg.classList.add('hidden');
   }
 
-  function safeParse(raw) {
-    try { return raw ? JSON.parse(raw) : null; }
-    catch (e) { return null; }
-  }
 })();

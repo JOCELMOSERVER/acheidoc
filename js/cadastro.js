@@ -49,69 +49,44 @@ document.getElementById('formCadastro').addEventListener('submit', async functio
     alerta.style.display = 'block';
     return;
   }
-  if ((typeof Api === 'undefined' || !Api.auth || !Api.auth.register) && UTILIZADORES.find(function (u) { return u.email === email; })) {
-    alerta.textContent = 'Este email já está registado.';
+  if (!(typeof Api !== 'undefined' && Api.auth && Api.auth.register)) {
+    alerta.textContent = 'Serviço de cadastro indisponível. Verifique a API.';
     alerta.style.display = 'block';
     return;
   }
 
   // Tentar fluxo real da API (registo + verificação OTP)
-  if (typeof Api !== 'undefined' && Api.auth && Api.auth.register) {
-    try {
-      await Api.auth.register({
-        nome: nome,
-        email: email,
-        telefone: telefone,
-        password: senha
-      });
+  try {
+    await Api.auth.register({
+      nome: nome,
+      email: email,
+      telefone: telefone,
+      password: senha
+    });
 
-      var otp = window.prompt('Introduza o código OTP enviado para o seu email:');
-      if (!otp) {
-        alerta.textContent = 'Código OTP obrigatório para concluir o cadastro.';
-        alerta.style.display = 'block';
-        return;
-      }
-
-      var verifyResp = await Api.auth.verifyEmail(email, otp.trim());
-      var tokenApi = verifyResp && verifyResp.token ? verifyResp.token : null;
-      var userApi = verifyResp && verifyResp.utilizador ? verifyResp.utilizador : null;
-
-      if (userApi && tokenApi) {
-        Auth.login(Object.assign({}, userApi, { role: 'utilizador' }), tokenApi);
-        document.getElementById('formCadastro').style.display = 'none';
-        document.getElementById('sucessoCadastro').style.display = 'block';
-        document.getElementById('nomeBoasVindas').textContent = nome;
-        return;
-      }
-    } catch (apiErr) {
-      alerta.textContent = apiErr && apiErr.message ? apiErr.message : 'Não foi possível concluir o cadastro online.';
+    var otp = window.prompt('Introduza o código OTP enviado para o seu email:');
+    if (!otp) {
+      alerta.textContent = 'Código OTP obrigatório para concluir o cadastro.';
       alerta.style.display = 'block';
       return;
     }
+
+    var verifyResp = await Api.auth.verifyEmail(email, otp.trim());
+    var tokenApi = verifyResp && verifyResp.token ? verifyResp.token : null;
+    var userApi = verifyResp && verifyResp.utilizador ? verifyResp.utilizador : null;
+
+    if (!userApi || !tokenApi) {
+      throw new Error('Resposta inválida do servidor no cadastro.');
+    }
+
+    Auth.login(Object.assign({}, userApi, { role: 'utilizador' }), tokenApi);
+    document.getElementById('formCadastro').style.display = 'none';
+    document.getElementById('sucessoCadastro').style.display = 'block';
+    document.getElementById('nomeBoasVindas').textContent = nome;
+  } catch (apiErr) {
+    alerta.textContent = apiErr && apiErr.message ? apiErr.message : 'Não foi possível concluir o cadastro online.';
+    alerta.style.display = 'block';
   }
-
-  // Fallback local/mock
-  const novoUtilizador = {
-    id: UTILIZADORES.length + 1,
-    nome: nome,
-    email: email,
-    telefone: telefone,
-    municipio: municipio,
-    senha: senha,
-    dataCadastro: new Date().toISOString().split('T')[0],
-    pontos: 0,
-    role: 'utilizador',
-    documentosPublicados: [],
-    documentosResgatados: []
-  };
-
-  UTILIZADORES.push(novoUtilizador);
-  Auth.login(novoUtilizador);
-
-  // Mostrar sucesso
-  document.getElementById('formCadastro').style.display = 'none';
-  document.getElementById('sucessoCadastro').style.display = 'block';
-  document.getElementById('nomeBoasVindas').textContent = nome;
 });
 
 // Toggle password visibility

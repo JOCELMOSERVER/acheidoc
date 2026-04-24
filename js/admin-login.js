@@ -28,56 +28,40 @@
         btnEntrar.innerHTML = '<span class="spinner"></span> A entrar...';
       }
 
-      if (typeof Api !== 'undefined' && Api.adminAuth && Api.adminAuth.login) {
-        try {
-          var response = await Api.adminAuth.login(email, senha);
-          var adminApi = response && response.admin ? response.admin : null;
-          var tokenApi = response && response.token ? response.token : null;
-
-          if (adminApi && tokenApi) {
-            sessionStorage.setItem('adminLogado', JSON.stringify(adminApi));
-            Api.setToken(tokenApi);
-            window.location.href = 'dashboard.html';
-            return;
-          }
-        } catch (apiErr) {
-          if (errorMsg) {
-            errorMsg.textContent = apiErr && apiErr.message ? apiErr.message : 'Falha no login do administrador.';
-            errorMsg.classList.remove('hidden');
-          }
-          if (btnEntrar) {
-            btnEntrar.disabled = false;
-            btnEntrar.textContent = 'Entrar';
-          }
-          return;
+      if (!(typeof Api !== 'undefined' && Api.adminAuth && Api.adminAuth.login)) {
+        if (errorMsg) {
+          errorMsg.textContent = 'Serviço de autenticação admin indisponível. Verifique a API.';
+          errorMsg.classList.remove('hidden');
         }
-      }
-
-      if (typeof ADMIN === 'undefined') return;
-
-      var pwdOverrides = {};
-      try {
-        pwdOverrides = JSON.parse(localStorage.getItem('acheidoc_password_overrides_admin') || '{}') || {};
-      } catch (err) {
-        pwdOverrides = {};
-      }
-
-      var admin = ADMIN.find(function (a) {
-        if (a.email !== email) return false;
-        var senhaReal = pwdOverrides[String(a.email || '').toLowerCase()] || a.senha;
-        return senhaReal === senha;
-      });
-
-      if (!admin) {
-        if (errorMsg) { errorMsg.textContent = 'Credenciais inválidas. Tente novamente.'; errorMsg.classList.remove('hidden'); }
+        if (btnEntrar) {
+          btnEntrar.disabled = false;
+          btnEntrar.textContent = 'Entrar';
+        }
         return;
       }
 
-      sessionStorage.setItem('adminLogado', JSON.stringify(admin));
+      try {
+        var response = await Api.adminAuth.login(email, senha);
+        var adminApi = response && response.admin ? response.admin : null;
+        var tokenApi = response && response.token ? response.token : null;
 
-      setTimeout(function () {
+        if (!adminApi || !tokenApi) {
+          throw new Error('Resposta inválida do servidor de autenticação.');
+        }
+
+        sessionStorage.setItem('adminLogado', JSON.stringify(adminApi));
+        Api.setToken(tokenApi);
         window.location.href = 'dashboard.html';
-      }, 800);
+      } catch (apiErr) {
+        if (errorMsg) {
+          errorMsg.textContent = apiErr && apiErr.message ? apiErr.message : 'Falha no login do administrador.';
+          errorMsg.classList.remove('hidden');
+        }
+        if (btnEntrar) {
+          btnEntrar.disabled = false;
+          btnEntrar.textContent = 'Entrar';
+        }
+      }
     });
   }
 })();

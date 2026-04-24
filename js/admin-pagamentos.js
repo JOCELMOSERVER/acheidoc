@@ -46,7 +46,7 @@
     setEl('countPendentes', pendentes);
     setEl('countPagos', pagos);
     setEl('totalReceita', receita.toLocaleString('pt-AO') + ' Kz');
-    setEl('entidadeDisplay', typeof PAYPAY_ENTIDADE !== 'undefined' ? PAYPAY_ENTIDADE : '00282');
+    setEl('entidadeDisplay', '00282');
   }
 
   calcularResumo();
@@ -157,23 +157,16 @@
       btnModalConfirmar.innerHTML = '<span class="spinner"></span> A registar...';
 
       setTimeout(async function () {
-        /* Actualizar o objecto na lista em memória */
-        var p = pagamentos.find(function (x) { return x.id === pagamentoSelecionadoId; });
         try {
-          if (typeof Api !== 'undefined' && Api.pagamentos && Api.pagamentos.adminConfirmar) {
-            var response = await Api.pagamentos.adminConfirmar(pagamentoSelecionadoId);
-            if (response && response.pagamento) {
-              var updated = toLegacyPagamento(response.pagamento);
-              pagamentos = pagamentos.map(function (item) {
-                return item.id === updated.id ? updated : item;
-              });
-            }
-          } else if (p) {
-            p.status = 'PAGO';
-            p.dataPagamento = new Date().toISOString().split('T')[0];
-            if (typeof savePagamentosData === 'function') {
-              savePagamentosData(pagamentos);
-            }
+          if (!(typeof Api !== 'undefined' && Api.pagamentos && Api.pagamentos.adminConfirmar)) {
+            throw new Error('API de pagamentos indisponível.');
+          }
+          var response = await Api.pagamentos.adminConfirmar(pagamentoSelecionadoId);
+          if (response && response.pagamento) {
+            var updated = toLegacyPagamento(response.pagamento);
+            pagamentos = pagamentos.map(function (item) {
+              return item.id === updated.id ? updated : item;
+            });
           }
         } catch (apiErr) {
           var failEl = document.getElementById('modalResult');
@@ -229,24 +222,19 @@
 
   /* ── Render inicial ── */
   async function loadPagamentos() {
-    if (typeof Api !== 'undefined' && Api.pagamentos && Api.pagamentos.adminList) {
-      try {
-        var response = await Api.pagamentos.adminList({ page: 1, limit: 200 });
-        pagamentos = (response && response.pagamentos ? response.pagamentos : []).map(toLegacyPagamento);
-        calcularResumo();
-        renderTabela(filtroAtual);
-        return;
-      } catch (apiErr) {
-        // fallback local
-      }
+    if (!(typeof Api !== 'undefined' && Api.pagamentos && Api.pagamentos.adminList)) {
+      alert('API de pagamentos indisponível.');
+      return;
     }
 
-    pagamentos = typeof getPagamentosData === 'function'
-      ? getPagamentosData()
-      : (typeof PAGAMENTOS !== 'undefined' ? PAGAMENTOS.slice() : []);
-    pagamentos = pagamentos.map(toLegacyPagamento);
-    calcularResumo();
-    renderTabela(filtroAtual);
+    try {
+      var response = await Api.pagamentos.adminList({ page: 1, limit: 200 });
+      pagamentos = (response && response.pagamentos ? response.pagamentos : []).map(toLegacyPagamento);
+      calcularResumo();
+      renderTabela(filtroAtual);
+    } catch (apiErr) {
+      alert(apiErr && apiErr.message ? apiErr.message : 'Falha ao carregar pagamentos.');
+    }
   }
 
   loadPagamentos();

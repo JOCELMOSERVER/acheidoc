@@ -18,13 +18,17 @@
     return;
   }
 
+  function defaultDocImage() {
+    return 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="480"><rect width="100%" height="100%" fill="%23e5e7eb"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="28" fill="%236b7280">Documento</text></svg>';
+  }
+
   function toLegacyDoc(item) {
     return {
       id: item.id,
       tipo: item.tipo,
       nomeParcial: item.nome_proprietario || 'Proprietário',
       localParcial: item.provincia || 'Luanda',
-      foto: item.foto_url || createDocMockImage(item.tipo || 'Documento', '#dbeafe', '#bfdbfe'),
+      foto: item.foto_url || defaultDocImage(),
       risco: item.risco || 'MEDIO',
       status: item.status || 'PENDENTE',
       dataCriacao: (item.criado_em || item.data_publicacao || '').slice(0, 10)
@@ -56,23 +60,17 @@
   }
 
   async function aplicarRevisao(status, observacao) {
-    if (typeof Api !== 'undefined' && Api.documentos && Api.documentos.adminReview) {
-      var response = await Api.documentos.adminReview(doc.id, {
-        status: status,
-        observacao_correcao: observacao || null
-      });
-      if (response && response.documento) {
-        doc = toLegacyDoc(response.documento);
-      }
-      return;
+    if (!(typeof Api !== 'undefined' && Api.documentos && Api.documentos.adminReview)) {
+      throw new Error('API de revisão indisponível.');
     }
 
-    doc = updateDocumentoById(doc.id, {
+    var response = await Api.documentos.adminReview(doc.id, {
       status: status,
-      observacaoCorrecao: observacao || '',
-      revistoPor: adminLogado.nome,
-      dataRevisao: new Date().toISOString().split('T')[0]
-    }) || doc;
+      observacao_correcao: observacao || null
+    });
+    if (response && response.documento) {
+      doc = toLegacyDoc(response.documento);
+    }
   }
 
   // Botão Aprovar
@@ -138,32 +136,22 @@
   }
 
   (async function loadDocumento() {
-    if (typeof Api !== 'undefined' && Api.documentos && Api.documentos.adminDetail) {
-      try {
-        var response = await Api.documentos.adminDetail(docId);
-        doc = response && response.documento ? toLegacyDoc(response.documento) : null;
-        if (!doc) {
-          showNotFound();
-          return;
-        }
-        preencherDados();
-        return;
-      } catch (err) {
-        // fallback local
-      }
+    if (!(typeof Api !== 'undefined' && Api.documentos && Api.documentos.adminDetail)) {
+      showNotFound();
+      return;
     }
 
-    var documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
-    if (!Array.isArray(documentos)) {
+    try {
+      var response = await Api.documentos.adminDetail(docId);
+      doc = response && response.documento ? toLegacyDoc(response.documento) : null;
+      if (!doc) {
+        showNotFound();
+        return;
+      }
+      preencherDados();
+    } catch (err) {
       showNotFound();
-      return;
     }
-    doc = documentos.find(function (d) { return d.id === docId; }) || null;
-    if (!doc) {
-      showNotFound();
-      return;
-    }
-    preencherDados();
   })();
 
   function showSuccessMsg(msg, type) {

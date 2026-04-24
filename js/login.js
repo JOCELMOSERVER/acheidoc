@@ -19,74 +19,28 @@ document.getElementById('formLogin').addEventListener('submit', function (e) {
   alertaSucesso.style.display = 'none';
 
   setTimeout(async function () {
-    if (typeof Api !== 'undefined' && Api.auth && Api.auth.login) {
-      try {
-        var response = await Api.auth.login(email, senha);
-        var userApi = response && response.utilizador ? response.utilizador : null;
-        var tokenApi = response && response.token ? response.token : null;
-
-        if (userApi && tokenApi) {
-          var sessaoApi = Object.assign({}, userApi, { role: 'utilizador' });
-          Auth.login(sessaoApi, tokenApi);
-          alertaSucesso.textContent = 'Login realizado com sucesso. A redirecionar...';
-          alertaSucesso.style.display = 'block';
-
-          const params = new URLSearchParams(window.location.search);
-          const redirectParam = params.get('redirect');
-          const safeRedirect = (redirectParam && /^(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_-]+\.html$/.test(redirectParam))
-            ? redirectParam
-            : null;
-
-          setTimeout(function () {
-            window.location.href = safeRedirect || 'index.html';
-          }, 900);
-          return;
-        }
-      } catch (apiErr) {
-        // Fallback para modo mock/local quando a API estiver indisponível.
-      }
+    if (!(typeof Api !== 'undefined' && Api.auth && Api.auth.login)) {
+      alertaErro.textContent = 'Serviço de autenticação indisponível. Verifique a API.';
+      alertaErro.style.display = 'block';
+      btnEntrar.textContent = 'Entrar';
+      btnEntrar.disabled = false;
+      return;
     }
 
-    var utilizadoresGeridos = [];
     try {
-      var fromStorage = JSON.parse(localStorage.getItem('acheidoc_admin_utilizadores') || 'null');
-      utilizadoresGeridos = Array.isArray(fromStorage) && fromStorage.length ? fromStorage : UTILIZADORES;
-    } catch (err) {
-      utilizadoresGeridos = UTILIZADORES;
-    }
+      var response = await Api.auth.login(email, senha);
+      var userApi = response && response.utilizador ? response.utilizador : null;
+      var tokenApi = response && response.token ? response.token : null;
 
-    var pwdOverrides = {};
-    try {
-      pwdOverrides = JSON.parse(localStorage.getItem('acheidoc_password_overrides_utilizadores') || '{}') || {};
-    } catch (err) {
-      pwdOverrides = {};
-    }
-
-    var utilizadorEncontrado = utilizadoresGeridos.find(function (u) {
-      if (u.email !== email) return false;
-      var senhaReal = pwdOverrides[String(u.email || '').toLowerCase()] || u.senha;
-      return senhaReal === senha;
-    });
-
-    // Bloquear tentativas de login institucional nesta página
-    var isAgente = AGENTES.find(function (a) { return a.email === email; });
-    var isAdmin = ADMIN.find(function (a) { return a.email === email; });
-
-    if (utilizadorEncontrado) {
-      if (utilizadorEncontrado.status === 'BLOQUEADO') {
-        alertaErro.textContent = 'A sua conta está bloqueada. Contacte o suporte da plataforma.';
-        alertaErro.style.display = 'block';
-        btnEntrar.textContent = 'Entrar';
-        btnEntrar.disabled = false;
-        return;
+      if (!userApi || !tokenApi) {
+        throw new Error('Resposta inválida do servidor de autenticação.');
       }
 
-      var sessao = Object.assign({}, utilizadorEncontrado, { role: 'utilizador' });
-      Auth.login(sessao);
+      var sessaoApi = Object.assign({}, userApi, { role: 'utilizador' });
+      Auth.login(sessaoApi, tokenApi);
       alertaSucesso.textContent = 'Login realizado com sucesso. A redirecionar...';
       alertaSucesso.style.display = 'block';
 
-      // Verificar redirect param — apenas permitir caminhos relativos seguros (.html)
       const params = new URLSearchParams(window.location.search);
       const redirectParam = params.get('redirect');
       const safeRedirect = (redirectParam && /^(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_-]+\.html$/.test(redirectParam))
@@ -95,14 +49,9 @@ document.getElementById('formLogin').addEventListener('submit', function (e) {
 
       setTimeout(function () {
         window.location.href = safeRedirect || 'index.html';
-      }, 1000);
-    } else if (isAgente || isAdmin) {
-      alertaErro.textContent = 'Use o portal específico no final desta página (Agente ou Admin).';
-      alertaErro.style.display = 'block';
-      btnEntrar.textContent = 'Entrar';
-      btnEntrar.disabled = false;
-    } else {
-      alertaErro.textContent = 'Email ou senha incorrectos. Tente novamente.';
+      }, 900);
+    } catch (apiErr) {
+      alertaErro.textContent = apiErr && apiErr.message ? apiErr.message : 'Email ou senha incorretos.';
       alertaErro.style.display = 'block';
       btnEntrar.textContent = 'Entrar';
       btnEntrar.disabled = false;

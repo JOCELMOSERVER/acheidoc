@@ -14,15 +14,10 @@
   setEl('agenteNome', agenteLogado.nome);
   var documentos = [];
 
-  if (typeof PONTOS_ENTREGA !== 'undefined') {
-    var ponto = PONTOS_ENTREGA.find(function (p) { return p.id === agenteLogado.pontoId; });
-    if (ponto) {
-      setEl('agentePonto', ponto.nome);
-    }
-  }
+  setEl('agentePonto', agenteLogado.pontoNome || ('Ponto #' + (agenteLogado.pontoId || '-')));
 
   setEl('agentePontos', agenteLogado.pontos || 0);
-  setEl('agentePontosMes', '+120 pts');
+  setEl('agentePontosMes', '0 pts');
 
   // Documentos aguardando recepção física pelo agente
   var docsReceberBody = document.getElementById('docsReceberBody');
@@ -78,6 +73,16 @@
   }
 
   function renderTabelas() {
+    var docsReceberCount = documentos.filter(function (d) { return d.status === 'PUBLICADO'; }).length;
+    var docsEntregarCount = documentos.filter(function (d) { return d.status === 'DISPONIVEL_LEVANTAMENTO'; }).length;
+    var currentMonth = new Date().toISOString().slice(0, 7);
+    var pontosMes = documentos.filter(function (d) {
+      return d.status === 'ENTREGUE' && String(d.dataCriacao || '').slice(0, 7) === currentMonth;
+    }).length * 30;
+    setEl('totalReceber', docsReceberCount);
+    setEl('totalDocs', docsEntregarCount);
+    setEl('agentePontosMes', pontosMes + ' pts');
+
     if (docsReceberBody) {
       var docsReceber = documentos.filter(function (d) { return d.status === 'PUBLICADO'; });
       if (!docsReceber.length) {
@@ -117,20 +122,18 @@
   }
 
   async function loadDocumentos() {
-    if (typeof Api !== 'undefined' && Api.documentos && Api.documentos.agenteLista) {
-      try {
-        var response = await Api.documentos.agenteLista();
-        documentos = (response && response.documentos ? response.documentos : []).map(toLegacyDoc);
-        renderTabelas();
-        return;
-      } catch (apiErr) {
-        // fallback local
-      }
+    if (!(typeof Api !== 'undefined' && Api.documentos && Api.documentos.agenteLista)) {
+      alert('API de documentos indisponível.');
+      return;
     }
 
-    documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
-    if (!Array.isArray(documentos)) documentos = [];
-    renderTabelas();
+    try {
+      var response = await Api.documentos.agenteLista();
+      documentos = (response && response.documentos ? response.documentos : []).map(toLegacyDoc);
+      renderTabelas();
+    } catch (apiErr) {
+      alert(apiErr && apiErr.message ? apiErr.message : 'Falha ao carregar documentos.');
+    }
   }
 
   // Logout

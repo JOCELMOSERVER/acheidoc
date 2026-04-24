@@ -3,7 +3,6 @@
    =========================== */
 
 (function () {
-  var STORAGE_KEY = 'acheidoc_admin_utilizadores';
   var adminLogado = JSON.parse(sessionStorage.getItem('adminLogado') || 'null');
   if (!adminLogado) {
     window.location.href = 'login.html';
@@ -18,22 +17,6 @@
 
   bindFiltros();
   bindLogout();
-
-  function loadUtilizadoresLocal() {
-    var saved = safeParse(localStorage.getItem(STORAGE_KEY));
-    if (Array.isArray(saved) && saved.length) return saved;
-
-    var base = Array.isArray(UTILIZADORES) ? UTILIZADORES : [];
-    var seeded = base.map(function (u) {
-      return Object.assign({}, u, { status: u.status || 'ATIVO' });
-    });
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(seeded));
-    return seeded;
-  }
-
-  function saveUtilizadores() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(utilizadores));
-  }
 
   function renderResumo() {
     var ativos = 0;
@@ -115,44 +98,42 @@
 
     var nextStatus = alvo.status === 'BLOQUEADO' ? 'ATIVO' : 'BLOQUEADO';
 
-    if (typeof Api !== 'undefined' && Api.adminUtilizadores && Api.adminUtilizadores.updateStatus) {
-      try {
-        await Api.adminUtilizadores.updateStatus(userId, nextStatus);
-      } catch (apiErr) {
-        alert(apiErr && apiErr.message ? apiErr.message : 'Falha ao actualizar estado do utilizador.');
-        return;
-      }
+    if (!(typeof Api !== 'undefined' && Api.adminUtilizadores && Api.adminUtilizadores.updateStatus)) {
+      alert('API de utilizadores indisponível.');
+      return;
     }
 
-    utilizadores = utilizadores.map(function (u) {
-      if (String(u.id) !== String(userId)) return u;
-      return Object.assign({}, u, { status: nextStatus });
-    });
-
-    saveUtilizadores();
-    renderResumo();
-    renderTabela(filtroAtual);
+    try {
+      await Api.adminUtilizadores.updateStatus(userId, nextStatus);
+      utilizadores = utilizadores.map(function (u) {
+        if (String(u.id) !== String(userId)) return u;
+        return Object.assign({}, u, { status: nextStatus });
+      });
+      renderResumo();
+      renderTabela(filtroAtual);
+    } catch (apiErr) {
+      alert(apiErr && apiErr.message ? apiErr.message : 'Falha ao actualizar estado do utilizador.');
+    }
   }
 
   async function changeUserPoints(userId, delta) {
-    if (typeof Api !== 'undefined' && Api.adminUtilizadores && Api.adminUtilizadores.addPontos) {
-      try {
-        await Api.adminUtilizadores.addPontos(userId, delta);
-      } catch (apiErr) {
-        alert(apiErr && apiErr.message ? apiErr.message : 'Falha ao alterar pontos do utilizador.');
-        return;
-      }
+    if (!(typeof Api !== 'undefined' && Api.adminUtilizadores && Api.adminUtilizadores.addPontos)) {
+      alert('API de utilizadores indisponível.');
+      return;
     }
 
-    utilizadores = utilizadores.map(function (u) {
-      if (String(u.id) !== String(userId)) return u;
-      var nextPoints = Number(u.pontos || 0) + delta;
-      return Object.assign({}, u, { pontos: Math.max(0, nextPoints) });
-    });
-
-    saveUtilizadores();
-    renderResumo();
-    renderTabela(filtroAtual);
+    try {
+      await Api.adminUtilizadores.addPontos(userId, delta);
+      utilizadores = utilizadores.map(function (u) {
+        if (String(u.id) !== String(userId)) return u;
+        var nextPoints = Number(u.pontos || 0) + delta;
+        return Object.assign({}, u, { pontos: Math.max(0, nextPoints) });
+      });
+      renderResumo();
+      renderTabela(filtroAtual);
+    } catch (apiErr) {
+      alert(apiErr && apiErr.message ? apiErr.message : 'Falha ao alterar pontos do utilizador.');
+    }
   }
 
   function bindFiltros() {
@@ -177,26 +158,24 @@
   }
 
   (async function init() {
-    if (typeof Api !== 'undefined' && Api.adminUtilizadores && Api.adminUtilizadores.list) {
-      try {
-        var response = await Api.adminUtilizadores.list({ page: 1, limit: 200 });
-        utilizadores = (response && response.utilizadores ? response.utilizadores : []).map(function (u) {
-          return Object.assign({}, u, {
-            municipio: u.municipio || u.provincia || '—',
-            status: u.status || 'ATIVO'
-          });
-        });
-        renderResumo();
-        renderTabela(filtroAtual);
-        return;
-      } catch (apiErr) {
-        // fallback local
-      }
+    if (!(typeof Api !== 'undefined' && Api.adminUtilizadores && Api.adminUtilizadores.list)) {
+      alert('API de utilizadores indisponível.');
+      return;
     }
 
-    utilizadores = loadUtilizadoresLocal();
-    renderResumo();
-    renderTabela(filtroAtual);
+    try {
+      var response = await Api.adminUtilizadores.list({ page: 1, limit: 200 });
+      utilizadores = (response && response.utilizadores ? response.utilizadores : []).map(function (u) {
+        return Object.assign({}, u, {
+          municipio: u.municipio || u.provincia || '—',
+          status: u.status || 'ATIVO'
+        });
+      });
+      renderResumo();
+      renderTabela(filtroAtual);
+    } catch (apiErr) {
+      alert(apiErr && apiErr.message ? apiErr.message : 'Falha ao carregar utilizadores.');
+    }
   })();
 
   function setEl(id, val) {

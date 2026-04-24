@@ -146,27 +146,8 @@
     </div>
   </div>
 </footer>
-
-<script src="../js/mockData.js"></script>
 <script src="../js/api.js"></script>
 <script src="../js/navbar.js"></script>
 <script src="../js/agente-dashboard.js"></script>
-<script>
-  // Contagens rápidas do dashboard
-  (function () {
-    var agenteLogado = JSON.parse(sessionStorage.getItem('agenteLogado') || 'null');
-    if (!agenteLogado) return;
-    var countReceber = DOCUMENTOS.filter(function (d) {
-      return d.pontoEntregaId === agenteLogado.pontoId && d.status === 'PUBLICADO';
-    }).length;
-    var countEntregar = DOCUMENTOS.filter(function (d) {
-      return d.pontoEntregaId === agenteLogado.pontoId && (d.status === 'DISPONIVEL_LEVANTAMENTO' || d.status === 'AGUARDANDO_ENTREGA');
-    }).length;
-    var receberEl = document.getElementById('totalReceber');
-    var entregarEl = document.getElementById('totalDocs');
-    if (receberEl) receberEl.textContent = countReceber;
-    if (entregarEl) entregarEl.textContent = countEntregar;
-  })();
-</script>
 </body>
 </html>

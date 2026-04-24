@@ -86,33 +86,12 @@
       if (receberErrorMsg) receberErrorMsg.classList.add('hidden');
       if (receberChecklistSection) receberChecklistSection.classList.add('hidden');
 
-      if (apiMode && docIdParam) {
-        docRecebido = documentos.find(function (d) { return d.id === docIdParam; }) || { id: docIdParam, tipo: 'Documento', nomeParcial: 'Proprietário' };
-        if (receberChecklistSection) receberChecklistSection.classList.remove('hidden');
-        animarRecepcao();
+      if (!(apiMode && docIdParam)) {
+        showReceiveError('Modo offline não disponível. Use a API.');
         return;
       }
 
-      if (typeof CHAVES_ENTREGA === 'undefined' || !Array.isArray(documentos)) return;
-
-      var docIdEncontrado = null;
-      Object.keys(CHAVES_ENTREGA).forEach(function (key) {
-        if (CHAVES_ENTREGA[key] === chave) {
-          docIdEncontrado = key;
-        }
-      });
-
-      if (!docIdEncontrado || (docIdParam && docIdEncontrado !== docIdParam)) {
-        showReceiveError('Chave de entrega inválida para este documento.');
-        return;
-      }
-
-      docRecebido = documentos.find(function (d) { return d.id === docIdEncontrado; }) || null;
-      if (!docRecebido) {
-        showReceiveError('Documento não encontrado para a chave informada.');
-        return;
-      }
-
+      docRecebido = documentos.find(function (d) { return d.id === docIdParam; }) || { id: docIdParam, tipo: 'Documento', nomeParcial: 'Proprietário' };
       if (receberChecklistSection) receberChecklistSection.classList.remove('hidden');
       animarRecepcao();
     });
@@ -130,28 +109,12 @@
       if (errorMsg) errorMsg.classList.add('hidden');
       if (checklistSection) checklistSection.classList.add('hidden');
 
-      // Verificar código
-      if (typeof CODIGOS_RESGATE === 'undefined') return;
-
-      var docIdEncontrado = null;
-      Object.keys(CODIGOS_RESGATE).forEach(function (key) {
-        if (CODIGOS_RESGATE[key] === codigo) {
-          docIdEncontrado = key;
-        }
-      });
-
-      if (!docIdEncontrado) {
-        showError('Código inválido. Verifique e tente novamente.');
+      if (!(apiMode && docIdParam)) {
+        showError('Modo offline não disponível. Use a API.');
         return;
       }
 
-      if (apiMode && docIdParam) {
-        docValidado = documentos.find(function (d) { return d.id === docIdParam; }) || { id: docIdParam, tipo: 'Documento', nomeParcial: 'Proprietário' };
-      } else {
-        docValidado = Array.isArray(documentos) ? documentos.find(function (d) { return d.id === docIdEncontrado; }) : null;
-      }
-
-      // Animar checklist
+      docValidado = documentos.find(function (d) { return d.id === docIdParam; }) || { id: docIdParam, tipo: 'Documento', nomeParcial: 'Proprietário' };
       if (checklistSection) checklistSection.classList.remove('hidden');
       animarChecklist();
     });
@@ -210,14 +173,8 @@
 
       setTimeout(async function () {
         try {
-          if (apiMode) {
-            await Api.documentos.agenteUpdate(docRecebido.id, 'DISPONIVEL_LEVANTAMENTO');
-            docRecebido.status = 'DISPONIVEL_LEVANTAMENTO';
-          } else {
-            docRecebido = updateDocumentoById(docRecebido.id, {
-              status: 'DISPONIVEL_LEVANTAMENTO'
-            }) || docRecebido;
-          }
+          await Api.documentos.agenteUpdate(docRecebido.id, 'DISPONIVEL_LEVANTAMENTO');
+          docRecebido.status = 'DISPONIVEL_LEVANTAMENTO';
         } catch (apiErr) {
           showReceiveError(apiErr && apiErr.message ? apiErr.message : 'Falha ao registar recepção.');
           btnConfirmarRecepcao.disabled = false;
@@ -259,14 +216,8 @@
       setTimeout(async function () {
         try {
           if (docValidado) {
-            if (apiMode) {
-              await Api.documentos.agenteUpdate(docValidado.id, 'ENTREGUE');
-              docValidado.status = 'ENTREGUE';
-            } else {
-              docValidado = updateDocumentoById(docValidado.id, {
-                status: 'ENTREGUE'
-              }) || docValidado;
-            }
+            await Api.documentos.agenteUpdate(docValidado.id, 'ENTREGUE');
+            docValidado.status = 'ENTREGUE';
           }
         } catch (apiErr) {
           showError(apiErr && apiErr.message ? apiErr.message : 'Falha ao confirmar entrega.');
@@ -292,15 +243,17 @@
   }
 
   (async function initData() {
-    if (apiMode && Api.documentos.agenteLista) {
-      try {
-        var response = await Api.documentos.agenteLista();
-        documentos = (response && response.documentos ? response.documentos : []).map(toLegacyDoc);
-      } catch (err) {
-        documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
-      }
-    } else {
-      documentos = typeof getDocumentosData === 'function' ? getDocumentosData() : DOCUMENTOS;
+    if (!(apiMode && Api.documentos.agenteLista)) {
+      showError('API de documentos indisponível.');
+      return;
+    }
+
+    try {
+      var response = await Api.documentos.agenteLista();
+      documentos = (response && response.documentos ? response.documentos : []).map(toLegacyDoc);
+    } catch (err) {
+      showError(err && err.message ? err.message : 'Falha ao carregar documentos.');
+      return;
     }
 
     if (docIdParam && Array.isArray(documentos)) {
