@@ -145,7 +145,7 @@
         return request('/api/documentos' + qs, { method: 'GET', skipAuth: true });
       },
       detail: function (id) {
-        return request('/api/documentos/' + encodeURIComponent(id), { method: 'GET', skipAuth: true });
+        return request('/api/documentos/' + encodeURIComponent(id), { method: 'GET' });
       },
       myList: function (query) {
         var qs = query ? ('?' + new URLSearchParams(query).toString()) : '';

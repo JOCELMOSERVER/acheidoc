@@ -3,7 +3,7 @@
    =========================== */
 
 (function () {
-  Auth.requireAuth();
+  // Busca é pública — não requer autenticação
 
   var searchInput = document.getElementById('searchInput');
   var tipoSelect = document.getElementById('tipoSelect');
