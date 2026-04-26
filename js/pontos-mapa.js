@@ -10,7 +10,21 @@
   var statusEl = document.getElementById('mapStatus');
   var listaEl = document.getElementById('pontosLista');
 
-  if (!mapEl || typeof L === 'undefined') return;
+  function setStatus(message, kind) {
+    if (!statusEl) return;
+    statusEl.textContent = message;
+    statusEl.className = 'alert ' + (kind || 'alert-info');
+  }
+
+  if (!mapEl) {
+    setStatus('Mapa indisponível nesta página.', 'alert-danger');
+    return;
+  }
+
+  if (typeof L === 'undefined') {
+    setStatus('Não foi possível carregar o mapa. Verifique a ligação e tente novamente.', 'alert-danger');
+    return;
+  }
 
   var map = L.map('map').setView([DEFAULT_LAT, DEFAULT_LNG], 12);
 
@@ -20,12 +34,6 @@
   }).addTo(map);
 
   var pointsLayer = L.featureGroup().addTo(map);
-
-  function setStatus(message, kind) {
-    if (!statusEl) return;
-    statusEl.textContent = message;
-    statusEl.className = 'alert ' + (kind || 'alert-info');
-  }
 
   function escapeHtml(value) {
     return String(value || '')
@@ -86,11 +94,16 @@
 
   function geocodeAddress(address) {
     var query = encodeURIComponent(String(address || '') + ', Angola');
+    var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    var timeoutId = controller ? setTimeout(function () { controller.abort(); }, 5000) : null;
+
     return fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + query, {
-      headers: { 'Accept-Language': 'pt' }
+      headers: { 'Accept-Language': 'pt' },
+      signal: controller ? controller.signal : undefined
     })
       .then(function (r) { return r.json(); })
       .then(function (rows) {
+        if (timeoutId) clearTimeout(timeoutId);
         if (!rows || !rows.length) return null;
         return {
           lat: parseFloat(rows[0].lat),
@@ -98,6 +111,7 @@
         };
       })
       .catch(function () {
+        if (timeoutId) clearTimeout(timeoutId);
         return null;
       });
   }
@@ -119,13 +133,17 @@
         return;
       }
 
-      setStatus('A localizar pontos no mapa...', 'alert-info');
+      setStatus('A localizar ' + pontos.length + ' ponto(s) no mapa...', 'alert-info');
       pointsLayer.clearLayers();
+
+      var geocoded = await Promise.all(pontos.map(function (ponto) {
+        return geocodeAddress(ponto.endereco || ponto.nome || 'Luanda');
+      }));
 
       var resolvedCount = 0;
       for (var i = 0; i < pontos.length; i++) {
         var ponto = pontos[i];
-        var geo = await geocodeAddress(ponto.endereco || ponto.nome || 'Luanda');
+        var geo = geocoded[i];
         if (geo && Number.isFinite(geo.lat) && Number.isFinite(geo.lng)) {
           addMarker(ponto, geo.lat, geo.lng);
           resolvedCount += 1;
