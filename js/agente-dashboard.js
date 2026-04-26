@@ -19,10 +19,13 @@
   setEl('agentePontos', agenteLogado.pontos || 0);
   setEl('agentePontosMes', '0 pts');
 
-  // Documentos aguardando recepção física pelo agente
+  // Documentos aguardando recepção física pelo agente (PUBLICADO)
   var docsReceberBody = document.getElementById('docsReceberBody');
 
-  // Documentos no ponto prontos para entrega ao dono
+  // Documentos no ponto a aguardar pagamento do dono (AGUARDANDO_ENTREGA)
+  var docsNoPontoBody = document.getElementById('docsNoPontoBody');
+
+  // Documentos prontos para entrega ao dono (DISPONIVEL_LEVANTAMENTO)
   var tabelaBody = document.getElementById('docsTabelaBody');
   var dashboardNotice = document.getElementById('agentDashboardNotice');
 
@@ -70,12 +73,16 @@
       }
 
       if (found) {
-        var flow = found.status === 'PUBLICADO' ? 'receber' : 'entregar';
-        var actionLabel = found.status === 'PUBLICADO' ? 'Receber no ponto' : 'Validar entrega';
-        searchResult.innerHTML = buildDocCard(found, '../') + `
-          <div style="margin-top:0.75rem; display:flex; justify-content:flex-end;">
-            <a href="validar.html?id=${found.id}&flow=${flow}" class="btn btn-primary btn-sm">${actionLabel}</a>
-          </div>`;
+        var actionHtml = '';
+        if (found.status === 'PUBLICADO') {
+          actionHtml = `<a href="validar.html?id=${found.id}&flow=receber" class="btn btn-primary btn-sm">Receber no ponto</a>`;
+        } else if (found.status === 'DISPONIVEL_LEVANTAMENTO') {
+          actionHtml = `<a href="validar.html?id=${found.id}&flow=entregar" class="btn btn-success btn-sm">Entregar ao dono</a>`;
+        } else if (found.status === 'AGUARDANDO_ENTREGA') {
+          actionHtml = `<span class="badge badge-aguardando">No ponto — a aguardar pagamento do dono</span>`;
+        }
+        searchResult.innerHTML = buildDocCard(found, '../') + (actionHtml ? `
+          <div style="margin-top:0.75rem; display:flex; justify-content:flex-end;">${actionHtml}</div>` : '');
         searchResult.classList.remove('hidden');
       } else {
         searchResult.innerHTML = `<div class="alert alert-danger">Documento não encontrado.</div>`;
@@ -103,9 +110,7 @@
   }
 
   function renderTabelas() {
-    var docsReceberCount = documentos.filter(function (d) {
-      return d.status === 'PUBLICADO' || d.status === 'AGUARDANDO_ENTREGA';
-    }).length;
+    var docsReceberCount = documentos.filter(function (d) { return d.status === 'PUBLICADO'; }).length;
     var docsEntregarCount = documentos.filter(function (d) { return d.status === 'DISPONIVEL_LEVANTAMENTO'; }).length;
     var currentMonth = new Date().toISOString().slice(0, 7);
     var pontosMes = documentos.filter(function (d) {
@@ -116,9 +121,7 @@
     setEl('agentePontosMes', pontosMes + ' pts');
 
     if (docsReceberBody) {
-      var docsReceber = documentos.filter(function (d) {
-        return d.status === 'PUBLICADO' || d.status === 'AGUARDANDO_ENTREGA';
-      });
+      var docsReceber = documentos.filter(function (d) { return d.status === 'PUBLICADO'; });
       if (!docsReceber.length) {
         docsReceberBody.innerHTML = '<tr><td colspan="8" class="text-center" style="padding: 2rem; color: var(--text-gray);">Nenhum documento pendente de recepção.</td></tr>';
       } else {
@@ -132,6 +135,24 @@
             '<td><span class="badge ' + getStatusBadgeClass(d.status) + '">' + getStatusLabel(d.status) + '</span></td>' +
             '<td>' + formatDate(d.dataCriacao) + '</td>' +
             '<td><a href="validar.html?id=' + d.id + '&flow=receber" class="btn btn-primary btn-sm">Receber documento</a></td>' +
+            '</tr>';
+        }).join('');
+      }
+    }
+
+    if (docsNoPontoBody) {
+      var docsNoPonto = documentos.filter(function (d) { return d.status === 'AGUARDANDO_ENTREGA'; });
+      if (!docsNoPonto.length) {
+        docsNoPontoBody.innerHTML = '<tr><td colspan="6" class="text-center" style="padding: 2rem; color: var(--text-gray);">Nenhum documento aguarda pagamento do dono.</td></tr>';
+      } else {
+        docsNoPontoBody.innerHTML = docsNoPonto.map(function (d) {
+          return '<tr>' +
+            '<td><code>' + d.id + '</code></td>' +
+            '<td>' + d.tipo + '</td>' +
+            '<td>' + d.nomeParcial + '</td>' +
+            '<td><code style="white-space:nowrap; font-size:0.8rem;">' + (d.chaveEntrega || '') + '</code></td>' +
+            '<td><span class="badge badge-aguardando">A aguardar pagamento</span></td>' +
+            '<td>' + formatDate(d.dataCriacao) + '</td>' +
             '</tr>';
         }).join('');
       }

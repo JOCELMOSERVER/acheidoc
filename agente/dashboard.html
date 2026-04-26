@@ -116,10 +116,33 @@
       </div>
     </div>
 
-    <!-- Documentos no ponto -->
+    <!-- Documentos no ponto a aguardar pagamento -->
+    <div class="card mb-4">
+      <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:0.35rem;">No ponto — a aguardar pagamento</h3>
+      <p style="color:var(--text-gray); margin-bottom:1rem;">Documentos já recebidos fisicamente no ponto. O dono ainda não efectuou o pagamento.</p>
+      <div class="table-wrapper" style="box-shadow:none;">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Tipo</th>
+              <th>Nome Parcial</th>
+              <th>Chave Entrega</th>
+              <th>Status</th>
+              <th>Data</th>
+            </tr>
+          </thead>
+          <tbody id="docsNoPontoBody">
+            <!-- Preenchido pelo JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Documentos prontos para entrega ao dono -->
     <div class="card">
       <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:0.35rem;">Entregar ao dono</h3>
-      <p style="color:var(--text-gray); margin-bottom:1rem;">Documentos já recebidos pelo agente e prontos para validação com o código do proprietário.</p>
+      <p style="color:var(--text-gray); margin-bottom:1rem;">Pagamento confirmado. Entregar ao proprietário após validar o código de resgate.</p>
       <div class="table-wrapper" style="box-shadow:none;">
         <table>
           <thead>
