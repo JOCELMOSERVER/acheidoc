@@ -25,7 +25,6 @@
     }, 16);
   }
 
-  var viewedCounters = new WeakSet();
   var counters = document.querySelectorAll('[data-counter]');
   if (counters.length > 0) {
     var observer = new IntersectionObserver(function (entries) {
@@ -33,7 +32,6 @@
         if (entry.isIntersecting) {
           var el = entry.target;
           var target = parseInt(el.getAttribute('data-counter'), 10);
-          viewedCounters.add(el);
           animateCounter(el, target, 1500);
           observer.unobserve(el);
         }
@@ -47,10 +45,17 @@
     if (!el) return;
     var safeValue = Math.max(0, Number(value) || 0);
     el.setAttribute('data-counter', String(safeValue));
+    animateCounter(el, safeValue, 900);
+  }
 
-    if (viewedCounters.has(el)) {
-      animateCounter(el, safeValue, 900);
+  function setCounterUnknown(el) {
+    if (!el) return;
+    if (el._counterTimer) {
+      clearInterval(el._counterTimer);
+      el._counterTimer = null;
     }
+    el.removeAttribute('data-counter');
+    el.textContent = '—';
   }
 
   function extractTotal(response, arrayKey) {
@@ -80,24 +85,6 @@
     return null;
   }
 
-  function countUniquePublishers(documentos) {
-    if (!Array.isArray(documentos) || !documentos.length) return 0;
-    var keys = ['publicado_por_id', 'utilizador_id', 'user_id', 'publicado_por_email', 'publicado_por_nome'];
-    var set = new Set();
-
-    documentos.forEach(function (d) {
-      for (var i = 0; i < keys.length; i++) {
-        var v = d ? d[keys[i]] : null;
-        if (v !== null && v !== undefined && String(v).trim() !== '') {
-          set.add(String(v));
-          return;
-        }
-      }
-    });
-
-    return set.size;
-  }
-
   async function loadRealStats() {
     var statDocsTotal = document.getElementById('statDocsTotal');
     var statDocsEntregues = document.getElementById('statDocsEntregues');
@@ -113,7 +100,7 @@
       var usersResp = null;
 
       if (Api.documentos && Api.documentos.list) {
-        docsResp = await Api.documentos.list({ page: 1, limit: 500 });
+        docsResp = await Api.documentos.list({ page: 1, limit: 10000 });
       }
 
       if (Api.pontosEntrega && Api.pontosEntrega.list) {
@@ -142,16 +129,25 @@
       }
 
       var usersTotal = extractTotal(usersResp, 'utilizadores');
-      if (usersTotal === null) {
-        usersTotal = countUniquePublishers(docs);
-      }
 
       setCounterValue(statDocsTotal, docsTotal);
       setCounterValue(statDocsEntregues, docsEntregues);
-      setCounterValue(statUsersTotal, usersTotal);
       setCounterValue(statPontosEntrega, pontosTotal);
+
+      if (usersTotal === null) {
+        if (usersResp && Array.isArray(usersResp.utilizadores)) {
+          setCounterValue(statUsersTotal, usersResp.utilizadores.length);
+        } else {
+          setCounterUnknown(statUsersTotal);
+        }
+      } else {
+        setCounterValue(statUsersTotal, usersTotal);
+      }
     } catch (err) {
-      // Mantém zeros quando a API não estiver disponível.
+      setCounterUnknown(statDocsTotal);
+      setCounterUnknown(statDocsEntregues);
+      setCounterUnknown(statUsersTotal);
+      setCounterUnknown(statPontosEntrega);
     }
   }
 

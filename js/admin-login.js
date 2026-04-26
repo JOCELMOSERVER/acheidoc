@@ -54,7 +54,11 @@
         window.location.href = 'dashboard.html';
       } catch (apiErr) {
         if (errorMsg) {
-          errorMsg.textContent = apiErr && apiErr.message ? apiErr.message : 'Falha no login do administrador.';
+          if (apiErr && apiErr.status === 401) {
+            errorMsg.textContent = 'Credenciais inválidas ou administrador ainda não criado no backend.';
+          } else {
+            errorMsg.textContent = apiErr && apiErr.message ? apiErr.message : 'Falha no login do administrador.';
+          }
           errorMsg.classList.remove('hidden');
         }
         if (btnEntrar) {

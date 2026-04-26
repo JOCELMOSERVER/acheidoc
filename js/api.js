@@ -43,7 +43,10 @@
 
     if (!response.ok) {
       var msg = data && data.erro ? data.erro : 'Erro ao comunicar com o servidor.';
-      throw new Error(msg);
+      var apiError = new Error(msg);
+      apiError.status = response.status;
+      apiError.payload = data;
+      throw apiError;
     }
 
     return data;
