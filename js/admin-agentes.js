@@ -14,9 +14,14 @@
   var agentes = [];
   var filtroAtual = 'TODOS';
   var tabela = document.getElementById('tabelaAgentes');
+  var formContainer = document.getElementById('formContainer');
+  var btnCriarAgente = document.getElementById('btnCriarAgente');
+  var btnCancelar = document.getElementById('btnCancelar');
+  var formNovoAgente = document.getElementById('formNovoAgente');
 
   bindFiltros();
   bindLogout();
+  bindFormCriarAgente();
 
   function getPontoNome(pontoId) {
     var agente = agentes.find(function (item) { return String(item.pontoId) === String(pontoId); });
@@ -161,6 +166,71 @@
       if (typeof Api !== 'undefined' && Api.clearToken) Api.clearToken();
       window.location.href = 'login.html';
     });
+  }
+
+  function bindFormCriarAgente() {
+    if (btnCriarAgente) {
+      btnCriarAgente.addEventListener('click', function () {
+        if (formContainer) formContainer.classList.remove('hidden');
+        if (formNovoAgente) formNovoAgente.reset();
+      });
+    }
+
+    if (btnCancelar) {
+      btnCancelar.addEventListener('click', function () {
+        if (formContainer) formContainer.classList.add('hidden');
+      });
+    }
+
+    if (formNovoAgente) {
+      formNovoAgente.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        var nome = document.getElementById('inputNome').value.trim();
+        var email = document.getElementById('inputEmail').value.trim();
+        var telefone = document.getElementById('inputTelefone').value.trim();
+        var pontoId = document.getElementById('inputPontoId').value.trim();
+
+        if (!nome || !email || !telefone) {
+          alert('Por favor, preencha os campos obrigatórios (Nome, Email, Telefone).');
+          return;
+        }
+
+        if (!(typeof Api !== 'undefined' && Api.adminAgentes && Api.adminAgentes.create)) {
+          alert('API de criação de agentes indisponível.');
+          return;
+        }
+
+        try {
+          btnCriarAgente.disabled = true;
+          var payload = {
+            nome: nome,
+            email: email,
+            telefone: telefone
+          };
+          if (pontoId) payload.ponto_id = pontoId;
+
+          var response = await Api.adminAgentes.create(payload);
+
+          if (response && response.agente) {
+            agentes.push(Object.assign({}, response.agente, {
+              ultimaActividade: (response.agente.criado_em || '').slice(0, 10) || new Date().toISOString().slice(0, 10),
+              pontoId: response.agente.ponto_id || response.agente.pontoId || null,
+              pontoNome: response.agente.ponto_nome || response.agente.pontoNome || null
+            }));
+            renderResumo();
+            renderTabela(filtroAtual);
+            formNovoAgente.reset();
+            if (formContainer) formContainer.classList.add('hidden');
+            alert('Agente criado com sucesso!');
+          }
+        } catch (err) {
+          alert(err && err.message ? err.message : 'Falha ao criar agente.');
+        } finally {
+          btnCriarAgente.disabled = false;
+        }
+      });
+    }
   }
 
   (async function init() {

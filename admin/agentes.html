@@ -16,10 +16,11 @@
     <a href="../index.html" class="navbar-logo" style="color: #312E81;"><span class="logo-icon">AD</span>AcheiDoc <span style="font-size:0.75rem; background:#312E81; color:white; padding:2px 8px; border-radius:4px; margin-left:4px;">ADMIN</span></a>
     <div class="navbar-links">
       <a href="dashboard.html">Dashboard</a>
-      <a href="revisar.html">Revisar Documentos</a>
+      <a href="revisar-lista.html">Revisar Documentos</a>
       <a href="pagamentos.html">Pagamentos</a>
       <a href="utilizadores.html">Utilizadores</a>
       <a href="agentes.html" class="active">Agentes</a>
+      <a href="pontos-entrega.html">Pontos</a>
     </div>
     <div class="navbar-right">
       <span id="adminNome" style="font-weight:600; color:var(--text-dark);"></span>
@@ -29,22 +30,57 @@
   </div>
   <div class="navbar-mobile" id="navbarMobile">
     <a href="dashboard.html">Dashboard</a>
-    <a href="revisar.html">Revisar</a>
+    <a href="revisar-lista.html">Revisar</a>
     <a href="pagamentos.html">Pagamentos</a>
     <a href="utilizadores.html">Utilizadores</a>
     <a href="agentes.html" class="active">Agentes</a>
+    <a href="pontos-entrega.html">Pontos</a>
   </div>
 </nav>
 
 <div class="page-header">
   <div class="container">
-    <h1>Gestão de agentes</h1>
-    <p>Controlo de equipas, pontos de entrega atribuídos e estado operacional</p>
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <h1>Gestão de agentes</h1>
+        <p>Controlo de equipas, pontos de entrega atribuídos e estado operacional</p>
+      </div>
+      <button id="btnCriarAgente" class="btn btn-primary">+ Novo Agente</button>
+    </div>
   </div>
 </div>
 
 <main class="page-content">
   <div class="container">
+
+    <!-- Formulário Criar Agente -->
+    <div id="formContainer" class="card hidden" style="margin-bottom:2rem; border-left:4px solid var(--primary);">
+      <h3 style="margin-bottom:1.5rem;">Registar novo agente</h3>
+      <form id="formNovoAgente">
+        <div class="grid-2" style="gap:1rem;">
+          <div class="form-group">
+            <label class="form-label">Nome *</label>
+            <input type="text" id="inputNome" class="form-input" placeholder="Ex: João Silva" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email *</label>
+            <input type="email" id="inputEmail" class="form-input" placeholder="Ex: joao@acheidoc.ao" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Telefone *</label>
+            <input type="tel" id="inputTelefone" class="form-input" placeholder="Ex: +244 923 000 000" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Ponto de Entrega Atribuído</label>
+            <input type="text" id="inputPontoId" class="form-input" placeholder="ID do ponto (opcional)">
+          </div>
+        </div>
+        <div style="display:flex; gap:0.75rem; margin-top:1.5rem;">
+          <button type="submit" class="btn btn-primary btn-full">Guardar Agente</button>
+          <button type="button" id="btnCancelar" class="btn btn-outline btn-full">Cancelar</button>
+        </div>
+      </form>
+    </div>
 
     <div class="grid-4 mb-4">
       <div class="summary-card">

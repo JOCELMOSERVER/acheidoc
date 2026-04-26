@@ -224,6 +224,12 @@
       },
       byDocumento: function (id) {
         return request('/api/pontos-entrega/documento/' + encodeURIComponent(id), { method: 'GET', skipAuth: true });
+      },
+      create: function (payload) {
+        return request('/api/pontos-entrega', {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
       }
     },
 
@@ -273,6 +279,12 @@
         return request('/api/admin/agentes/' + encodeURIComponent(id) + '/pontos', {
           method: 'PATCH',
           body: JSON.stringify({ delta: delta })
+        });
+      },
+      create: function (payload) {
+        return request('/api/admin/agentes', {
+          method: 'POST',
+          body: JSON.stringify(payload)
         });
       }
     }

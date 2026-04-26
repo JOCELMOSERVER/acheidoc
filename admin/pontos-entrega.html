@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pontos de Entrega — AcheiDoc Admin</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/navbar.css">
+  <link rel="stylesheet" href="../css/footer.css">
+  <link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+
+<!-- ══ NAVBAR ADMIN ══ -->
+<nav class="navbar" style="border-bottom: 3px solid #312E81;">
+  <div class="container navbar-inner">
+    <a href="../index.html" class="navbar-logo" style="color: #312E81;"><span class="logo-icon">AD</span>AcheiDoc <span style="font-size:0.75rem; background:#312E81; color:white; padding:2px 8px; border-radius:4px; margin-left:4px;">ADMIN</span></a>
+    <div class="navbar-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="revisar-lista.html">Revisar</a>
+      <a href="pagamentos.html">Pagamentos</a>
+      <a href="utilizadores.html">Utilizadores</a>
+      <a href="agentes.html">Agentes</a>
+      <a href="pontos-entrega.html" class="active">Pontos</a>
+    </div>
+    <div class="navbar-right">
+      <button id="btnLogout" class="btn btn-outline" style="font-size:0.85rem; padding:8px 14px;">Sair</button>
+    </div>
+    <div class="navbar-toggle" id="navbarToggle"><span></span><span></span><span></span></div>
+  </div>
+  <div class="navbar-mobile" id="navbarMobile">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="revisar-lista.html">Revisar</a>
+    <a href="pagamentos.html">Pagamentos</a>
+    <a href="utilizadores.html">Utilizadores</a>
+    <a href="agentes.html">Agentes</a>
+    <a href="pontos-entrega.html" class="active">Pontos</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h1>Pontos de Entrega</h1>
+      <button id="btnCriarPonto" class="btn btn-primary">+ Novo Ponto</button>
+    </div>
+  </div>
+</div>
+
+<main class="page-content">
+  <div class="container">
+    <!-- Formulário Criar/Editar (oculto por padrão) -->
+    <div id="formContainer" class="card hidden" style="margin-bottom:2rem; border-left:4px solid var(--primary);">
+      <h3 style="margin-bottom:1.5rem;">Registar novo ponto de entrega</h3>
+      <form id="formNovoPonto">
+        <div class="grid-2" style="gap:1rem;">
+          <div class="form-group">
+            <label class="form-label">Nome do Ponto *</label>
+            <input type="text" id="inputNome" class="form-input" placeholder="Ex: Ponto Viana Centro" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Município *</label>
+            <input type="text" id="inputMunicipio" class="form-input" placeholder="Ex: Viana" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Provínc ia *</label>
+            <input type="text" id="inputProvincia" class="form-input" placeholder="Ex: Luanda" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Horário *</label>
+            <input type="text" id="inputHorario" class="form-input" placeholder="Ex: Seg-Sex: 08h-17h" required>
+          </div>
+          <div class="form-group" style="grid-column:1/-1;">
+            <label class="form-label">Endereço *</label>
+            <input type="text" id="inputEndereco" class="form-input" placeholder="Ex: Rua Principal, Bairro X" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Telefone *</label>
+            <input type="tel" id="inputTelefone" class="form-input" placeholder="Ex: +244 923 000 000" required>
+          </div>
+        </div>
+        <div style="display:flex; gap:0.75rem; margin-top:1.5rem;">
+          <button type="submit" class="btn btn-primary btn-full">Guardar Ponto</button>
+          <button type="button" id="btnCancelar" class="btn btn-outline btn-full">Cancelar</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Lista de Pontos -->
+    <div class="card">
+      <table class="table" style="width:100%; border-collapse:collapse;">
+        <thead>
+          <tr style="border-bottom:2px solid var(--border);">
+            <th style="text-align:left; padding:0.75rem; font-weight:700;">Nome</th>
+            <th style="text-align:left; padding:0.75rem; font-weight:700;">Local</th>
+            <th style="text-align:left; padding:0.75rem; font-weight:700;">Telefone</th>
+            <th style="text-align:left; padding:0.75rem; font-weight:700;">Horário</th>
+            <th style="text-align:left; padding:0.75rem; font-weight:700;">Ação</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaBody">
+          <tr><td colspan="5" style="text-align:center; padding:2rem; color:var(--text-gray);">A carregar...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© 2026 AcheiDoc — Painel Admin</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/api.js"></script>
+<script src="../js/navbar.js"></script>
+<script src="../js/admin-pontos-entrega.js"></script>
+</body>
+</html>

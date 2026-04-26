@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Revisar Documentos — AcheiDoc Admin</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/navbar.css">
+  <link rel="stylesheet" href="../css/footer.css">
+  <link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+
+<!-- ══ NAVBAR ADMIN ══ -->
+<nav class="navbar" style="border-bottom: 3px solid #312E81;">
+  <div class="container navbar-inner">
+    <a href="../index.html" class="navbar-logo" style="color: #312E81;"><span class="logo-icon">AD</span>AcheiDoc <span style="font-size:0.75rem; background:#312E81; color:white; padding:2px 8px; border-radius:4px; margin-left:4px;">ADMIN</span></a>
+    <div class="navbar-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="revisar-lista.html" class="active">Revisar Documentos</a>
+      <a href="pagamentos.html">Pagamentos</a>
+      <a href="utilizadores.html">Utilizadores</a>
+      <a href="agentes.html">Agentes</a>
+    </div>
+    <div class="navbar-right">
+      <button id="btnLogout" class="btn btn-outline" style="font-size:0.85rem; padding:8px 14px;">Sair</button>
+    </div>
+    <div class="navbar-toggle" id="navbarToggle"><span></span><span></span><span></span></div>
+  </div>
+  <div class="navbar-mobile" id="navbarMobile">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="revisar-lista.html" class="active">Revisar</a>
+    <a href="pagamentos.html">Pagamentos</a>
+    <a href="utilizadores.html">Utilizadores</a>
+    <a href="agentes.html">Agentes</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1>Documentos Pendentes de Revisão</h1>
+    <p style="color:var(--text-gray); margin-top:0.25rem;">Selecione um documento para revisar e aprovar/rejeitar</p>
+  </div>
+</div>
+
+<main class="page-content">
+  <div class="container">
+    <!-- Filtros -->
+    <div class="card" style="margin-bottom:1.5rem;">
+      <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
+        <button class="filter-tab active" data-filter="PENDENTE">Pendentes</button>
+        <button class="filter-tab" data-filter="CORRECAO_SOLICITADA">Correcção Solicitada</button>
+        <button class="filter-tab" data-filter="TODOS">Todos</button>
+      </div>
+    </div>
+
+    <!-- Tabela de documentos -->
+    <div class="card">
+      <table class="table" style="width:100%; border-collapse:collapse;">
+        <thead>
+          <tr style="border-bottom:2px solid var(--border);">
+            <th style="text-align:left; padding:0.75rem; font-weight:700;">ID</th>
+            <th style="text-align:left; padding:0.75rem; font-weight:700;">Tipo</th>
+            <th style="text-align:left; padding:0.75rem; font-weight:700;">Nome</th>
+            <th style="text-align:left; padding:0.75rem; font-weight:700;">Local</th>
+            <th style="text-align:left; padding:0.75rem; font-weight:700;">Risco</th>
+            <th style="text-align:left; padding:0.75rem; font-weight:700;">Data</th>
+            <th style="text-align:left; padding:0.75rem; font-weight:700;">Ação</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaBody">
+          <tr><td colspan="7" style="text-align:center; padding:2rem; color:var(--text-gray);">A carregar...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© 2026 AcheiDoc — Painel Admin</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/api.js"></script>
+<script src="../js/navbar.js"></script>
+<script src="../js/ui-utils.js"></script>
+<script src="../js/admin-revisar-lista.js"></script>
+</body>
+</html>
