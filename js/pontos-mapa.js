@@ -4,6 +4,7 @@
 
 (function () {
   var mapFrame = document.getElementById('mapFrame');
+  var mapContainer = document.getElementById('map');
   var statusEl = document.getElementById('mapStatus');
   var listaEl = document.getElementById('pontosLista');
 
@@ -11,6 +12,21 @@
     if (!statusEl) return;
     statusEl.textContent = message;
     statusEl.className = 'alert ' + (kind || 'alert-info');
+  }
+
+  if (!mapFrame && mapContainer && mapContainer.tagName === 'DIV') {
+    var iframe = document.createElement('iframe');
+    iframe.id = 'mapFrame';
+    iframe.title = 'Mapa de pontos de entrega';
+    iframe.src = 'https://www.google.com/maps?q=Luanda,Angola&output=embed';
+    iframe.style.width = '100%';
+    iframe.style.height = '100%';
+    iframe.style.border = '0';
+    iframe.loading = 'lazy';
+    iframe.referrerPolicy = 'no-referrer-when-downgrade';
+    mapContainer.innerHTML = '';
+    mapContainer.appendChild(iframe);
+    mapFrame = iframe;
   }
 
   if (!mapFrame) {
