@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ — AcheiDoc</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="navbar-logo"><span class="logo-icon">AD</span>AcheiDoc</a>
+    <div class="navbar-links">
+      <a href="index.html">Home</a>
+      <a href="buscar.html">Buscar Documento</a>
+      <a href="publicar.html">Publicar Achado</a>
+      <a href="recompensas.html">Recompensas</a>
+      <a href="faq.html" class="active">FAQ</a>
+    </div>
+    <div class="navbar-right">
+      <div id="navLogin">
+        <a href="login.html" class="btn-login">Entrar</a>
+      </div>
+      <div id="navUser" style="display:none; position:relative;"></div>
+    </div>
+    <div class="navbar-toggle" id="navbarToggle"><span></span><span></span><span></span></div>
+  </div>
+  <div class="navbar-mobile" id="navbarMobile">
+    <a href="index.html">Home</a>
+    <a href="buscar.html">Buscar Documento</a>
+    <a href="publicar.html">Publicar Achado</a>
+    <a href="recompensas.html">Recompensas</a>
+    <a href="faq.html" class="active">FAQ</a>
+    <div class="mobile-divider"></div>
+    <a href="agente/login.html">Agente</a>
+    <a href="admin/login.html">Admin</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1>Perguntas Frequentes</h1>
+    <p>Respostas rápidas sobre publicação, validação, pagamento e levantamento de documentos.</p>
+  </div>
+</div>
+
+<main class="page-content">
+  <div class="container" style="max-width: 880px;">
+
+    <div class="card mb-3" style="border-left:4px solid var(--primary); background:#EFF6FF;">
+      <h2 style="font-size:1.15rem; font-weight:700; margin-bottom:0.5rem;">Como funciona o AcheiDoc?</h2>
+      <p style="color:var(--text-gray); margin:0;">Quem encontra um documento publica no sistema, a equipa valida, e o dono pode pesquisar, pagar a taxa e levantar no ponto de entrega.</p>
+    </div>
+
+    <div class="card mb-3">
+      <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:1rem;">Conta e Acesso</h3>
+
+      <details class="mb-2" open>
+        <summary style="cursor:pointer; font-weight:700;">Preciso criar conta para pesquisar documentos?</summary>
+        <p style="margin-top:0.6rem; color:var(--text-gray);">Não. A pesquisa é pública. A conta é necessária para publicar achados, pagar e acompanhar histórico.</p>
+      </details>
+
+      <details class="mb-2">
+        <summary style="cursor:pointer; font-weight:700;">Esqueci a palavra-passe. Como recuperar?</summary>
+        <p style="margin-top:0.6rem; color:var(--text-gray);">Na página de login, use a opção Recuperar palavra-passe e siga as instruções enviadas por e-mail.</p>
+      </details>
+
+      <details>
+        <summary style="cursor:pointer; font-weight:700;">Tenho perfis diferentes (utilizador, agente, admin)?</summary>
+        <p style="margin-top:0.6rem; color:var(--text-gray);">Sim. Cada perfil tem área própria com permissões diferentes para segurança e controlo do processo.</p>
+      </details>
+    </div>
+
+    <div class="card mb-3">
+      <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:1rem;">Publicação e Validação</h3>
+
+      <details class="mb-2">
+        <summary style="cursor:pointer; font-weight:700;">O que acontece depois de publicar um documento encontrado?</summary>
+        <p style="margin-top:0.6rem; color:var(--text-gray);">O documento entra em validação. Após aprovação, fica visível na busca para o dono identificar e iniciar resgate.</p>
+      </details>
+
+      <details class="mb-2">
+        <summary style="cursor:pointer; font-weight:700;">Porque o meu documento pode ser rejeitado?</summary>
+        <p style="margin-top:0.6rem; color:var(--text-gray);">Normalmente por informação incompleta, foto ilegível, inconsistência de dados ou suspeita de fraude.</p>
+      </details>
+
+      <details>
+        <summary style="cursor:pointer; font-weight:700;">Como sei que o documento foi recebido no ponto?</summary>
+        <p style="margin-top:0.6rem; color:var(--text-gray);">No painel do agente e nos estados do documento, ele passa para fase de disponibilidade para pagamento/levantamento.</p>
+      </details>
+    </div>
+
+    <div class="card mb-3">
+      <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:1rem;">Pagamento e Levantamento</h3>
+
+      <details class="mb-2">
+        <summary style="cursor:pointer; font-weight:700;">Quando posso pagar para levantar?</summary>
+        <p style="margin-top:0.6rem; color:var(--text-gray);">Quando o documento estiver disponível para pagamento na busca/detalhes. Depois do pagamento, recebe código de resgate.</p>
+      </details>
+
+      <details class="mb-2">
+        <summary style="cursor:pointer; font-weight:700;">Quais métodos de pagamento são aceites?</summary>
+        <p style="margin-top:0.6rem; color:var(--text-gray);">Os métodos activos aparecem na página de pagamento (ex.: Multicaixa Express e Unitel Money).</p>
+      </details>
+
+      <details>
+        <summary style="cursor:pointer; font-weight:700;">O que devo levar no ponto de entrega?</summary>
+        <p style="margin-top:0.6rem; color:var(--text-gray);">Código de resgate e documento de identificação (BI ou passaporte), conforme instruções do ponto.</p>
+      </details>
+    </div>
+
+    <div class="card" style="border-top:4px solid var(--success);">
+      <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:0.6rem;">Ainda tem dúvidas?</h3>
+      <p style="color:var(--text-gray); margin-bottom:1rem;">Fale com a nossa equipa e teremos prazer em ajudar.</p>
+      <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+        <a href="mailto:info@acheidoc.ao" class="btn btn-primary">Enviar e-mail</a>
+        <a href="tel:+244923000000" class="btn btn-outline">Ligar agora</a>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo"><span class="logo-icon">AD</span> AcheiDoc</div>
+        <p>Sistema de recuperação de documentos perdidos em Angola. Ligamos quem encontrou a quem perdeu.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Plataforma</h4>
+        <ul>
+          <li><a href="buscar.html">Buscar Documento</a></li>
+          <li><a href="publicar.html">Publicar Achado</a></li>
+          <li><a href="recompensas.html">Recompensas</a></li>
+          <li><a href="meus-achados.html">Meus Achados</a></li>
+          <li><a href="pontos-mapa.html">Pontos no Mapa</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Acesso</h4>
+        <ul>
+          <li><a href="agente/login.html">Portal do Agente</a></li>
+          <li><a href="admin/login.html">Painel Admin</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="tel:+244923000000">+244 923 000 000</a></li>
+          <li><a href="mailto:info@acheidoc.ao">info@acheidoc.ao</a></li>
+          <li><a href="#">Luanda, Angola</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 AcheiDoc. Todos os direitos reservados.</span>
+      <div class="footer-legal">
+        <a href="termos.html">Privacidade</a>
+        <a href="termos.html">Termos de Uso</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/navbar.js"></script>
+</body>
+</html>

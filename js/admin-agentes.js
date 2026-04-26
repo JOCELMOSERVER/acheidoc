@@ -12,16 +12,53 @@
   setEl('adminNome', adminLogado.nome);
 
   var agentes = [];
+  var pontosEntrega = [];
   var filtroAtual = 'TODOS';
   var tabela = document.getElementById('tabelaAgentes');
   var formContainer = document.getElementById('formContainer');
   var btnCriarAgente = document.getElementById('btnCriarAgente');
   var btnCancelar = document.getElementById('btnCancelar');
   var formNovoAgente = document.getElementById('formNovoAgente');
+  var inputPontoId = document.getElementById('inputPontoId');
 
   bindFiltros();
   bindLogout();
   bindFormCriarAgente();
+
+  function renderPontosSelect(selectedValue) {
+    if (!inputPontoId) return;
+
+    var options = ['<option value="">Seleccionar ponto (opcional)</option>'];
+    pontosEntrega.forEach(function (ponto) {
+      var isAssigned = !!ponto.agente_id;
+      var isSelected = String(selectedValue || '') === String(ponto.id || '');
+      var label = (ponto.nome || 'Ponto') + (ponto.municipio ? ' - ' + ponto.municipio : '') + (isAssigned ? ' (já atribuído)' : '');
+      options.push(
+        '<option value="' + (ponto.id || '') + '"' +
+        (isAssigned ? ' disabled' : '') +
+        (isSelected ? ' selected' : '') +
+        '>' + label + '</option>'
+      );
+    });
+
+    inputPontoId.innerHTML = options.join('');
+  }
+
+  async function loadPontosEntrega() {
+    if (!(typeof Api !== 'undefined' && Api.pontosEntrega && Api.pontosEntrega.list)) {
+      renderPontosSelect('');
+      return;
+    }
+
+    try {
+      var response = await Api.pontosEntrega.list();
+      pontosEntrega = response && Array.isArray(response.pontos) ? response.pontos : [];
+      renderPontosSelect('');
+    } catch (err) {
+      pontosEntrega = [];
+      renderPontosSelect('');
+    }
+  }
 
   function getPontoNome(pontoId) {
     var agente = agentes.find(function (item) { return String(item.pontoId) === String(pontoId); });
@@ -173,6 +210,7 @@
       btnCriarAgente.addEventListener('click', function () {
         if (formContainer) formContainer.classList.remove('hidden');
         if (formNovoAgente) formNovoAgente.reset();
+        renderPontosSelect('');
       });
     }
 
@@ -218,6 +256,7 @@
               pontoId: response.agente.ponto_id || null,
               pontoNome: response.agente.ponto_nome || null
             }));
+            await loadPontosEntrega();
             renderResumo();
             renderTabela(filtroAtual);
             formNovoAgente.reset();
@@ -234,6 +273,8 @@
   }
 
   (async function init() {
+    await loadPontosEntrega();
+
     if (!(typeof Api !== 'undefined' && Api.adminAgentes && Api.adminAgentes.list)) {
       alert('API de agentes indisponível.');
       return;
