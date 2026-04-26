@@ -188,9 +188,28 @@
     }
 
     try {
-      var response = await Api.documentos.list({ limit: 4, page: 1 });
+      var response = await Api.documentos.list({ limit: 50, page: 1 });
       var apiDocs = (response && response.documentos ? response.documentos : []).map(toLegacyDoc).filter(Boolean);
-      recentGrid.innerHTML = apiDocs.map(function (d) { return buildDocCard(d, ''); }).join('');
+
+      var priority = {
+        DISPONIVEL_PAGAMENTO: 0,
+        PUBLICADO: 1,
+        AGUARDANDO_ENTREGA: 2,
+        DISPONIVEL_LEVANTAMENTO: 3,
+        PENDENTE: 4,
+        CORRECAO_SOLICITADA: 5,
+        ENTREGUE: 6,
+        REJEITADO: 7
+      };
+
+      var ordered = apiDocs.slice().sort(function (a, b) {
+        var pa = Object.prototype.hasOwnProperty.call(priority, a.status) ? priority[a.status] : 99;
+        var pb = Object.prototype.hasOwnProperty.call(priority, b.status) ? priority[b.status] : 99;
+        if (pa !== pb) return pa - pb;
+        return String(b.dataCriacao || '').localeCompare(String(a.dataCriacao || ''));
+      }).slice(0, 4);
+
+      recentGrid.innerHTML = ordered.map(function (d) { return buildDocCard(d, ''); }).join('');
     } catch (apiErr) {
       recentGrid.innerHTML = '<p class="text-gray">Não foi possível carregar documentos recentes.</p>';
     }
