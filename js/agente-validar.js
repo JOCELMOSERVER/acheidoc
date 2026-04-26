@@ -54,7 +54,12 @@
   var docValidado = null;
   var docRecebido = null;
   var documentos = [];
+  var docsLoaded = false;
   var apiMode = typeof Api !== 'undefined' && Api.documentos && Api.documentos.agenteUpdate;
+
+  function normalizeCode(value) {
+    return String(value || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  }
 
   function renderResumoDoc(docSelecionado) {
     if (docSelecionado && docResumoCard && docResumoInfo) {
@@ -75,8 +80,8 @@
   }
 
   if (btnReceber) {
-    btnReceber.addEventListener('click', function () {
-      var chave = chaveEntregaInput ? chaveEntregaInput.value.trim().toUpperCase() : '';
+    btnReceber.addEventListener('click', async function () {
+      var chave = chaveEntregaInput ? normalizeCode(chaveEntregaInput.value) : '';
 
       if (!chave) {
         showReceiveError('Por favor, insira a chave de entrega apresentada pelo encontrador.');
@@ -91,7 +96,14 @@
         return;
       }
 
-      docRecebido = findDocForReceive(chave);
+      if (!docsLoaded) {
+        await loadDocumentos();
+      }
+
+      docRecebido = await findDocByCodigoApi(chave);
+      if (!docRecebido) {
+        docRecebido = findDocForReceive(chave);
+      }
       if (!docRecebido) {
         showReceiveError('Documento não encontrado para esta chave de entrega.');
         return;
@@ -103,8 +115,8 @@
   }
 
   if (btnValidar) {
-    btnValidar.addEventListener('click', function () {
-      var codigo = codigoInput ? codigoInput.value.trim().toUpperCase() : '';
+    btnValidar.addEventListener('click', async function () {
+      var codigo = codigoInput ? normalizeCode(codigoInput.value) : '';
 
       if (!codigo) {
         showError('Por favor, insira o código de resgate.');
@@ -119,7 +131,14 @@
         return;
       }
 
-      docValidado = findDocForEntrega(codigo);
+      if (!docsLoaded) {
+        await loadDocumentos();
+      }
+
+      docValidado = await findDocByCodigoApi(codigo);
+      if (!docValidado) {
+        docValidado = findDocForEntrega(codigo);
+      }
       if (!docValidado) {
         showError('Documento não encontrado para este código de resgate.');
         return;
@@ -140,7 +159,7 @@
     if (byId) return byId;
 
     return documentos.find(function (d) {
-      return String(d.chaveEntrega || '').toUpperCase() === chave;
+      return normalizeCode(d.chaveEntrega) === chave;
     }) || null;
   }
 
@@ -149,8 +168,28 @@
     if (byId) return byId;
 
     return documentos.find(function (d) {
-      return String(d.codigoResgate || '').toUpperCase() === codigo;
+      var codigoResgate = normalizeCode(d.codigoResgate);
+      var chaveEntrega = normalizeCode(d.chaveEntrega);
+      var docId = normalizeCode(d.id);
+      return codigoResgate === codigo || chaveEntrega === codigo || docId === codigo;
     }) || null;
+  }
+
+  async function findDocByCodigoApi(codigo) {
+    if (!(apiMode && Api.documentos && Api.documentos.agenteByCodigo)) return null;
+
+    try {
+      var response = await Api.documentos.agenteByCodigo(codigo);
+      var doc = response && response.documento ? toLegacyDoc(response.documento) : null;
+      if (!doc || !doc.id) return null;
+
+      var exists = documentos.find(function (d) { return d.id === doc.id; });
+      if (!exists) documentos.push(doc);
+
+      return doc;
+    } catch (err) {
+      return null;
+    }
   }
 
   function animarRecepcao() {
@@ -277,10 +316,10 @@
     };
   }
 
-  (async function initData() {
+  async function loadDocumentos() {
     if (!(apiMode && Api.documentos.agenteLista)) {
       showError('API de documentos indisponível.');
-      return;
+      return false;
     }
 
     try {
@@ -288,10 +327,17 @@
       documentos = (response && response.documentos ? response.documentos : []).map(toLegacyDoc).filter(function (d) {
         return d.id && d.tipo && d.nomeParcial;
       });
+      docsLoaded = true;
+      return true;
     } catch (err) {
       showError(err && err.message ? err.message : 'Falha ao carregar documentos.');
-      return;
+      return false;
     }
+  }
+
+  (async function initData() {
+    var loaded = await loadDocumentos();
+    if (!loaded) return;
 
     if (docIdParam && Array.isArray(documentos)) {
       var docSelecionado = documentos.find(function (d) { return d.id === docIdParam; }) || null;

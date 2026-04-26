@@ -198,6 +198,9 @@
         var qs = query ? ('?' + new URLSearchParams(query).toString()) : '';
         return request('/api/documentos/agente/lista' + qs, { method: 'GET' });
       },
+      agenteByCodigo: function (codigo) {
+        return request('/api/documentos/agente/codigo/' + encodeURIComponent(codigo), { method: 'GET' });
+      },
       agenteUpdate: function (id, status) {
         return request('/api/documentos/agente/' + encodeURIComponent(id), {
           method: 'PATCH',

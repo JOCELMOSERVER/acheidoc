@@ -143,6 +143,8 @@
   var recomendadoEndereco = document.getElementById('recomendadoEndereco');
   var recomendadoHorario = document.getElementById('recomendadoHorario');
   var recomendadoTelefone = document.getElementById('recomendadoTelefone');
+  var chaveEntregaCode = document.getElementById('chaveEntregaCode');
+  var btnCopiarChaveEntrega = document.getElementById('btnCopiarChaveEntrega');
 
   if (btnPublicar) {
     btnPublicar.addEventListener('click', async function () {
@@ -152,6 +154,7 @@
       setTimeout(async function () {
         var id = '';
         var ponto = null;
+        var chaveEntrega = '';
 
         if (!(typeof Api !== 'undefined' && Api.documentos && Api.documentos.createWithFile)) {
           alert('API de documentos indisponível.');
@@ -177,11 +180,17 @@
             id = response.documento.id;
           }
 
+          if (response && response.chave_entrega) {
+            chaveEntrega = response.chave_entrega;
+          } else if (response && response.documento && response.documento.chave_entrega) {
+            chaveEntrega = response.documento.chave_entrega;
+          }
+
           if (response && response.ponto_entrega) {
             ponto = response.ponto_entrega;
           }
 
-          if (!id || !ponto || !ponto.nome || !ponto.endereco || !ponto.telefone) {
+          if (!id || !chaveEntrega || !ponto || !ponto.nome || !ponto.endereco || !ponto.telefone) {
             throw new Error('Resposta incompleta do servidor ao publicar documento.');
           }
         } catch (apiErr) {
@@ -200,7 +209,22 @@
         if (formContainer) formContainer.classList.add('hidden');
         if (successContainer) successContainer.classList.remove('hidden');
         if (newDocId) newDocId.textContent = id;
+        if (chaveEntregaCode) chaveEntregaCode.textContent = chaveEntrega;
       }, 1500);
+    });
+  }
+
+  if (btnCopiarChaveEntrega) {
+    btnCopiarChaveEntrega.addEventListener('click', function () {
+      if (!chaveEntregaCode || !chaveEntregaCode.textContent) return;
+      if (!navigator.clipboard) {
+        alert('Cópia indisponível neste navegador.');
+        return;
+      }
+      navigator.clipboard.writeText(chaveEntregaCode.textContent).then(function () {
+        btnCopiarChaveEntrega.textContent = 'Copiado';
+        setTimeout(function () { btnCopiarChaveEntrega.textContent = 'Copiar'; }, 1500);
+      });
     });
   }
 

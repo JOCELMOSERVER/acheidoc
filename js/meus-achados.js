@@ -37,6 +37,7 @@
       id: d.id,
       tipo: d.tipo,
       nomeParcial: d.nome_proprietario || 'Proprietario',
+      chaveEntrega: d.chave_entrega || '',
       status: d.status || 'PENDENTE',
       dataCriacao: (d.criado_em || d.data_publicacao || '').slice(0, 10)
     };
@@ -50,7 +51,7 @@
     });
 
     if (!lista.length) {
-      tabelaBody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-gray);">Nenhum achado encontrado.</td></tr>';
+      tabelaBody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-gray);">Nenhum achado encontrado.</td></tr>';
       return;
     }
 
@@ -61,6 +62,7 @@
         '<td><code>' + d.id + '</code></td>' +
         '<td>' + d.tipo + '</td>' +
         '<td>' + d.nomeParcial + '</td>' +
+        '<td><code style="white-space:nowrap; font-size:0.8rem;">' + d.chaveEntrega + '</code></td>' +
         '<td><span class="badge ' + getStatusBadgeClass(d.status) + '">' + getStatusLabel(d.status) + '</span></td>' +
         '<td>' + formatDate(d.dataCriacao) + '</td>' +
         '<td style="' + cor + '">' + pontos + '</td>' +
