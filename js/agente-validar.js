@@ -246,8 +246,8 @@
 
       setTimeout(async function () {
         try {
-          await Api.documentos.agenteUpdate(docRecebido.id, 'AGUARDANDO_ENTREGA');
-          docRecebido.status = 'AGUARDANDO_ENTREGA';
+          await Api.documentos.agenteUpdate(docRecebido.id, 'DISPONIVEL_LEVANTAMENTO');
+          docRecebido.status = 'DISPONIVEL_LEVANTAMENTO';
         } catch (apiErr) {
           showReceiveError(apiErr && apiErr.message ? apiErr.message : 'Falha ao registar recepção.');
           btnConfirmarRecepcao.disabled = false;
