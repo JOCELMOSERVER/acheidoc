@@ -648,6 +648,16 @@ tr.risco-medio:hover td {
     padding: 0 0.75rem;
   }
 
+  .card-doc-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .card-doc-footer .btn {
+    margin-left: 0;
+    width: 100%;
+  }
+
   .hero-title {
     font-size: 1.5rem;
   }

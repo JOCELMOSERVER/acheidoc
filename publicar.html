@@ -99,6 +99,22 @@
           <textarea id="descricaoDoc" class="form-input" placeholder="Descreva o estado do documento, cor, detalhes relevantes..."></textarea>
         </div>
 
+        <div class="form-group" style="margin-top:1rem;">
+          <label style="display:flex; align-items:center; gap:0.55rem; cursor:pointer;">
+            <input type="checkbox" id="multiDocsToggle">
+            <span style="font-weight:600;">Mais documentos (ex.: carteira com vários cartões)</span>
+          </label>
+          <span class="form-hint">Use esta opção para publicar mais de um documento encontrado ao mesmo tempo.</span>
+        </div>
+
+        <div id="multiDocsSection" class="card hidden" style="background:var(--bg-light); box-shadow:none; border:1px dashed var(--border); margin-bottom:1rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem; gap:0.75rem; flex-wrap:wrap;">
+            <h3 style="font-size:1rem; font-weight:700; margin:0;">Documentos adicionais</h3>
+            <button type="button" id="btnAddExtraDoc" class="btn btn-outline btn-sm">+ Adicionar documento</button>
+          </div>
+          <div id="extraDocsContainer"></div>
+        </div>
+
         <div style="text-align:right;">
           <button id="btnNext1" class="btn btn-primary btn-lg">Próximo →</button>
         </div>
@@ -179,6 +195,10 @@
               <td style="padding:8px 0; color:var(--text-gray); font-size:0.9rem;">Local</td>
               <td style="padding:8px 0;" id="reviewLocal">—</td>
             </tr>
+            <tr>
+              <td style="padding:8px 0; color:var(--text-gray); font-size:0.9rem;">Mais documentos</td>
+              <td style="padding:8px 0;" id="reviewExtras">Nenhum</td>
+            </tr>
           </table>
         </div>
 
@@ -202,6 +222,7 @@
         <div style="background:var(--bg-light); border-radius:12px; padding:1.5rem; margin-bottom:1.5rem;">
           <p style="color:var(--text-gray); font-size:0.85rem; margin-bottom:0.25rem;">ID do documento</p>
           <p style="font-size:1.4rem; font-weight:900; font-family:monospace; color:var(--primary);" id="newDocId">—</p>
+          <p id="newDocIdsMore" class="hidden" style="font-size:0.85rem; color:var(--text-gray); margin-top:0.45rem;"></p>
           <span class="badge badge-pendente" style="margin-top:0.5rem;">Pendente</span>
         </div>
         <div style="background:#FEF3C7; border:1px solid #FCD34D; border-radius:12px; padding:1rem; margin-bottom:1.2rem; text-align:left;">
