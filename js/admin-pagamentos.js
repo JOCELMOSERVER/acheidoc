@@ -28,7 +28,7 @@
       utilizador: p.utilizador_nome || p.utilizador || 'Cliente',
       tipoDoc: p.tipo || p.tipoDoc || 'Documento',
       entidade: p.entidade || '00282',
-      referencia: p.referencia || '—',
+      referencia: p.referencia || '',
       valor: Number(p.valor || 0),
       status: normStatus(p.status),
       dataCriacao: (p.criado_em || p.dataCriacao || '').slice(0, 10),
@@ -78,9 +78,9 @@
       if (p.status === 'PENDENTE') {
         acaoBtns = '<button class="btn btn-success btn-sm btn-confirmar" data-id="' + p.id + '">Confirmar pago</button>';
       } else if (p.status === 'PAGO') {
-        acaoBtns = '<span style="color:var(--text-gray); font-size:0.85rem;">' + (p.dataPagamento || '—') + '</span>';
+        acaoBtns = '<span style="color:var(--text-gray); font-size:0.85rem;">' + (p.dataPagamento || '') + '</span>';
       } else {
-        acaoBtns = '<span style="color:var(--text-gray); font-size:0.85rem;">—</span>';
+        acaoBtns = '<span style="color:var(--text-gray); font-size:0.85rem;"></span>';
       }
 
       return '<tr>' +

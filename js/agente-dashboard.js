@@ -14,7 +14,7 @@
   setEl('agenteNome', agenteLogado.nome);
   var documentos = [];
 
-  setEl('agentePonto', agenteLogado.pontoNome || ('Ponto #' + (agenteLogado.pontoId || '-')));
+  setEl('agentePonto', agenteLogado.pontoNome || '');
 
   setEl('agentePontos', agenteLogado.pontos || 0);
   setEl('agentePontosMes', '0 pts');
@@ -64,11 +64,11 @@
     return {
       id: item.id,
       tipo: item.tipo,
-      nomeParcial: item.nome_proprietario || 'Proprietário',
-      nomeCompleto: item.nome_proprietario || 'Proprietário',
-      status: item.status || 'PENDENTE',
+      nomeParcial: item.nome_proprietario,
+      nomeCompleto: item.nome_proprietario,
+      status: item.status,
       dataCriacao: (item.criado_em || item.data_publicacao || '').slice(0, 10),
-      encontradoPor: item.publicado_por_nome || 'Utilizador'
+      encontradoPor: item.publicado_por_nome
     };
   }
 
@@ -93,7 +93,7 @@
             '<td><code>' + d.id + '</code></td>' +
             '<td>' + d.tipo + '</td>' +
             '<td>' + d.nomeParcial + '</td>' +
-            '<td>' + (d.encontradoPor || '—') + '</td>' +
+            '<td>' + (d.encontradoPor || '') + '</td>' +
             '<td><span class="badge ' + getStatusBadgeClass(d.status) + '">' + getStatusLabel(d.status) + '</span></td>' +
             '<td>' + formatDate(d.dataCriacao) + '</td>' +
             '<td><a href="validar.html?id=' + d.id + '&flow=receber" class="btn btn-primary btn-sm">Receber documento</a></td>' +

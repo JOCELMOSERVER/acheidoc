@@ -25,11 +25,11 @@
 
     tabelaBody.innerHTML = pontos.map(function (p) {
       return '<tr style="border-bottom:1px solid var(--border);">' +
-        '<td style="padding:0.75rem;"><strong>' + (p.nome || '—') + '</strong></td>' +
-        '<td style="padding:0.75rem;">' + (p.municipio || '—') + ', ' + (p.provincia || '—') + '</td>' +
-        '<td style="padding:0.75rem;"><a href="tel:' + (p.telefone || '#') + '" style="color:var(--primary);">' + (p.telefone || '—') + '</a></td>' +
-        '<td style="padding:0.75rem;">' + (p.horario || '—') + '</td>' +
-        '<td style="padding:0.75rem;"><small><code>' + (p.id && p.id.slice(0, 8) || '—') + '</code></small></td>' +
+        '<td style="padding:0.75rem;"><strong>' + (p.nome || '') + '</strong></td>' +
+        '<td style="padding:0.75rem;">' + ((p.municipio || '') + (p.provincia ? ', ' + p.provincia : '')) + '</td>' +
+        '<td style="padding:0.75rem;"><a href="tel:' + (p.telefone || '') + '" style="color:var(--primary);">' + (p.telefone || '') + '</a></td>' +
+        '<td style="padding:0.75rem;">' + (p.horario || '') + '</td>' +
+        '<td style="padding:0.75rem;"><small><code>' + (p.id ? p.id.slice(0, 8) : '') + '</code></small></td>' +
         '</tr>';
     }).join('');
   }

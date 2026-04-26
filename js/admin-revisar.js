@@ -18,19 +18,19 @@
     return;
   }
 
-  function defaultDocImage() {
-    return 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="480"><rect width="100%" height="100%" fill="%23e5e7eb"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="28" fill="%236b7280">Documento</text></svg>';
-  }
-
   function toLegacyDoc(item) {
+    if (!item || !item.id || !item.tipo || !item.nome_proprietario || !item.provincia || !item.criado_em) {
+      return null;
+    }
+
     return {
       id: item.id,
       tipo: item.tipo,
-      nomeParcial: item.nome_proprietario || 'Proprietário',
-      localParcial: item.provincia || 'Luanda',
-      foto: item.foto_url || defaultDocImage(),
-      risco: item.risco || 'MEDIO',
-      status: item.status || 'PENDENTE',
+      nomeParcial: item.nome_proprietario,
+      localParcial: item.provincia,
+      foto: item.foto_url,
+      risco: item.risco,
+      status: item.status,
       dataCriacao: (item.criado_em || item.data_publicacao || '').slice(0, 10)
     };
   }

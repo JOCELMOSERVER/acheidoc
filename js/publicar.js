@@ -118,10 +118,10 @@
 
   // Preencher resumo
   function buildReview() {
-    setEl('reviewTipo', formData.tipo || '—');
-    setEl('reviewNome', formData.nome ? mascaraNome(formData.nome) : '—');
-    setEl('reviewDescricao', formData.descricao || '—');
-    setEl('reviewLocal', formData.local ? (formData.local + ', ' + (formData.municipio || '')) : '—');
+    setEl('reviewTipo', formData.tipo || '');
+    setEl('reviewNome', formData.nome ? mascaraNome(formData.nome) : '');
+    setEl('reviewDescricao', formData.descricao || '');
+    setEl('reviewLocal', formData.local ? (formData.local + ', ' + (formData.municipio || '')) : '');
   }
 
   function mascaraNome(nome) {
@@ -192,7 +192,7 @@
         }
 
         setEl('recomendadoPontoNome', ponto.nome);
-        setEl('recomendadoAgente', 'Agente responsável: ' + (ponto.agente_nome || ponto.agente || '-'));
+        setEl('recomendadoAgente', 'Agente responsável: ' + (ponto.agente_nome || ponto.agente || ''));
         setEl('recomendadoEndereco', ponto.endereco);
         setEl('recomendadoHorario', 'Horário: ' + ponto.horario);
         setEl('recomendadoTelefone', 'Telefone: ' + ponto.telefone);

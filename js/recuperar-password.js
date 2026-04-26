@@ -38,13 +38,11 @@
   });
 
   function validateIdentityAndPassword() {
-    var isApiMode = true;
     var email = val('inputEmail').toLowerCase();
-    var telefone = normalizePhone(val('inputTelefone'));
     var novaSenha = val('inputNovaSenha');
     var confirmar = val('inputConfirmarSenha');
 
-    if (!email || !novaSenha || !confirmar || (!isApiMode && !telefone)) {
+    if (!email || !novaSenha || !confirmar) {
       return { ok: false, msg: 'Preencha todos os campos.' };
     }
     if (novaSenha.length < 4) {
@@ -54,23 +52,7 @@
       return { ok: false, msg: 'A confirmação da palavra-passe não coincide.' };
     }
 
-    if (!isApiMode) {
-      var lista = getUsers();
-      var user = lista.find(function (u) {
-        return String(u.email || '').toLowerCase() === email
-          && normalizePhone(String(u.telefone || '')) === telefone;
-      });
-
-      if (!user) {
-        return { ok: false, msg: 'Não encontramos uma conta com esse email e telefone.' };
-      }
-    }
-
     return { ok: true, email: email, novaSenha: novaSenha };
-  }
-
-  function normalizePhone(v) {
-    return String(v || '').replace(/\s+/g, '').replace(/\-/g, '');
   }
 
   function val(id) {
@@ -95,10 +77,5 @@
   function hideAlerts() {
     if (alertErro) alertErro.classList.add('hidden');
     if (alertOk) alertOk.classList.add('hidden');
-  }
-
-  function safeParse(raw) {
-    try { return raw ? JSON.parse(raw) : null; }
-    catch (e) { return null; }
   }
 })();

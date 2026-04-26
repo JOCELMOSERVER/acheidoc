@@ -3,22 +3,7 @@
    =========================== */
 
 (function () {
-  var DEFAULT_API_BASE = 'https://acheidoc-api.onrender.com';
-
-  function normalizeBaseUrl(rawBase) {
-    var base = String(rawBase || DEFAULT_API_BASE).trim().replace(/\/+$/, '');
-    // Endpoints below already include "/api/..."; strip a trailing "/api" to avoid "/api/api" URLs.
-    base = base.replace(/\/api$/i, '');
-    return base;
-  }
-
-  var API_BASE = normalizeBaseUrl(window.ACHEIDOC_API_BASE || localStorage.getItem('acheidoc_api_base') || DEFAULT_API_BASE);
-
-  function buildUrl(path) {
-    var normalizedPath = String(path || '');
-    if (normalizedPath.charAt(0) !== '/') normalizedPath = '/' + normalizedPath;
-    return API_BASE + normalizedPath;
-  }
+  var API_BASE = (window.ACHEIDOC_API_BASE || localStorage.getItem('acheidoc_api_base') || 'https://acheidoc-api.onrender.com').replace(/\/$/, '');
 
   function getToken() {
     var raw = localStorage.getItem('acheidoc_auth_token');
@@ -47,7 +32,7 @@
       if (token) headers.Authorization = 'Bearer ' + token;
     }
 
-    var response = await fetch(buildUrl(path), Object.assign({}, opts, { headers: headers }));
+    var response = await fetch(API_BASE + path, Object.assign({}, opts, { headers: headers }));
     var data = null;
 
     try {

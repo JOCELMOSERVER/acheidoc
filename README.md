@@ -72,6 +72,11 @@ acheidoc-main/
 | POST | `/api/admin/auth/login` | Login de admin |
 | POST | `/api/agente/auth/login` | Login de agente |
 
+### Rotas em falta confirmadas
+
+- `POST /api/admin/agentes` ainda não está implementada no backend público.
+- Actualmente o frontend trata este caso com mensagem de indisponibilidade e bloqueio do botão de criação após resposta `404` ou `501`.
+
 ---
 
 ## Tecnologias Usadas

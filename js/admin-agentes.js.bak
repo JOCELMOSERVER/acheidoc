@@ -26,7 +26,7 @@
   function getPontoNome(pontoId) {
     var agente = agentes.find(function (item) { return String(item.pontoId) === String(pontoId); });
     if (agente && agente.pontoNome) return agente.pontoNome;
-    return pontoId ? 'Ponto ' + pontoId : '';
+    return pontoId ? 'Ponto ' + pontoId : '—';
   }
 
   function renderResumo() {
@@ -67,8 +67,8 @@
 
       return '<tr>' +
         '<td><code>' + a.id + '</code></td>' +
-        '<td>' + (a.nome || '') + '</td>' +
-        '<td>' + (a.email || '') + '</td>' +
+        '<td>' + (a.nome || '—') + '</td>' +
+        '<td>' + (a.email || '—') + '</td>' +
         '<td>' + getPontoNome(a.pontoId) + '</td>' +
         '<td>' + Number(a.pontos || 0) + '</td>' +
         '<td>' + formatDate(a.ultimaActividade) + '</td>' +
@@ -214,9 +214,9 @@
 
           if (response && response.agente) {
             agentes.push(Object.assign({}, response.agente, {
-              ultimaActividade: (response.agente.criado_em || '').slice(0, 10),
-              pontoId: response.agente.ponto_id || null,
-              pontoNome: response.agente.ponto_nome || null
+              ultimaActividade: (response.agente.criado_em || '').slice(0, 10) || new Date().toISOString().slice(0, 10),
+              pontoId: response.agente.ponto_id || response.agente.pontoId || null,
+              pontoNome: response.agente.ponto_nome || response.agente.pontoNome || null
             }));
             renderResumo();
             renderTabela(filtroAtual);
@@ -227,7 +227,7 @@
         } catch (err) {
           alert(err && err.message ? err.message : 'Falha ao criar agente.');
         } finally {
-          if (btnCriarAgente) btnCriarAgente.disabled = false;
+          btnCriarAgente.disabled = false;
         }
       });
     }
@@ -243,9 +243,9 @@
       var response = await Api.adminAgentes.list({ page: 1, limit: 200 });
       agentes = (response && response.agentes ? response.agentes : []).map(function (a) {
         return Object.assign({}, a, {
-          ultimaActividade: (a.criado_em || '').slice(0, 10),
-          pontoId: a.ponto_id || null,
-          pontoNome: a.ponto_nome || null
+          ultimaActividade: (a.criado_em || '').slice(0, 10) || new Date().toISOString().slice(0, 10),
+          pontoId: a.ponto_id || a.pontoId || null,
+          pontoNome: a.ponto_nome || a.pontoNome || null
         });
       });
       renderResumo();
@@ -258,5 +258,10 @@
   function setEl(id, val) {
     var el = document.getElementById(id);
     if (el) el.textContent = val;
+  }
+
+  function safeParse(raw) {
+    try { return raw ? JSON.parse(raw) : null; }
+    catch (e) { return null; }
   }
 })();

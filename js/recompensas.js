@@ -127,10 +127,10 @@
       var positivo = Number(item.pontos || 0) > 0;
       var docCell = item.doc_id
         ? '<a href="detalhes.html?id=' + encodeURIComponent(item.doc_id) + '">' + item.doc_id + '</a>'
-        : '—';
+        : '';
       return '<tr>' +
         '<td>' + formatDate(item.data) + '</td>' +
-        '<td>' + (item.acao || '—') + '</td>' +
+        '<td>' + (item.acao || '') + '</td>' +
         '<td>' + docCell + '</td>' +
         '<td style="color:' + (positivo ? 'var(--success)' : 'var(--danger)') + '; font-weight:700;">' +
         (positivo ? '+' : '') + Number(item.pontos || 0) + ' pts</td>' +
@@ -147,7 +147,7 @@
 
   function formatDate(dateStr) {
     var date = new Date(dateStr);
-    if (Number.isNaN(date.getTime())) return '-';
+    if (Number.isNaN(date.getTime())) return '';
     return date.toLocaleDateString('pt-PT');
   }
 })();

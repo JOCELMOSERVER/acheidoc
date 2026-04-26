@@ -13,7 +13,7 @@
       ENTREGUE: 'Entregue',
       REJEITADO: 'Rejeitado'
     };
-    return map[status] || status || '-';
+    return map[status] || status || '';
   }
 
   function getStatusBadgeClass(status) {
@@ -51,9 +51,9 @@
       '    <div class="card-doc-watermark"><span>Marca D\'Água</span></div>' +
       '  </div>' +
       '  <div class="card-doc-body">' +
-      '    <div class="card-doc-title">' + (d.tipo || '-') + '</div>' +
-      '    <div class="card-doc-meta">👤 ' + (d.nomeParcial || '-') + '</div>' +
-      '    <div class="card-doc-meta">📍 ' + (d.localParcial || '-') + '</div>' +
+      '    <div class="card-doc-title">' + (d.tipo || '') + '</div>' +
+      '    <div class="card-doc-meta">👤 ' + (d.nomeParcial || '') + '</div>' +
+      '    <div class="card-doc-meta">📍 ' + (d.localParcial || '') + '</div>' +
       '    <div class="card-doc-meta">📅 ' + formatDate(d.dataCriacao) + '</div>' +
       '  </div>' +
       '  <div class="card-doc-footer">' +
@@ -68,3 +68,25 @@
   window.formatDate = formatDate;
   window.buildDocCard = buildDocCard;
 })();
+// Add Risco label and badge functions if not exists
+if (typeof window.getRiscoLabel === 'undefined') {
+  window.getRiscoLabel = function(risco) {
+    var map = {
+      BAIXO: 'Baixo',
+      MEDIO: 'Médio',
+      ALTO: 'Alto'
+    };
+    return map[risco] || risco || '';
+  };
+}
+
+if (typeof window.getRiscoBadgeClass === 'undefined') {
+  window.getRiscoBadgeClass = function(risco) {
+    var map = {
+      BAIXO: 'badge-entregue',
+      MEDIO: 'badge-aguardando',
+      ALTO: 'badge-rejeitado'
+    };
+    return map[risco] || 'badge-pendente';
+  };
+}

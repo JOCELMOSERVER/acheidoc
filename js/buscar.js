@@ -35,20 +35,20 @@
     if (resultsCount) resultsCount.textContent = docs.length + ' resultado(s) encontrado(s)';
   }
 
-  function defaultDocImage() {
-    return 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="480"><rect width="100%" height="100%" fill="%23e5e7eb"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="28" fill="%236b7280">Documento</text></svg>';
-  }
-
   function toLegacyDoc(item) {
+    if (!item || !item.id || !item.tipo || !item.nome_proprietario || !item.provincia || !item.data_publicacao) {
+      return null;
+    }
+
     return {
       id: item.id,
       tipo: item.tipo,
-      nomeParcial: item.nome_proprietario || 'Proprietário',
-      foto: item.foto_url || defaultDocImage(),
-      localParcial: item.provincia || 'Luanda',
-      localEncontrado: item.provincia || 'Luanda',
-      dataCriacao: item.data_publicacao ? String(item.data_publicacao).slice(0, 10) : new Date().toISOString().slice(0, 10),
-      status: item.status || 'PUBLICADO'
+      nomeParcial: item.nome_proprietario,
+      foto: item.foto_url,
+      localParcial: item.provincia,
+      localEncontrado: item.provincia,
+      dataCriacao: String(item.data_publicacao).slice(0, 10),
+      status: item.status
     };
   }
 
@@ -72,7 +72,7 @@
         page: 1,
         limit: 50
       });
-      documentos = (response && response.documentos ? response.documentos : []).map(toLegacyDoc);
+      documentos = (response && response.documentos ? response.documentos : []).map(toLegacyDoc).filter(Boolean);
     } catch (apiErr) {
       renderResults([]);
       return;

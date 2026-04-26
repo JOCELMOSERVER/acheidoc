@@ -13,21 +13,20 @@
 
   var doc = null;
 
-  function defaultDocImage() {
-    return 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="480"><rect width="100%" height="100%" fill="%23e5e7eb"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="28" fill="%236b7280">Documento</text></svg>';
-  }
-
   function toLegacyDoc(item) {
+    if (!item || !item.id || !item.tipo || !item.nome_proprietario) {
+      throw new Error('Dados incompletos do documento na API.');
+    }
+
     return {
       id: item.id,
       tipo: item.tipo,
-      nomeParcial: item.nome_proprietario || 'Proprietário',
-      foto: item.foto_url || defaultDocImage(),
-      localParcial: item.provincia || 'Luanda',
-      dataCriacao: item.data_publicacao ? String(item.data_publicacao).slice(0, 10) : new Date().toISOString().slice(0, 10),
-      status: item.status || 'PUBLICADO',
-      taxaKz: 500,
-      pontoEntregaId: 1
+      nomeParcial: item.nome_proprietario,
+      foto: item.foto_url,
+      localParcial: item.provincia,
+      dataCriacao: item.data_publicacao ? String(item.data_publicacao).slice(0, 10) : '',
+      status: item.status,
+      taxaKz: 500
     };
   }
 
@@ -154,9 +153,9 @@
     // Ponto de entrega
     var pontoNome = pontoEntrega.nome;
     var pontoEndereco = pontoEntrega.endereco;
-    var pontoHorario = pontoEntrega.horario || '-';
+    var pontoHorario = pontoEntrega.horario;
     var pontoTel = pontoEntrega.telefone;
-    var pontoAgente = pontoEntrega.agente_nome || '-';
+    var pontoAgente = pontoEntrega.agente_nome;
 
     setEl('successPontoNome', pontoNome);
     setEl('successPontoEndereco', pontoEndereco);
@@ -185,22 +184,15 @@
     var btnCopiar = document.getElementById('btnCopiarCodigo');
     if (btnCopiar && codigoEl) {
       btnCopiar.addEventListener('click', function () {
-        if (navigator.clipboard) {
-          navigator.clipboard.writeText(codigoEl.textContent).then(function () {
-            btnCopiar.textContent = 'Código copiado';
-            setTimeout(function () { btnCopiar.textContent = 'Copiar código'; }, 2000);
-          });
-        } else {
-          // Fallback
-          var ta = document.createElement('textarea');
-          ta.value = codigoEl.textContent;
-          document.body.appendChild(ta);
-          ta.select();
-          document.execCommand('copy');
-          document.body.removeChild(ta);
+        if (!navigator.clipboard) {
+          alert('Funcionalidade de cópia indisponível neste navegador.');
+          return;
+        }
+
+        navigator.clipboard.writeText(codigoEl.textContent).then(function () {
           btnCopiar.textContent = 'Código copiado';
           setTimeout(function () { btnCopiar.textContent = 'Copiar código'; }, 2000);
-        }
+        });
       });
     }
   }

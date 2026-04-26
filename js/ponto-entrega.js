@@ -71,9 +71,9 @@
     setEl('codigoDisplay', codigoResgate);
     setEl('pontoNome', nome);
     setEl('pontoEndereco', endereco);
-    setEl('pontoHorario', horario || '-');
+    setEl('pontoHorario', horario || '');
     setEl('pontoTelefone', telefone);
-    setEl('pontoAgente', agente || '-');
+    setEl('pontoAgente', agente || '');
     if (btnLigar) btnLigar.href = 'tel:' + String(telefone).replace(/\s/g, '');
     geocodeAndInit(endereco, nome);
   }
@@ -106,11 +106,11 @@
   }
 
   function renderError(message) {
-    setEl('pontoNome', 'Indisponível');
+    setEl('pontoNome', '');
     setEl('pontoEndereco', message);
-    setEl('pontoHorario', '-');
-    setEl('pontoTelefone', '-');
-    setEl('pontoAgente', '-');
+    setEl('pontoHorario', '');
+    setEl('pontoTelefone', '');
+    setEl('pontoAgente', '');
     if (btnLigar) btnLigar.removeAttribute('href');
   }
 })();

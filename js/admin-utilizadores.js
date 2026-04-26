@@ -56,10 +56,10 @@
 
       return '<tr>' +
         '<td><code>' + u.id + '</code></td>' +
-        '<td>' + (u.nome || '—') + '</td>' +
-        '<td>' + (u.email || '—') + '</td>' +
-        '<td>' + (u.telefone || '—') + '</td>' +
-        '<td>' + (u.municipio || '—') + '</td>' +
+        '<td>' + (u.nome || '') + '</td>' +
+        '<td>' + (u.email || '') + '</td>' +
+        '<td>' + (u.telefone || '') + '</td>' +
+        '<td>' + (u.municipio || '') + '</td>' +
         '<td><span class="badge ' + statusClass + '">' + statusLabel + '</span></td>' +
         '<td>' + Number(u.pontos || 0) + '</td>' +
         '<td><div style="display:flex; gap:0.35rem; flex-wrap:wrap;">' +
@@ -167,7 +167,7 @@
       var response = await Api.adminUtilizadores.list({ page: 1, limit: 200 });
       utilizadores = (response && response.utilizadores ? response.utilizadores : []).map(function (u) {
         return Object.assign({}, u, {
-          municipio: u.municipio || u.provincia || '—',
+          municipio: u.municipio || u.provincia || '',
           status: u.status || 'ATIVO'
         });
       });
@@ -181,10 +181,5 @@
   function setEl(id, val) {
     var el = document.getElementById(id);
     if (el) el.textContent = val;
-  }
-
-  function safeParse(raw) {
-    try { return raw ? JSON.parse(raw) : null; }
-    catch (e) { return null; }
   }
 })();
