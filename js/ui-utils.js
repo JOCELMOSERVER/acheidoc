@@ -9,6 +9,7 @@
       CORRECAO_SOLICITADA: 'Correcao Solicitada',
       PUBLICADO: 'Publicado',
       AGUARDANDO_ENTREGA: 'Aguardando Entrega',
+      DISPONIVEL_PAGAMENTO: 'Disponivel para Pagamento',
       DISPONIVEL_LEVANTAMENTO: 'Disponivel p/ Levantamento',
       ENTREGUE: 'Entregue',
       REJEITADO: 'Rejeitado'
@@ -22,6 +23,7 @@
       CORRECAO_SOLICITADA: 'badge-aguardando',
       PUBLICADO: 'badge-publicado',
       AGUARDANDO_ENTREGA: 'badge-aguardando',
+      DISPONIVEL_PAGAMENTO: 'badge-publicado',
       DISPONIVEL_LEVANTAMENTO: 'badge-disponivel',
       ENTREGUE: 'badge-entregue',
       REJEITADO: 'badge-rejeitado'

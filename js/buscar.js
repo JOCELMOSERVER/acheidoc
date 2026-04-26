@@ -40,6 +40,13 @@
       return null;
     }
 
+    var rawStatus = item.status;
+    var hasCodigoResgate = !!String(item.codigo_resgate || '').trim();
+    var visualStatus = rawStatus;
+    if (rawStatus === 'DISPONIVEL_LEVANTAMENTO' && !hasCodigoResgate) {
+      visualStatus = 'DISPONIVEL_PAGAMENTO';
+    }
+
     return {
       id: item.id,
       tipo: item.tipo,
@@ -48,7 +55,7 @@
       localParcial: item.provincia,
       localEncontrado: item.provincia,
       dataCriacao: String(item.data_publicacao).slice(0, 10),
-      status: item.status
+      status: visualStatus
     };
   }
 
