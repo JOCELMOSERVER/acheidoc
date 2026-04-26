@@ -61,6 +61,10 @@
     return String(value || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
   }
 
+  function sanitizeCode(value) {
+    return String(value || '').trim().toUpperCase();
+  }
+
   function renderResumoDoc(docSelecionado) {
     if (docSelecionado && docResumoCard && docResumoInfo) {
       docResumoCard.classList.remove('hidden');
@@ -81,9 +85,10 @@
 
   if (btnReceber) {
     btnReceber.addEventListener('click', async function () {
-      var chave = chaveEntregaInput ? normalizeCode(chaveEntregaInput.value) : '';
+      var chaveRaw = chaveEntregaInput ? sanitizeCode(chaveEntregaInput.value) : '';
+      var chave = normalizeCode(chaveRaw);
 
-      if (!chave) {
+      if (!chaveRaw) {
         showReceiveError('Por favor, insira a chave de entrega apresentada pelo encontrador.');
         return;
       }
@@ -100,7 +105,7 @@
         await loadDocumentos();
       }
 
-      docRecebido = await findDocByCodigoApi(chave);
+      docRecebido = await findDocByCodigoApi(chaveRaw);
       if (!docRecebido) {
         docRecebido = findDocForReceive(chave);
       }
@@ -116,9 +121,10 @@
 
   if (btnValidar) {
     btnValidar.addEventListener('click', async function () {
-      var codigo = codigoInput ? normalizeCode(codigoInput.value) : '';
+      var codigoRaw = codigoInput ? sanitizeCode(codigoInput.value) : '';
+      var codigo = normalizeCode(codigoRaw);
 
-      if (!codigo) {
+      if (!codigoRaw) {
         showError('Por favor, insira o código de resgate.');
         return;
       }
@@ -135,7 +141,7 @@
         await loadDocumentos();
       }
 
-      docValidado = await findDocByCodigoApi(codigo);
+      docValidado = await findDocByCodigoApi(codigoRaw);
       if (!docValidado) {
         docValidado = findDocForEntrega(codigo);
       }
@@ -178,18 +184,32 @@
   async function findDocByCodigoApi(codigo) {
     if (!(apiMode && Api.documentos && Api.documentos.agenteByCodigo)) return null;
 
-    try {
-      var response = await Api.documentos.agenteByCodigo(codigo);
-      var doc = response && response.documento ? toLegacyDoc(response.documento) : null;
-      if (!doc || !doc.id) return null;
-
-      var exists = documentos.find(function (d) { return d.id === doc.id; });
-      if (!exists) documentos.push(doc);
-
-      return doc;
-    } catch (err) {
-      return null;
+    var rawCode = sanitizeCode(codigo);
+    var normalizedCode = normalizeCode(codigo);
+    var candidates = [rawCode];
+    if (normalizedCode && normalizedCode !== rawCode) {
+      candidates.push(normalizedCode);
     }
+
+    for (var i = 0; i < candidates.length; i++) {
+      var candidate = candidates[i];
+      if (!candidate) continue;
+
+      try {
+        var response = await Api.documentos.agenteByCodigo(candidate);
+        var doc = response && response.documento ? toLegacyDoc(response.documento) : null;
+        if (!doc || !doc.id) continue;
+
+        var exists = documentos.find(function (d) { return d.id === doc.id; });
+        if (!exists) documentos.push(doc);
+
+        return doc;
+      } catch (err) {
+        // Try the next candidate format before failing.
+      }
+    }
+
+    return null;
   }
 
   function animarRecepcao() {

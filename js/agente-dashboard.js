@@ -24,6 +24,7 @@
 
   // Documentos no ponto prontos para entrega ao dono
   var tabelaBody = document.getElementById('docsTabelaBody');
+  var dashboardNotice = document.getElementById('agentDashboardNotice');
 
   // Pesquisar documento
   var searchInput = document.getElementById('searchDoc');
@@ -39,7 +40,7 @@
   }
 
   if (searchBtn && searchInput && searchResult) {
-    searchBtn.addEventListener('click', function () {
+    searchBtn.addEventListener('click', async function () {
       var q = normalizeText(searchInput.value);
       var qCode = normalizeCode(searchInput.value);
       if (!q) return;
@@ -52,6 +53,21 @@
           normalizeText(d.nomeParcial).includes(q) ||
           normalizeText(d.nomeCompleto).includes(q);
       });
+
+      if (!found && qCode && typeof Api !== 'undefined' && Api.documentos && Api.documentos.agenteByCodigo) {
+        try {
+          var response = await Api.documentos.agenteByCodigo(qCode);
+          if (response && response.documento) {
+            found = toLegacyDoc(response.documento);
+            if (!documentos.find(function (d) { return d.id === found.id; })) {
+              documentos.push(found);
+              renderTabelas();
+            }
+          }
+        } catch (err) {
+          found = null;
+        }
+      }
 
       if (found) {
         var flow = found.status === 'PUBLICADO' ? 'receber' : 'entregar';
@@ -142,6 +158,11 @@
   }
 
   async function loadDocumentos() {
+    if (dashboardNotice && !agenteLogado.pontoId) {
+      dashboardNotice.textContent = 'Este agente ainda não tem ponto de entrega atribuído. Sem essa atribuição, o dashboard não consegue listar documentos do ponto.';
+      dashboardNotice.classList.remove('hidden');
+    }
+
     if (!(typeof Api !== 'undefined' && Api.documentos && Api.documentos.agenteLista)) {
       alert('API de documentos indisponível.');
       return;
