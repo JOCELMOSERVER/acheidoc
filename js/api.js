@@ -78,6 +78,12 @@
       return request('/api/health', { method: 'GET', skipAuth: true });
     },
 
+    stats: {
+      summary: function () {
+        return request('/api/stats', { method: 'GET', skipAuth: true });
+      }
+    },
+
     auth: {
       login: function (email, password) {
         return request('/api/auth/login', {

@@ -95,54 +95,16 @@
     if (typeof Api === 'undefined') return;
 
     try {
-      var docsResp = null;
-      var pontosResp = null;
-      var usersResp = null;
-
-      if (Api.documentos && Api.documentos.list) {
-        docsResp = await Api.documentos.list({ page: 1, limit: 10000 });
+      if (!(Api.stats && Api.stats.summary)) {
+        throw new Error('API de estatísticas indisponível.');
       }
 
-      if (Api.pontosEntrega && Api.pontosEntrega.list) {
-        pontosResp = await Api.pontosEntrega.list();
-      }
+      var stats = await Api.stats.summary();
 
-      if (Api.adminUtilizadores && Api.adminUtilizadores.list) {
-        try {
-          usersResp = await Api.adminUtilizadores.list({ page: 1, limit: 1 });
-        } catch (err) {
-          usersResp = null;
-        }
-      }
-
-      var docs = docsResp && Array.isArray(docsResp.documentos) ? docsResp.documentos : [];
-      var docsTotal = extractTotal(docsResp, 'documentos');
-      if (docsTotal === null) docsTotal = docs.length;
-
-      var docsEntregues = docs.filter(function (d) {
-        return String((d && d.status) || '').toUpperCase() === 'ENTREGUE';
-      }).length;
-
-      var pontosTotal = extractTotal(pontosResp, 'pontos');
-      if (pontosTotal === null) {
-        pontosTotal = pontosResp && Array.isArray(pontosResp.pontos) ? pontosResp.pontos.length : 0;
-      }
-
-      var usersTotal = extractTotal(usersResp, 'utilizadores');
-
-      setCounterValue(statDocsTotal, docsTotal);
-      setCounterValue(statDocsEntregues, docsEntregues);
-      setCounterValue(statPontosEntrega, pontosTotal);
-
-      if (usersTotal === null) {
-        if (usersResp && Array.isArray(usersResp.utilizadores)) {
-          setCounterValue(statUsersTotal, usersResp.utilizadores.length);
-        } else {
-          setCounterUnknown(statUsersTotal);
-        }
-      } else {
-        setCounterValue(statUsersTotal, usersTotal);
-      }
+      setCounterValue(statDocsTotal, stats && stats.documentos_total);
+      setCounterValue(statDocsEntregues, stats && stats.documentos_entregues);
+      setCounterValue(statUsersTotal, stats && stats.utilizadores_total);
+      setCounterValue(statPontosEntrega, stats && stats.pontos_entrega_total);
     } catch (err) {
       setCounterUnknown(statDocsTotal);
       setCounterUnknown(statDocsEntregues);
