@@ -143,31 +143,20 @@
     if (!(apiMode && Api.documentos && Api.documentos.agenteByCodigo)) return null;
 
     var rawCode = sanitizeCode(codigo);
-    var normalizedCode = normalizeCode(codigo);
-    var candidates = [rawCode];
-    if (normalizedCode && normalizedCode !== rawCode) {
-      candidates.push(normalizedCode);
+    if (!rawCode) return null;
+
+    try {
+      var response = await Api.documentos.agenteByCodigo(rawCode);
+      var doc = response && response.documento ? toLegacyDoc(response.documento) : null;
+      if (!doc || !doc.id) return null;
+
+      var exists = documentos.find(function (d) { return d.id === doc.id; });
+      if (!exists) documentos.push(doc);
+
+      return doc;
+    } catch (err) {
+      return null;
     }
-
-    for (var i = 0; i < candidates.length; i++) {
-      var candidate = candidates[i];
-      if (!candidate) continue;
-
-      try {
-        var response = await Api.documentos.agenteByCodigo(candidate);
-        var doc = response && response.documento ? toLegacyDoc(response.documento) : null;
-        if (!doc || !doc.id) continue;
-
-        var exists = documentos.find(function (d) { return d.id === doc.id; });
-        if (!exists) documentos.push(doc);
-
-        return doc;
-      } catch (err) {
-        // Try the next candidate format before failing.
-      }
-    }
-
-    return null;
   }
 
   async function findDocByChaveEntregaApi(chave) {
