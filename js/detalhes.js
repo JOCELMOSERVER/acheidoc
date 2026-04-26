@@ -51,7 +51,14 @@
         window.location.href = 'pagamento.html?id=' + doc.id;
       });
 
-      if (doc.status === 'ENTREGUE') {
+      if (doc.status === 'AGUARDANDO_ENTREGA') {
+        btnResgatar.textContent = 'Documento no ponto — Pagar e levantar — ' + doc.taxaKz.toLocaleString('pt-AO') + ' Kz';
+      } else if (doc.status === 'DISPONIVEL_LEVANTAMENTO') {
+        btnResgatar.disabled = true;
+        btnResgatar.textContent = 'Pagamento confirmado — Dirija-se ao ponto de entrega';
+        btnResgatar.classList.remove('btn-success');
+        btnResgatar.classList.add('btn-neutral');
+      } else if (doc.status === 'ENTREGUE') {
         btnResgatar.disabled = true;
         btnResgatar.textContent = 'Documento já entregue';
         btnResgatar.classList.remove('btn-success');

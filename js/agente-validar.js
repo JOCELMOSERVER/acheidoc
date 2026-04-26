@@ -86,7 +86,6 @@
   if (btnReceber) {
     btnReceber.addEventListener('click', async function () {
       var chaveRaw = chaveEntregaInput ? sanitizeCode(chaveEntregaInput.value) : '';
-      var chave = normalizeCode(chaveRaw);
 
       if (!chaveRaw) {
         showReceiveError('Por favor, insira a chave de entrega apresentada pelo encontrador.');
@@ -101,14 +100,7 @@
         return;
       }
 
-      if (!docsLoaded) {
-        await loadDocumentos();
-      }
-
-      docRecebido = await findDocByCodigoApi(chaveRaw);
-      if (!docRecebido) {
-        docRecebido = findDocForReceive(chave);
-      }
+      docRecebido = await findDocByChaveEntregaApi(chaveRaw);
       if (!docRecebido) {
         showReceiveError('Documento não encontrado para esta chave de entrega.');
         return;
@@ -122,7 +114,6 @@
   if (btnValidar) {
     btnValidar.addEventListener('click', async function () {
       var codigoRaw = codigoInput ? sanitizeCode(codigoInput.value) : '';
-      var codigo = normalizeCode(codigoRaw);
 
       if (!codigoRaw) {
         showError('Por favor, insira o código de resgate.');
@@ -137,14 +128,7 @@
         return;
       }
 
-      if (!docsLoaded) {
-        await loadDocumentos();
-      }
-
       docValidado = await findDocByCodigoApi(codigoRaw);
-      if (!docValidado) {
-        docValidado = findDocForEntrega(codigo);
-      }
       if (!docValidado) {
         showError('Documento não encontrado para este código de resgate.');
         return;
@@ -153,32 +137,6 @@
       if (checklistSection) checklistSection.classList.remove('hidden');
       animarChecklist();
     });
-  }
-
-  function findDocByRouteId() {
-    if (!docIdParam) return null;
-    return documentos.find(function (d) { return d.id === docIdParam; }) || null;
-  }
-
-  function findDocForReceive(chave) {
-    var byId = findDocByRouteId();
-    if (byId) return byId;
-
-    return documentos.find(function (d) {
-      return normalizeCode(d.chaveEntrega) === chave;
-    }) || null;
-  }
-
-  function findDocForEntrega(codigo) {
-    var byId = findDocByRouteId();
-    if (byId) return byId;
-
-    return documentos.find(function (d) {
-      var codigoResgate = normalizeCode(d.codigoResgate);
-      var chaveEntrega = normalizeCode(d.chaveEntrega);
-      var docId = normalizeCode(d.id);
-      return codigoResgate === codigo || chaveEntrega === codigo || docId === codigo;
-    }) || null;
   }
 
   async function findDocByCodigoApi(codigo) {
@@ -210,6 +168,29 @@
     }
 
     return null;
+  }
+
+  async function findDocByChaveEntregaApi(chave) {
+    if (!(apiMode && Api.documentos && Api.documentos.agenteLista)) return null;
+
+    var chaveNormalizada = normalizeCode(chave);
+    if (!chaveNormalizada) return null;
+
+    try {
+      if (!docsLoaded) {
+        var response = await Api.documentos.agenteLista();
+        documentos = (response && response.documentos ? response.documentos : []).map(toLegacyDoc).filter(function (d) {
+          return d.id && d.tipo && d.nomeParcial;
+        });
+        docsLoaded = true;
+      }
+
+      return documentos.find(function (d) {
+        return normalizeCode(d.chaveEntrega) === chaveNormalizada;
+      }) || null;
+    } catch (err) {
+      return null;
+    }
   }
 
   function animarRecepcao() {
@@ -265,8 +246,8 @@
 
       setTimeout(async function () {
         try {
-          await Api.documentos.agenteUpdate(docRecebido.id, 'DISPONIVEL_LEVANTAMENTO');
-          docRecebido.status = 'DISPONIVEL_LEVANTAMENTO';
+          await Api.documentos.agenteUpdate(docRecebido.id, 'AGUARDANDO_ENTREGA');
+          docRecebido.status = 'AGUARDANDO_ENTREGA';
         } catch (apiErr) {
           showReceiveError(apiErr && apiErr.message ? apiErr.message : 'Falha ao registar recepção.');
           btnConfirmarRecepcao.disabled = false;
@@ -276,7 +257,7 @@
         if (receberChecklistSection) receberChecklistSection.classList.add('hidden');
         if (receberSuccessSection) receberSuccessSection.classList.remove('hidden');
         if (receberSuccessInfo) {
-          receberSuccessInfo.textContent = docRecebido.id + ' pronto para ser levantado pelo dono no ponto.';
+          receberSuccessInfo.textContent = docRecebido.id + ' registado no ponto. O dono pode agora pesquisar e pagar para levantar o documento.';
         }
       }, 1000);
     });
