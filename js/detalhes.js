@@ -23,6 +23,7 @@
       localParcial: item.provincia,
       dataCriacao: String(item.data_publicacao).slice(0, 10),
       status: item.status,
+      codigoResgate: item.codigo_resgate || '',
       taxaKz: 500
     };
   }
@@ -54,10 +55,15 @@
       if (doc.status === 'AGUARDANDO_ENTREGA') {
         btnResgatar.textContent = 'Documento no ponto — Pagar e levantar — ' + doc.taxaKz.toLocaleString('pt-AO') + ' Kz';
       } else if (doc.status === 'DISPONIVEL_LEVANTAMENTO') {
-        btnResgatar.disabled = true;
-        btnResgatar.textContent = 'Pagamento confirmado — Dirija-se ao ponto de entrega';
-        btnResgatar.classList.remove('btn-success');
-        btnResgatar.classList.add('btn-neutral');
+        var jaTemCodigoResgate = !!String(doc.codigoResgate || '').trim();
+        if (jaTemCodigoResgate) {
+          btnResgatar.disabled = true;
+          btnResgatar.textContent = 'Pagamento confirmado — Dirija-se ao ponto de entrega';
+          btnResgatar.classList.remove('btn-success');
+          btnResgatar.classList.add('btn-neutral');
+        } else {
+          btnResgatar.textContent = 'Documento no ponto — Pagar e levantar — ' + doc.taxaKz.toLocaleString('pt-AO') + ' Kz';
+        }
       } else if (doc.status === 'ENTREGUE') {
         btnResgatar.disabled = true;
         btnResgatar.textContent = 'Documento já entregue';

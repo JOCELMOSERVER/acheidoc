@@ -20,7 +20,7 @@
 
   function getStatusLabel(status) {
     if (status === 'AGUARDANDO_ENTREGA') return 'Aguardando Entrega';
-    if (status === 'DISPONIVEL_LEVANTAMENTO') return 'Disponivel';
+    if (status === 'DISPONIVEL_LEVANTAMENTO') return 'No ponto';
     if (status === 'CORRECAO_SOLICITADA') return 'Correcao Solicitada';
     return status || 'PENDENTE';
   }
@@ -56,7 +56,7 @@
     }
 
     tabelaBody.innerHTML = lista.map(function (d) {
-      var pontos = d.status === 'ENTREGUE' ? '+60 pts' : d.status === 'AGUARDANDO_ENTREGA' ? '+10 pts' : '-';
+      var pontos = d.status === 'ENTREGUE' ? '+60 pts' : (d.status === 'AGUARDANDO_ENTREGA' || d.status === 'DISPONIVEL_LEVANTAMENTO') ? '+10 pts' : '-';
       var cor = pontos !== '-' ? 'color:var(--success); font-weight:700;' : '';
       return '<tr>' +
         '<td><code>' + d.id + '</code></td>' +

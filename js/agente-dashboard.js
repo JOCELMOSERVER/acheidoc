@@ -77,7 +77,11 @@
         if (found.status === 'PUBLICADO') {
           actionHtml = `<a href="validar.html?id=${found.id}&flow=receber" class="btn btn-primary btn-sm">Receber no ponto</a>`;
         } else if (found.status === 'DISPONIVEL_LEVANTAMENTO') {
-          actionHtml = `<a href="validar.html?id=${found.id}&flow=entregar" class="btn btn-success btn-sm">Entregar ao dono</a>`;
+          if (String(found.codigoResgate || '').trim()) {
+            actionHtml = `<a href="validar.html?id=${found.id}&flow=entregar" class="btn btn-success btn-sm">Entregar ao dono</a>`;
+          } else {
+            actionHtml = `<span class="badge badge-aguardando">No ponto — a aguardar pagamento do dono</span>`;
+          }
         } else if (found.status === 'AGUARDANDO_ENTREGA') {
           actionHtml = `<span class="badge badge-aguardando">No ponto — a aguardar pagamento do dono</span>`;
         }
@@ -103,6 +107,7 @@
       nomeCompleto: item.nome_proprietario || '',
       status: item.status || '',
       dataCriacao: (item.criado_em || item.data_publicacao || '').slice(0, 10),
+      dataEntrega: (item.entregue_em || item.atualizado_em || item.updated_at || '').slice(0, 10),
       encontradoPor: item.publicado_por_nome || '',
       codigoResgate: item.codigo_resgate || '',
       chaveEntrega: item.chave_entrega || ''
@@ -111,10 +116,14 @@
 
   function renderTabelas() {
     var docsReceberCount = documentos.filter(function (d) { return d.status === 'PUBLICADO'; }).length;
-    var docsEntregarCount = documentos.filter(function (d) { return d.status === 'DISPONIVEL_LEVANTAMENTO'; }).length;
+    var docsEntregarCount = documentos.filter(function (d) {
+      return d.status === 'DISPONIVEL_LEVANTAMENTO' && !!String(d.codigoResgate || '').trim();
+    }).length;
     var currentMonth = new Date().toISOString().slice(0, 7);
     var pontosMes = documentos.filter(function (d) {
-      return d.status === 'ENTREGUE' && String(d.dataCriacao || '').slice(0, 7) === currentMonth;
+      if (d.status !== 'ENTREGUE') return false;
+      var refDate = String(d.dataEntrega || d.dataCriacao || '').slice(0, 7);
+      return refDate === currentMonth;
     }).length * 30;
     setEl('totalReceber', docsReceberCount);
     setEl('totalDocs', docsEntregarCount);
@@ -141,7 +150,9 @@
     }
 
     if (docsNoPontoBody) {
-      var docsNoPonto = documentos.filter(function (d) { return d.status === 'AGUARDANDO_ENTREGA'; });
+      var docsNoPonto = documentos.filter(function (d) {
+        return d.status === 'DISPONIVEL_LEVANTAMENTO' && !String(d.codigoResgate || '').trim();
+      });
       if (!docsNoPonto.length) {
         docsNoPontoBody.innerHTML = '<tr><td colspan="6" class="text-center" style="padding: 2rem; color: var(--text-gray);">Nenhum documento aguarda pagamento do dono.</td></tr>';
       } else {
@@ -159,7 +170,9 @@
     }
 
     if (tabelaBody) {
-      var docsEntregar = documentos.filter(function (d) { return d.status === 'DISPONIVEL_LEVANTAMENTO'; });
+      var docsEntregar = documentos.filter(function (d) {
+        return d.status === 'DISPONIVEL_LEVANTAMENTO' && !!String(d.codigoResgate || '').trim();
+      });
       if (!docsEntregar.length) {
         tabelaBody.innerHTML = '<tr><td colspan="7" class="text-center" style="padding: 2rem; color: var(--text-gray);">Nenhum documento pronto para entrega.</td></tr>';
       } else {
