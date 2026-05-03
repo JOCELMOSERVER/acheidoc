@@ -269,6 +269,24 @@
       }
     },
 
+    utilizadores: {
+      perfil: function () {
+        return request('/api/utilizadores/perfil', { method: 'GET' });
+      },
+      atualizar: function (payload) {
+        return request('/api/utilizadores/perfil', {
+          method: 'PATCH',
+          body: JSON.stringify(payload)
+        });
+      },
+      alterarPassword: function (payload) {
+        return request('/api/utilizadores/password', {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+      }
+    },
+
     adminUtilizadores: {
       list: function (query) {
         var qs = query ? ('?' + new URLSearchParams(query).toString()) : '';

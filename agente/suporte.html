@@ -131,16 +131,6 @@
 
 <script src="../js/api.js"></script>
 <script src="../js/navbar.js"></script>
-<script>
-  // Logout
-  var btnLogout = document.getElementById('btnLogout');
-  if (btnLogout) {
-    btnLogout.addEventListener('click', function () {
-      sessionStorage.removeItem('agenteLogado');
-      if (typeof Api !== 'undefined' && Api.clearToken) Api.clearToken();
-      window.location.href = 'login.html';
-    });
-  }
-</script>
+<script src="../js/agente-suporte.js"></script>
 </body>
 </html>

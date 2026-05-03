@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>O Meu Perfil — AcheiDoc</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="navbar-logo"><span class="logo-icon">AD</span>AcheiDoc</a>
+    <div class="navbar-links">
+      <a href="index.html">Home</a>
+      <a href="buscar.html" id="linkBuscar" style="display:none">Buscar Documento</a>
+      <a href="publicar.html" id="linkPublicar" style="display:none">Publicar Achado</a>
+      <a href="recompensas.html" id="linkRecompensas" style="display:none">Recompensas</a>
+    </div>
+    <div class="navbar-right">
+      <div id="navLogin">
+        <a href="login.html" class="btn btn-outline">Entrar</a>
+        <a href="cadastro.html" class="btn btn-primary">Cadastrar</a>
+      </div>
+      <div id="navUser" style="display:none; position:relative;"></div>
+    </div>
+    <div class="navbar-toggle" id="navbarToggle"><span></span><span></span><span></span></div>
+  </div>
+  <div class="navbar-mobile" id="navbarMobile">
+    <a href="index.html">Home</a>
+    <a href="buscar.html" id="mobileLinkBuscar" style="display:none">Buscar Documento</a>
+    <a href="publicar.html" id="mobileLinkPublicar" style="display:none">Publicar Achado</a>
+    <a href="recompensas.html" id="mobileLinkRecompensas" style="display:none">Recompensas</a>
+    <div class="mobile-divider"></div>
+    <div id="mobileNavLogin">
+      <a href="login.html">Entrar</a>
+      <a href="cadastro.html">Cadastrar</a>
+    </div>
+    <div id="mobileNavUser" style="display:none;"></div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1>O Meu Perfil</h1>
+    <p>Gerencie os seus dados pessoais e segurança</p>
+  </div>
+</div>
+
+<main class="page-content">
+  <div class="container" style="max-width: 800px;">
+
+    <div id="perfilNotice" class="alert hidden" style="margin-bottom:1rem;"></div>
+
+    <div class="grid-2" style="align-items: start; gap: 2rem;">
+
+      <!-- Coluna esquerda: Dados pessoais + Estatísticas -->
+      <div>
+
+        <!-- Dados Pessoais -->
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <h2 style="font-size:1.2rem; font-weight:700; margin-bottom:1.5rem;">Dados Pessoais</h2>
+
+          <div class="form-group">
+            <label class="form-label" for="perfilNome">Nome completo</label>
+            <input type="text" id="perfilNome" class="form-input" placeholder="O seu nome completo">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="perfilEmail">Email</label>
+            <input type="email" id="perfilEmail" class="form-input" readonly style="background: var(--bg-light); cursor: not-allowed;">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="perfilTelefone">Telefone</label>
+            <input type="tel" id="perfilTelefone" class="form-input" placeholder="+244 9XX XXX XXX">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="perfilMunicipio">Município</label>
+            <select id="perfilMunicipio" class="form-select">
+              <option value="">Selecione o município</option>
+              <option value="Luanda">Luanda</option>
+              <option value="Viana">Viana</option>
+              <option value="Cacuaco">Cacuaco</option>
+              <option value="Belas">Belas</option>
+              <option value="Cazenga">Cazenga</option>
+              <option value="Huambo">Huambo</option>
+              <option value="Benguela">Benguela</option>
+              <option value="Lobito">Lobito</option>
+              <option value="Lubango">Lubango</option>
+              <option value="Malanje">Malanje</option>
+              <option value="Cabinda">Cabinda</option>
+              <option value="Uíge">Uíge</option>
+              <option value="Kwanza Sul">Kwanza Sul</option>
+              <option value="Kwanza Norte">Kwanza Norte</option>
+              <option value="Moxico">Moxico</option>
+              <option value="Bié">Bié</option>
+              <option value="Cuando Cubango">Cuando Cubango</option>
+              <option value="Cunene">Cunene</option>
+              <option value="Namibe">Namibe</option>
+              <option value="Zaire">Zaire</option>
+              <option value="Lunda Norte">Lunda Norte</option>
+              <option value="Lunda Sul">Lunda Sul</option>
+              <option value="Bengo">Bengo</option>
+              <option value="Outro">Outro</option>
+            </select>
+          </div>
+
+          <button id="btnGuardarPerfil" class="btn btn-primary" style="width:100%;">Guardar alterações</button>
+        </div>
+
+        <!-- Estatísticas -->
+        <div class="card">
+          <h2 style="font-size:1.2rem; font-weight:700; margin-bottom:1.5rem;">Estatísticas</h2>
+          <div class="grid-3" style="gap:1rem; text-align:center;">
+            <div style="background: var(--bg-light); border-radius:12px; padding:1rem;">
+              <div style="font-size:2rem; font-weight:900; color:var(--warning);" id="statPontos">0</div>
+              <div style="font-size:0.85rem; color:var(--text-gray); margin-top:0.25rem;">Pontos</div>
+            </div>
+            <div style="background: var(--bg-light); border-radius:12px; padding:1rem;">
+              <div style="font-size:2rem; font-weight:900; color:var(--primary);" id="statPublicados">0</div>
+              <div style="font-size:0.85rem; color:var(--text-gray); margin-top:0.25rem;">Publicados</div>
+            </div>
+            <div style="background: var(--bg-light); border-radius:12px; padding:1rem;">
+              <div style="font-size:2rem; font-weight:900; color:#059669;" id="statResgatados">0</div>
+              <div style="font-size:0.85rem; color:var(--text-gray); margin-top:0.25rem;">Resgatados</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Coluna direita: Segurança -->
+      <div>
+        <div class="card">
+          <h2 style="font-size:1.2rem; font-weight:700; margin-bottom:1.5rem;">Alterar Password</h2>
+
+          <div id="passwordNotice" class="alert hidden" style="margin-bottom:1rem;"></div>
+
+          <div class="form-group">
+            <label class="form-label" for="passwordAtual">Password atual</label>
+            <input type="password" id="passwordAtual" class="form-input" placeholder="A sua password atual">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="passwordNova">Nova password</label>
+            <input type="password" id="passwordNova" class="form-input" placeholder="Nova password (mín. 6 caracteres)">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="passwordConfirmar">Confirmar nova password</label>
+            <input type="password" id="passwordConfirmar" class="form-input" placeholder="Repetir nova password">
+          </div>
+
+          <button id="btnAlterarPassword" class="btn btn-primary" style="width:100%;">Alterar Password</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- ══ FOOTER ══ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo"><span class="logo-icon">AD</span> AcheiDoc</div>
+        <p>Sistema de recuperação de documentos perdidos em Angola. Ligamos quem encontrou a quem perdeu.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Plataforma</h4>
+        <ul>
+          <li><a href="buscar.html">Buscar Documento</a></li>
+          <li><a href="publicar.html">Publicar Achado</a></li>
+          <li><a href="recompensas.html">Recompensas</a></li>
+          <li><a href="pontos-mapa.html">Pontos no Mapa</a></li>
+          <li><a href="meus-achados.html">Meus Achados</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Acesso</h4>
+        <ul>
+          <li><a href="agente/login.html">Portal do Agente</a></li>
+          <li><a href="admin/login.html">Painel Admin</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="tel:+244923000000">+244 923 000 000</a></li>
+          <li><a href="mailto:info@acheidoc.ao">info@acheidoc.ao</a></li>
+          <li><a href="#">Luanda, Angola</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 AcheiDoc. Todos os direitos reservados.</span>
+      <div class="footer-legal">
+        <a href="faq.html">FAQ</a>
+        <a href="termos.html">Privacidade</a>
+        <a href="termos.html">Termos de Uso</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/navbar.js"></script>
+<script src="js/ui-utils.js"></script>
+<script src="js/perfil.js"></script>
+</body>
+</html>
