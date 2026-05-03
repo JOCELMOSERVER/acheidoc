@@ -67,6 +67,22 @@
     const mobileNavUser = document.getElementById('mobileNavUser');
 
     if (user && user.role === 'utilizador') {
+      // Mostrar links protegidos (desktop)
+      var linkBuscar = document.getElementById('linkBuscar');
+      var linkPublicar = document.getElementById('linkPublicar');
+      var linkRecompensas = document.getElementById('linkRecompensas');
+      if (linkBuscar) linkBuscar.style.display = '';
+      if (linkPublicar) linkPublicar.style.display = '';
+      if (linkRecompensas) linkRecompensas.style.display = '';
+
+      // Mostrar links protegidos (mobile)
+      var mobileLinkBuscar = document.getElementById('mobileLinkBuscar');
+      var mobileLinkPublicar = document.getElementById('mobileLinkPublicar');
+      var mobileLinkRecompensas = document.getElementById('mobileLinkRecompensas');
+      if (mobileLinkBuscar) mobileLinkBuscar.style.display = '';
+      if (mobileLinkPublicar) mobileLinkPublicar.style.display = '';
+      if (mobileLinkRecompensas) mobileLinkRecompensas.style.display = '';
+
       // Desktop
       if (navLogin) navLogin.style.display = 'none';
       // Mobile
@@ -78,6 +94,9 @@
         var mUserLabel = document.createElement('div');
         mUserLabel.style.cssText = 'padding:8px 14px;font-weight:600;color:var(--text-dark);font-size:0.95rem;';
         mUserLabel.textContent = user.nome.split(' ')[0] + '  ' + user.pontos + ' pts';
+        var mLinkPerfil = document.createElement('a');
+        mLinkPerfil.href = 'perfil.html';
+        mLinkPerfil.textContent = 'O Meu Perfil';
         var mLinkAchados = document.createElement('a');
         mLinkAchados.href = 'meus-achados.html';
         mLinkAchados.textContent = 'Meus achados';
@@ -89,6 +108,7 @@
         mLinkSair.textContent = 'Sair';
         mLinkSair.addEventListener('click', function (e) { e.preventDefault(); Auth.logout(); });
         mobileNavUser.appendChild(mUserLabel);
+        mobileNavUser.appendChild(mLinkPerfil);
         mobileNavUser.appendChild(mLinkAchados);
         mobileNavUser.appendChild(mLinkRecomp);
         mobileNavUser.appendChild(mLinkSair);
@@ -134,6 +154,10 @@
         dropdown.id = 'userDropdown';
         dropdown.style.display = 'none';
 
+        var linkPerfil = document.createElement('a');
+        linkPerfil.href = 'perfil.html';
+        linkPerfil.textContent = 'O Meu Perfil';
+
         var linkAchados = document.createElement('a');
         linkAchados.href = 'meus-achados.html';
         linkAchados.textContent = 'Meus achados';
@@ -153,6 +177,7 @@
           Auth.logout();
         });
 
+        dropdown.appendChild(linkPerfil);
         dropdown.appendChild(linkAchados);
         dropdown.appendChild(linkRecompensas);
         dropdown.appendChild(hr);

@@ -16,14 +16,15 @@
     <a href="index.html" class="navbar-logo"><span class="logo-icon">AD</span>AcheiDoc</a>
     <div class="navbar-links">
       <a href="index.html">Home</a>
-      <a href="buscar.html">Buscar Documento</a>
-      <a href="publicar.html">Publicar Achado</a>
-      <a href="recompensas.html">Recompensas</a>
+      <a href="buscar.html" id="linkBuscar" style="display:none">Buscar Documento</a>
+      <a href="publicar.html" id="linkPublicar" style="display:none">Publicar Achado</a>
+      <a href="recompensas.html" id="linkRecompensas" style="display:none">Recompensas</a>
       <a href="faq.html" class="active">FAQ</a>
     </div>
     <div class="navbar-right">
       <div id="navLogin">
-        <a href="login.html" class="btn-login">Entrar</a>
+        <a href="login.html" class="btn btn-outline">Entrar</a>
+        <a href="cadastro.html" class="btn btn-primary">Cadastrar</a>
       </div>
       <div id="navUser" style="display:none; position:relative;"></div>
     </div>
@@ -31,10 +32,16 @@
   </div>
   <div class="navbar-mobile" id="navbarMobile">
     <a href="index.html">Home</a>
-    <a href="buscar.html">Buscar Documento</a>
-    <a href="publicar.html">Publicar Achado</a>
-    <a href="recompensas.html">Recompensas</a>
+    <a href="buscar.html" id="mobileLinkBuscar" style="display:none">Buscar Documento</a>
+    <a href="publicar.html" id="mobileLinkPublicar" style="display:none">Publicar Achado</a>
+    <a href="recompensas.html" id="mobileLinkRecompensas" style="display:none">Recompensas</a>
     <a href="faq.html" class="active">FAQ</a>
+    <div class="mobile-divider"></div>
+    <div id="mobileNavLogin">
+      <a href="login.html">Entrar</a>
+      <a href="cadastro.html">Cadastrar</a>
+    </div>
+    <div id="mobileNavUser" style="display:none;"></div>
     <div class="mobile-divider"></div>
     <a href="agente/login.html">Agente</a>
     <a href="admin/login.html">Admin</a>
