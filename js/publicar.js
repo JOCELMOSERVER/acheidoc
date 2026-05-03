@@ -171,11 +171,100 @@
     });
   }
 
-  // Passo 2 → 1
-  var btnPrev2 = document.getElementById('btnPrev2');
-  if (btnPrev2) {
-    btnPrev2.addEventListener('click', function () { showStep(1); });
+  // ── CÂMARA AO VIVO (getUserMedia) ──
+  var cameraStart    = document.getElementById('cameraStart');
+  var cameraLive     = document.getElementById('cameraLive');
+  var cameraVideo    = document.getElementById('cameraVideo');
+  var cameraCanvas   = document.getElementById('cameraCanvas');
+  var btnAbrirCamera = document.getElementById('btnAbrirCamera');
+  var btnCapturar    = document.getElementById('btnCapturar');
+  var btnCancelarCamera = document.getElementById('btnCancelarCamera');
+  var btnTirarNovamente = document.getElementById('btnTirarNovamente');
+  var fotoPreview    = document.getElementById('fotoPreview');
+  var fotoPreviewImg = document.getElementById('fotoPreviewImg');
+  var fotoActions    = document.getElementById('fotoActions');
+  var cameraStream   = null; // MediaStream activo
+
+  function stopCamera() {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(function(t) { t.stop(); });
+      cameraStream = null;
+    }
+    if (cameraVideo) cameraVideo.srcObject = null;
   }
+
+  function openCamera() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert('O seu browser não suporta acesso à câmara. Use o Chrome ou Safari actualizados.');
+      return;
+    }
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false })
+      .then(function(stream) {
+        cameraStream = stream;
+        cameraVideo.srcObject = stream;
+        cameraStart.classList.add('hidden');
+        cameraLive.classList.remove('hidden');
+        fotoPreview.classList.add('hidden');
+        fotoActions.classList.add('hidden');
+      })
+      .catch(function(err) {
+        var msg = 'Não foi possível aceder à câmara.';
+        if (err.name === 'NotAllowedError') msg = 'Permissão de câmara negada. Active nas definições do browser.';
+        else if (err.name === 'NotFoundError') msg = 'Nenhuma câmara encontrada neste dispositivo.';
+        alert(msg);
+      });
+  }
+
+  function capturePhoto() {
+    if (!cameraVideo || !cameraCanvas) return;
+    var w = cameraVideo.videoWidth;
+    var h = cameraVideo.videoHeight;
+    if (!w || !h) { alert('Aguarde a câmara inicializar.'); return; }
+    cameraCanvas.width = w;
+    cameraCanvas.height = h;
+    cameraCanvas.getContext('2d').drawImage(cameraVideo, 0, 0, w, h);
+    var dataUrl = cameraCanvas.toDataURL('image/jpeg', 0.85);
+    formData.fotoDataUrl = dataUrl;
+    formData.fotoBlob = dataURLtoBlob(dataUrl);
+    fotoPreviewImg.src = dataUrl;
+    stopCamera();
+    cameraLive.classList.add('hidden');
+    cameraStart.classList.add('hidden');
+    fotoPreview.classList.remove('hidden');
+    fotoActions.classList.remove('hidden');
+  }
+
+  function dataURLtoBlob(dataURL) {
+    var arr = dataURL.split(',');
+    var mime = arr[0].match(/:(.*?);/)[1];
+    var bstr = atob(arr[1]);
+    var n = bstr.length;
+    var u8arr = new Uint8Array(n);
+    while (n--) u8arr[n] = bstr.charCodeAt(n);
+    return new Blob([u8arr], { type: mime });
+  }
+
+  if (btnAbrirCamera) btnAbrirCamera.addEventListener('click', openCamera);
+  if (cameraStart) cameraStart.addEventListener('click', function(e) {
+    if (e.target !== btnAbrirCamera) openCamera();
+  });
+  if (btnCapturar) btnCapturar.addEventListener('click', capturePhoto);
+  if (btnCancelarCamera) btnCancelarCamera.addEventListener('click', function() {
+    stopCamera();
+    cameraLive.classList.add('hidden');
+    cameraStart.classList.remove('hidden');
+  });
+  if (btnTirarNovamente) btnTirarNovamente.addEventListener('click', function() {
+    formData.fotoDataUrl = null;
+    formData.fotoBlob = null;
+    fotoPreview.classList.add('hidden');
+    fotoActions.classList.add('hidden');
+    openCamera();
+  });
+
+  // Passo 2 → 1 (parar câmara ao sair do passo 2)
+  var btnPrev2 = document.getElementById('btnPrev2');
+  if (btnPrev2) btnPrev2.addEventListener('click', function() { stopCamera(); showStep(1); });
 
   // Passo 2 → 3
   var btnNext2 = document.getElementById('btnNext2');
@@ -184,15 +273,16 @@
       var local = document.getElementById('localDoc') ? document.getElementById('localDoc').value.trim() : '';
       var municipio = document.getElementById('municipioDoc') ? document.getElementById('municipioDoc').value : '';
 
+      if (!formData.fotoBlob) {
+        alert('Por favor, tire uma foto do documento antes de avançar.');
+        return;
+      }
       if (!local || !municipio) {
         alert('Por favor, preencha o local onde foi encontrado e o município.');
         return;
       }
-
       formData.local = local;
       formData.municipio = municipio;
-
-      // Preencher revisão
       buildReview();
       showStep(3);
     });
@@ -202,47 +292,6 @@
   var btnPrev3 = document.getElementById('btnPrev3');
   if (btnPrev3) {
     btnPrev3.addEventListener('click', function () { showStep(2); });
-  }
-
-  // Camera interface
-  var fotoInput = document.getElementById('fotoInput');
-  var fotoPreview = document.getElementById('fotoPreview');
-  var fotoPreviewImg = document.getElementById('fotoPreviewImg');
-  var btnCamera = document.getElementById('btnCamera');
-  var cameraZone = document.getElementById('cameraZone');
-  var btnTirarNovamente = document.getElementById('btnTirarNovamente');
-
-  function openCamera() {
-    if (fotoInput) fotoInput.click();
-  }
-
-  if (btnCamera) btnCamera.addEventListener('click', openCamera);
-  if (cameraZone) cameraZone.addEventListener('click', function(e) {
-    if (e.target !== btnCamera) openCamera();
-  });
-  if (btnTirarNovamente) btnTirarNovamente.addEventListener('click', function() {
-    if (fotoInput) fotoInput.value = '';
-    if (fotoPreview) fotoPreview.classList.add('hidden');
-    var fotoActions = document.getElementById('fotoActions');
-    if (fotoActions) fotoActions.classList.add('hidden');
-    if (cameraZone) cameraZone.classList.remove('hidden');
-  });
-
-  if (fotoInput && fotoPreview && fotoPreviewImg) {
-    fotoInput.addEventListener('change', function () {
-      var file = fotoInput.files[0];
-      if (!file) return;
-      var reader = new FileReader();
-      reader.onload = function (e) {
-        fotoPreviewImg.src = e.target.result;
-        fotoPreview.classList.remove('hidden');
-        var fotoActions = document.getElementById('fotoActions');
-        if (fotoActions) fotoActions.classList.remove('hidden');
-        if (cameraZone) cameraZone.classList.add('hidden');
-        formData.fotoPreview = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
   }
 
   // Preencher resumo
@@ -318,8 +367,8 @@
             formDataAPI.append('morada', formData.local);
             formDataAPI.append('provincia', formData.municipio);
 
-            if (fotoInput && fotoInput.files && fotoInput.files[0]) {
-              formDataAPI.append('foto', fotoInput.files[0]);
+            if (formData.fotoBlob) {
+              formDataAPI.append('foto', formData.fotoBlob, 'foto-documento.jpg');
             }
 
             var response = await Api.documentos.createWithFile(formDataAPI);

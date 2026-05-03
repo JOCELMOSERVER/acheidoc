@@ -12,6 +12,12 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#12305f">
+  <meta name="description" content="AcheiDoc — Plataforma angolana para recuperação de documentos perdidos. Publica achados e resgata o teu documento.">
+  <meta property="og:title" content="AcheiDoc — Recupere os seus documentos perdidos">
+  <meta property="og:description" content="Plataforma angolana para recuperação de documentos perdidos. Publica achados e resgata o teu documento.">
+  <meta property="og:image" content="https://acheidoc.ao/favicon.svg">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_AO">
 </head>
 <body>
 
@@ -34,7 +40,7 @@
       </div>
       <div id="navUser" style="display:none; position:relative;"></div>
     </div>
-    <div class="navbar-toggle" id="navbarToggle"><span></span><span></span><span></span></div>
+    <button class="navbar-toggle" id="navbarToggle" aria-label="Abrir menu de navegação" aria-expanded="false" aria-controls="navbarMobile"><span></span><span></span><span></span></button>
   </div>
   <div class="navbar-mobile" id="navbarMobile">
     <a href="index.html">Home</a>
@@ -138,5 +144,12 @@
 <script src="js/navbar.js"></script>
 <script src="js/ui-utils.js"></script>
 <script src="js/buscar.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js');
+    });
+  }
+</script>
 </body>
 </html>

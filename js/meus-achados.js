@@ -79,6 +79,12 @@
       return;
     }
 
+    // Skeleton loading — mostrar 4 linhas enquanto aguarda a API
+    if (tabelaBody) {
+      var skeletonRow = '<tr>' + '<td><div class="skeleton-line" style="width:60px; height:12px; margin:4px 0;"></div></td>'.repeat(7) + '<td><div class="skeleton-line" style="width:40px; height:12px; margin:4px 0;"></div></td></tr>';
+      tabelaBody.innerHTML = skeletonRow.repeat(4);
+    }
+
     try {
       var response = await Api.documentos.myList({ page: 1, limit: 200 });
       docs = (response && response.documentos ? response.documentos : []).map(toLegacyDoc);

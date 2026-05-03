@@ -11,8 +11,9 @@
 
   if (toggle && mobileMenu) {
     toggle.addEventListener('click', function () {
+      var isOpen = mobileMenu.classList.toggle('open');
       toggle.classList.toggle('open');
-      mobileMenu.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     });
   }
 
