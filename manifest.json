@@ -1,0 +1,13 @@
+{
+  "name": "AcheiDoc",
+  "short_name": "AcheiDoc",
+  "description": "Plataforma angolana de recuperação de documentos perdidos",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#12305f",
+  "lang": "pt",
+  "icons": [
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

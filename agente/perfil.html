@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Perfil — AcheiDoc Agentes</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/navbar.css">
+  <link rel="stylesheet" href="../css/footer.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#12305f">
+</head>
+<body>
+
+<!-- ══ NAVBAR AGENTE ══ -->
+<nav class="navbar" style="border-bottom: 3px solid #059669;">
+  <div class="container navbar-inner">
+    <a href="../index.html" class="navbar-logo" style="color: #059669;"><span class="logo-icon">AD</span>AcheiDoc <span style="font-size:0.75rem; background:#059669; color:white; padding:2px 8px; border-radius:4px; margin-left:4px;">AGENTE</span></a>
+    <div class="navbar-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="historico.html">Histórico</a>
+      <a href="suporte.html">Suporte</a>
+      <a href="perfil.html" class="active">Perfil</a>
+    </div>
+    <div class="navbar-right">
+      <button id="btnLogout" class="btn btn-outline" style="font-size:0.85rem; padding:8px 14px;">Sair</button>
+    </div>
+    <div class="navbar-toggle" id="navbarToggle"><span></span><span></span><span></span></div>
+  </div>
+  <div class="navbar-mobile" id="navbarMobile">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="historico.html">Histórico</a>
+    <a href="suporte.html">Suporte</a>
+    <a href="perfil.html" class="active">Perfil</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1>Meu Perfil</h1>
+    <p style="color:var(--text-gray); margin-top:0.25rem;">Visualize e edite os seus dados</p>
+  </div>
+</div>
+
+<main class="page-content">
+  <div class="container" style="max-width:720px;">
+
+    <!-- Card principal -->
+    <div class="card mb-4" style="text-align:center;">
+      <div id="agenteAvatar" style="width:80px; height:80px; border-radius:50%; background:var(--primary); color:white; display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:800; margin:0 auto 1rem;">?</div>
+      <h2 id="perfilNome" style="font-size:1.3rem; font-weight:800; margin-bottom:0.25rem;">—</h2>
+      <p id="perfilEmail" style="color:var(--text-gray); margin-bottom:0.5rem;">—</p>
+      <div style="display:flex; justify-content:center; gap:1rem; flex-wrap:wrap; margin-top:0.75rem;">
+        <div style="background:var(--bg-light); border-radius:8px; padding:0.5rem 1rem;">
+          <span style="font-size:0.8rem; color:var(--text-gray);">Ponto de entrega</span>
+          <div id="perfilPonto" style="font-weight:700; color:var(--text-dark);">—</div>
+        </div>
+        <div style="background:#FEF3C7; border-radius:8px; padding:0.5rem 1rem;">
+          <span style="font-size:0.8rem; color:#92400E;">Pontos acumulados</span>
+          <div id="perfilPontos" style="font-weight:800; color:#92400E;">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Editar Perfil -->
+    <div class="card mb-4">
+      <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:1.5rem;">Editar Perfil</h3>
+      <div id="editSuccessMsg" class="alert alert-success hidden" style="margin-bottom:1rem;">✅ Perfil actualizado com sucesso!</div>
+      <div id="editErrorMsg" class="alert alert-danger hidden" style="margin-bottom:1rem;"></div>
+      <form id="editPerfilForm">
+        <div class="form-group">
+          <label class="form-label">Nome</label>
+          <input type="text" id="editNome" class="form-input" placeholder="O seu nome completo">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Telefone</label>
+          <input type="tel" id="editTelefone" class="form-input" placeholder="+244 9XX XXX XXX">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Senha actual</label>
+          <input type="password" id="editSenhaAtual" class="form-input" placeholder="Introduza a senha actual">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nova senha</label>
+          <input type="password" id="editNovaSenha" class="form-input" placeholder="Deixe em branco para não alterar">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirmar nova senha</label>
+          <input type="password" id="editConfirmarSenha" class="form-input" placeholder="Repita a nova senha">
+        </div>
+        <div style="text-align:right;">
+          <button type="submit" class="btn btn-primary">Guardar alterações</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Estatísticas -->
+    <div class="card mb-4">
+      <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:1.5rem;">Estatísticas</h3>
+      <div class="grid-3">
+        <div class="summary-card">
+          <div class="summary-icon blue">Rec</div>
+          <div class="summary-info">
+            <h3 id="statRecebidos">—</h3>
+            <p>Documentos recebidos</p>
+          </div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-icon green">Ent</div>
+          <div class="summary-info">
+            <h3 id="statEntregues">—</h3>
+            <p>Documentos entregues</p>
+          </div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-icon yellow">Pts</div>
+          <div class="summary-info">
+            <h3 id="statPontosMes">—</h3>
+            <p>Pontos este mês</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© 2026 AcheiDoc — Portal de Agentes</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/api.js"></script>
+<script src="../js/navbar.js"></script>
+<script>
+(function() {
+  var agenteLogado = null;
+  try { agenteLogado = JSON.parse(sessionStorage.getItem('agenteLogado') || 'null'); } catch(e) {}
+  if (!agenteLogado) { window.location.href = '../login.html'; return; }
+
+  // Preencher dados
+  var nome = agenteLogado.nome || agenteLogado.name || '';
+  var email = agenteLogado.email || '';
+  var ponto = agenteLogado.ponto_entrega || agenteLogado.ponto || '—';
+  var pontos = agenteLogado.pontos || 0;
+
+  var avatarEl = document.getElementById('agenteAvatar');
+  if (avatarEl && nome) avatarEl.textContent = nome.charAt(0).toUpperCase();
+
+  var setEl = function(id, v) { var el = document.getElementById(id); if (el) el.textContent = v; };
+  setEl('perfilNome', nome || '—');
+  setEl('perfilEmail', email || '—');
+  setEl('perfilPonto', ponto);
+  setEl('perfilPontos', pontos + ' pts');
+
+  var editNomeEl = document.getElementById('editNome');
+  if (editNomeEl) editNomeEl.value = nome;
+
+  // Carregar estatísticas
+  if (typeof Api !== 'undefined' && Api.agente && Api.agente.stats) {
+    Api.agente.stats(agenteLogado.id).then(function(data) {
+      if (!data) return;
+      var s = data.stats || data;
+      setEl('statRecebidos', s.recebidos || s.documentos_recebidos || '0');
+      setEl('statEntregues', s.entregues || s.documentos_entregues || '0');
+      setEl('statPontosMes', (s.pontos_mes || s.pontos_este_mes || '0') + ' pts');
+    }).catch(function(){});
+  } else {
+    if (typeof Api !== 'undefined' && Api.documentos && Api.documentos.list) {
+      setEl('statRecebidos', '0');
+      setEl('statEntregues', '0');
+      setEl('statPontosMes', '0 pts');
+    }
+  }
+
+  // Logout
+  var btnLogout = document.getElementById('btnLogout');
+  if (btnLogout) {
+    btnLogout.addEventListener('click', function() {
+      sessionStorage.removeItem('agenteLogado');
+      window.location.href = '../login.html';
+    });
+  }
+
+  // Editar perfil
+  var editForm = document.getElementById('editPerfilForm');
+  if (editForm) {
+    editForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var errEl = document.getElementById('editErrorMsg');
+      var sucEl = document.getElementById('editSuccessMsg');
+      if (errEl) { errEl.textContent = ''; errEl.classList.add('hidden'); }
+      if (sucEl) sucEl.classList.add('hidden');
+
+      var novaSenha = (document.getElementById('editNovaSenha') || {}).value || '';
+      var confirmar = (document.getElementById('editConfirmarSenha') || {}).value || '';
+
+      if (novaSenha && novaSenha !== confirmar) {
+        if (errEl) { errEl.textContent = 'As senhas não coincidem.'; errEl.classList.remove('hidden'); }
+        return;
+      }
+
+      var novoNome = (document.getElementById('editNome') || {}).value || '';
+      if (novoNome.trim()) {
+        agenteLogado.nome = novoNome.trim();
+        try { sessionStorage.setItem('agenteLogado', JSON.stringify(agenteLogado)); } catch(e) {}
+        setEl('perfilNome', agenteLogado.nome);
+        if (avatarEl) avatarEl.textContent = agenteLogado.nome.charAt(0).toUpperCase();
+      }
+
+      if (sucEl) sucEl.classList.remove('hidden');
+      setTimeout(function() { if (sucEl) sucEl.classList.add('hidden'); }, 3000);
+    });
+  }
+})();
+</script>
+</body>
+</html>

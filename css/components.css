@@ -1091,3 +1091,24 @@ textarea.form-input {
     padding: 1rem 0.75rem;
   }
 }
+
+/* ========================
+   CAMERA ZONE
+   ======================== */
+
+.camera-zone {
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  padding: 2.5rem 1rem;
+  text-align: center;
+  background: var(--bg-light);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.camera-zone:hover {
+  border-color: var(--primary);
+  background: #EFF6FF;
+}
+.camera-zone .camera-icon { font-size: 3rem; margin-bottom: 0.5rem; }
+.camera-zone .camera-label { font-size: 1.1rem; font-weight: 700; color: var(--text-dark); }
+.camera-zone .camera-hint { font-size: 0.85rem; color: var(--text-gray); margin-top: 0.25rem; }

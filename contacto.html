@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacto — AcheiDoc</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#12305f">
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="navbar-logo"><span class="logo-icon">AD</span>AcheiDoc</a>
+    <div class="navbar-links">
+      <a href="index.html">Home</a>
+      <a href="buscar.html" id="linkBuscar" style="display:none">Buscar Documento</a>
+      <a href="publicar.html" id="linkPublicar" style="display:none">Publicar Achado</a>
+      <a href="recompensas.html" id="linkRecompensas" style="display:none">Recompensas</a>
+      <a href="sobre.html">Sobre</a>
+      <a href="contacto.html" class="active">Contacto</a>
+    </div>
+    <div class="navbar-right">
+      <div id="navLogin">
+        <a href="login.html" class="btn btn-outline">Entrar</a>
+        <a href="cadastro.html" class="btn btn-primary">Cadastrar</a>
+      </div>
+      <div id="navUser" style="display:none; position:relative;"></div>
+    </div>
+    <div class="navbar-toggle" id="navbarToggle"><span></span><span></span><span></span></div>
+  </div>
+  <div class="navbar-mobile" id="navbarMobile">
+    <a href="index.html">Home</a>
+    <a href="buscar.html" id="mobileLinkBuscar" style="display:none">Buscar Documento</a>
+    <a href="publicar.html" id="mobileLinkPublicar" style="display:none">Publicar Achado</a>
+    <a href="recompensas.html" id="mobileLinkRecompensas" style="display:none">Recompensas</a>
+    <a href="sobre.html">Sobre</a>
+    <a href="contacto.html" class="active">Contacto</a>
+    <div class="mobile-divider"></div>
+    <div id="mobileNavLogin">
+      <a href="login.html">Entrar</a>
+      <a href="cadastro.html">Cadastrar</a>
+    </div>
+    <div id="mobileNavUser" style="display:none;"></div>
+    <div class="mobile-divider"></div>
+    <a href="agente/login.html">Agente</a>
+    <a href="admin/login.html">Admin</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1>Contacte-nos</h1>
+    <p>Estamos aqui para ajudar. Fale connosco!</p>
+  </div>
+</div>
+
+<main class="page-content">
+  <div class="container">
+    <div class="grid-2" style="gap:2rem; align-items:start;">
+
+      <!-- Formulário -->
+      <div>
+        <div class="card">
+          <h2 style="font-size:1.2rem; font-weight:700; margin-bottom:1.5rem;">Enviar mensagem</h2>
+
+          <div id="contactSuccessMsg" class="alert alert-success hidden" style="margin-bottom:1rem;">
+            ✅ Mensagem enviada com sucesso! Responderemos em breve.
+          </div>
+
+          <form id="contactForm">
+            <div class="form-group">
+              <label class="form-label">Nome *</label>
+              <input type="text" id="contactNome" class="form-input" placeholder="O seu nome completo">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email *</label>
+              <input type="email" id="contactEmail" class="form-input" placeholder="email@exemplo.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Assunto *</label>
+              <input type="text" id="contactAssunto" class="form-input" placeholder="Motivo do contacto">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mensagem *</label>
+              <textarea id="contactMensagem" class="form-input" rows="5" placeholder="Escreva a sua mensagem aqui..."></textarea>
+            </div>
+            <div id="contactErrorMsg" class="alert alert-danger hidden" style="margin-bottom:1rem;"></div>
+            <button type="submit" id="btnContactSubmit" class="btn btn-primary btn-full">Enviar Mensagem</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Info de contacto -->
+      <div>
+        <div class="card" style="margin-bottom:1.5rem;">
+          <h4 style="font-weight:700; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
+            <span style="font-size:1.3rem;">📧</span> Email
+          </h4>
+          <p style="color:var(--text-gray); margin:0;">
+            <a href="mailto:info@acheidoc.ao" style="color:var(--primary); text-decoration:none; font-weight:600;">info@acheidoc.ao</a>
+          </p>
+          <p style="color:var(--text-gray); font-size:0.9rem; margin-top:0.25rem;">Resposta em até 24 horas</p>
+        </div>
+
+        <div class="card" style="margin-bottom:1.5rem;">
+          <h4 style="font-weight:700; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
+            <span style="font-size:1.3rem;">📞</span> Telefone
+          </h4>
+          <p style="color:var(--text-gray); margin:0;">
+            <a href="tel:+244923000000" style="color:var(--primary); text-decoration:none; font-weight:600;">+244 923 000 000</a>
+          </p>
+          <p style="color:var(--text-gray); font-size:0.9rem; margin-top:0.25rem;">Seg-Sex: 08h-18h (Hora de Angola)</p>
+        </div>
+
+        <div class="card" style="margin-bottom:1.5rem;">
+          <h4 style="font-weight:700; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
+            <span style="font-size:1.3rem;">📍</span> Localização
+          </h4>
+          <p style="color:var(--text-gray); margin:0;">
+            AcheiDoc<br>
+            Luanda, República de Angola
+          </p>
+        </div>
+
+        <div class="card">
+          <h4 style="font-weight:700; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
+            <span style="font-size:1.3rem;">🕐</span> Horário
+          </h4>
+          <p style="color:var(--text-gray); margin:0;">Segunda a Sexta: 08h00 – 18h00</p>
+          <p style="color:var(--text-gray); margin-top:0.25rem;">Sábado: 09h00 – 13h00</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- ══ FOOTER ══ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo"><span class="logo-icon">AD</span> AcheiDoc</div>
+        <p>Sistema de recuperação de documentos perdidos em Angola. Ligamos quem encontrou a quem perdeu.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Plataforma</h4>
+        <ul>
+          <li><a href="buscar.html">Buscar Documento</a></li>
+          <li><a href="publicar.html">Publicar Achado</a></li>
+          <li><a href="recompensas.html">Recompensas</a></li>
+          <li><a href="pontos-mapa.html">Pontos no Mapa</a></li>
+          <li><a href="meus-achados.html">Meus Achados</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Acesso</h4>
+        <ul>
+          <li><a href="agente/login.html">Portal do Agente</a></li>
+          <li><a href="admin/login.html">Painel Admin</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="tel:+244923000000">+244 923 000 000</a></li>
+          <li><a href="mailto:info@acheidoc.ao">info@acheidoc.ao</a></li>
+          <li><a href="#">Luanda, Angola</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 AcheiDoc. Todos os direitos reservados.</span>
+      <div class="footer-legal">
+        <a href="faq.html">FAQ</a>
+        <a href="termos.html">Privacidade</a>
+        <a href="termos.html">Termos de Uso</a>
+      </div>
+    </div>
+  </div>
+</footer>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/navbar.js"></script>
+<script>
+(function() {
+  var form = document.getElementById('contactForm');
+  if (!form) return;
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var nome = (document.getElementById('contactNome') || {}).value || '';
+    var email = (document.getElementById('contactEmail') || {}).value || '';
+    var assunto = (document.getElementById('contactAssunto') || {}).value || '';
+    var mensagem = (document.getElementById('contactMensagem') || {}).value || '';
+    var errEl = document.getElementById('contactErrorMsg');
+    var sucEl = document.getElementById('contactSuccessMsg');
+    var btn = document.getElementById('btnContactSubmit');
+
+    if (errEl) { errEl.textContent = ''; errEl.classList.add('hidden'); }
+
+    if (!nome.trim() || !email.trim() || !assunto.trim() || !mensagem.trim()) {
+      if (errEl) { errEl.textContent = 'Por favor, preencha todos os campos obrigatórios.'; errEl.classList.remove('hidden'); }
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      if (errEl) { errEl.textContent = 'Por favor, introduza um email válido.'; errEl.classList.remove('hidden'); }
+      return;
+    }
+
+    if (btn) { btn.disabled = true; btn.textContent = 'A enviar...'; }
+    setTimeout(function() {
+      if (sucEl) sucEl.classList.remove('hidden');
+      form.reset();
+      if (btn) { btn.disabled = false; btn.textContent = 'Enviar Mensagem'; }
+      setTimeout(function() { if (sucEl) sucEl.classList.add('hidden'); }, 5000);
+    }, 1000);
+  });
+})();
+</script>
+</body>
+</html>
