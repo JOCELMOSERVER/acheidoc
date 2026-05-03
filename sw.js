@@ -45,7 +45,8 @@ self.addEventListener('fetch', function(e) {
       return cached || fetch(e.request).then(function(response) {
         return response;
       }).catch(function() {
-        if (e.request.headers.get('accept').includes('text/html')) {
+        var accept = e.request.headers.get('accept') || '';
+        if (accept.includes('text/html')) {
           return caches.match('/index.html');
         }
       });
