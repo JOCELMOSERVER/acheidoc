@@ -1,0 +1,21 @@
+/* ===========================
+   AcheiDoc — Blur Tool
+   =========================== */
+
+#blurToolModal {
+  display: none;
+}
+
+#blurToolModal canvas {
+  cursor: crosshair;
+  border-radius: 8px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Mobile: canvas ocupa largura total */
+@media (max-width: 600px) {
+  #blurToolModal > div {
+    padding: 0.5rem;
+  }
+}
