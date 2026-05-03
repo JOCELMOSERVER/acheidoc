@@ -202,6 +202,12 @@
       return;
     }
 
+    // Skeleton loading — mostrar 3 linhas enquanto aguarda a API
+    var skeletonRow = '<tr>' + '<td><div class="skeleton-line" style="width:60px; height:12px; margin:4px 0;"></div></td>'.repeat(6) + '<td><div class="skeleton-line" style="width:80px; height:12px; margin:4px 0;"></div></td></tr>';
+    if (docsReceberBody) docsReceberBody.innerHTML = skeletonRow.repeat(3);
+    if (docsNoPontoBody) docsNoPontoBody.innerHTML = skeletonRow.repeat(3);
+    if (tabelaBody) tabelaBody.innerHTML = skeletonRow.repeat(3);
+
     try {
       var response = await Api.documentos.agenteLista();
       documentos = (response && response.documentos ? response.documentos : []).map(toLegacyDoc);

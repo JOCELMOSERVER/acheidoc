@@ -1109,6 +1109,6 @@ textarea.form-input {
   border-color: var(--primary);
   background: #EFF6FF;
 }
-.camera-zone .camera-icon { font-size: 3rem; margin-bottom: 0.5rem; }
-.camera-zone .camera-label { font-size: 1.1rem; font-weight: 700; color: var(--text-dark); }
-.camera-zone .camera-hint { font-size: 0.85rem; color: var(--text-gray); margin-top: 0.25rem; }
+.camera-zone .camera-icon { font-size: 3rem; margin-bottom: 0.5rem; display: block; }
+.camera-zone .camera-label { font-size: 1.1rem; font-weight: 700; color: var(--text-dark); display: block; }
+.camera-zone .camera-hint { font-size: 0.85rem; color: var(--text-gray); margin-top: 0.25rem; display: block; }

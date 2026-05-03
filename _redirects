@@ -1,0 +1,4 @@
+# Netlify redirects
+/agente    /agente/login.html    301
+/admin     /admin/login.html     301
+/*         /index.html           200
