@@ -6,6 +6,12 @@
 var AutoBlur = (function () {
 
   var MODELS_URL = '/models';
+  var TEMPLATE_BLUR_PX = 18;
+  var FACE_BLUR_PX = 22;
+  var OUTPUT_JPEG_QUALITY = 0.88;
+  var FACE_DETECTION_INPUT_SIZE = 320;
+  var FACE_DETECTION_THRESHOLD = 0.4;
+  var MODELS_LOAD_TIMEOUT_MS = 10000;
 
   var DOC_TEMPLATES = {
     'Bilhete de Identidade': [
@@ -39,6 +45,12 @@ var AutoBlur = (function () {
       var check = setInterval(function() {
         if (_modelsLoaded) { clearInterval(check); resolve(); }
       }, 100);
+      setTimeout(function() {
+        clearInterval(check);
+        _modelsLoaded = true;
+        _loading = false;
+        resolve();
+      }, MODELS_LOAD_TIMEOUT_MS);
     });
     _loading = true;
     if (typeof faceapi === 'undefined') {
@@ -104,7 +116,7 @@ var AutoBlur = (function () {
             var ry = Math.round(t.y * H);
             var rw = Math.round(t.w * W);
             var rh = Math.round(t.h * H);
-            blurRegionOnCanvas(ctx, canvas, rx, ry, rw, rh, 18);
+            blurRegionOnCanvas(ctx, canvas, rx, ry, rw, rh, TEMPLATE_BLUR_PX);
             regions.push({ label: t.label, x: rx, y: ry, w: rw, h: rh });
           });
 
@@ -112,7 +124,7 @@ var AutoBlur = (function () {
 
           var facePromise;
           if (typeof faceapi !== 'undefined' && _modelsLoaded) {
-            facePromise = faceapi.detectAllFaces(canvas, new faceapi.TinyFaceDetectorOptions({ inputSize: 320, scoreThreshold: 0.4 }))
+            facePromise = faceapi.detectAllFaces(canvas, new faceapi.TinyFaceDetectorOptions({ inputSize: FACE_DETECTION_INPUT_SIZE, scoreThreshold: FACE_DETECTION_THRESHOLD }))
               .then(function(detections) {
                 detections.forEach(function(det) {
                   var box = det.box;
@@ -121,7 +133,7 @@ var AutoBlur = (function () {
                   var fy = Math.max(0, Math.round(box.y) - padding);
                   var fw = Math.min(W - fx, Math.round(box.width) + padding * 2);
                   var fh = Math.min(H - fy, Math.round(box.height) + padding * 2);
-                  blurRegionOnCanvas(ctx, canvas, fx, fy, fw, fh, 22);
+                  blurRegionOnCanvas(ctx, canvas, fx, fy, fw, fh, FACE_BLUR_PX);
                   regions.push({ label: 'Rosto detectado', x: fx, y: fy, w: fw, h: fh });
                 });
               })
@@ -132,7 +144,7 @@ var AutoBlur = (function () {
 
           facePromise.then(function() {
             onProgress('A finalizar...');
-            var blurredDataUrl = canvas.toDataURL('image/jpeg', 0.88);
+            var blurredDataUrl = canvas.toDataURL('image/jpeg', OUTPUT_JPEG_QUALITY);
             resolve({ blurredDataUrl: blurredDataUrl, regions: regions });
           });
         };
@@ -144,3 +156,4 @@ var AutoBlur = (function () {
 
   return { process: process };
 })();
+
