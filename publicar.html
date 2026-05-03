@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="css/navbar.css">
   <link rel="stylesheet" href="css/footer.css">
   <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/blur-tool.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#12305f">
@@ -147,42 +148,54 @@
         <div class="form-group">
           <label class="form-label">Foto do Documento *</label>
 
-          <!-- Estado inicial: botão para activar câmara -->
-          <div id="cameraStart" class="camera-zone">
-            <div class="camera-icon">📷</div>
-            <div class="camera-label">Tirar Foto ao Documento</div>
-            <div class="camera-hint">A câmara abrirá directamente — sem galeria</div>
-            <button type="button" id="btnAbrirCamera" class="btn btn-primary" style="margin-top:1rem;">Abrir Câmara</button>
-          </div>
-
-          <!-- Feed da câmara ao vivo (escondido até activar) -->
-          <div id="cameraLive" class="hidden">
-            <div style="position:relative; border-radius:12px; overflow:hidden; background:#000; margin-bottom:0.75rem;">
-              <video id="cameraVideo" autoplay playsinline muted style="width:100%; display:block; max-height:320px; object-fit:cover;"></video>
+          <!-- MODO MOBILE: câmara ao vivo via getUserMedia -->
+          <div id="cameraBlock">
+            <!-- Estado inicial -->
+            <div id="cameraStart" class="camera-zone">
+              <span class="camera-icon">📷</span>
+              <span class="camera-label">Tirar Foto ao Documento</span>
+              <span class="camera-hint">A câmara abrirá directamente — sem galeria</span>
+              <button type="button" id="btnAbrirCamera" class="btn btn-primary" style="margin-top:1rem;">Abrir Câmara</button>
             </div>
-            <div style="display:flex; gap:0.75rem; justify-content:center; margin-bottom:0.5rem;">
-              <button type="button" id="btnCapturar" class="btn btn-success btn-lg">📸 Capturar</button>
-              <button type="button" id="btnCancelarCamera" class="btn btn-outline">Cancelar</button>
+            <!-- Feed ao vivo -->
+            <div id="cameraLive" style="display:none;">
+              <div style="position:relative; border-radius:12px; overflow:hidden; background:#000; margin-bottom:0.75rem;">
+                <video id="cameraVideo" autoplay playsinline muted style="width:100%; display:block; max-height:320px; object-fit:cover;"></video>
+              </div>
+              <div style="display:flex; gap:0.75rem; justify-content:center; margin-bottom:0.5rem;">
+                <button type="button" id="btnCapturar" class="btn btn-success btn-lg">📸 Capturar</button>
+                <button type="button" id="btnCancelarCamera" class="btn btn-outline">Cancelar</button>
+              </div>
+            </div>
+            <canvas id="cameraCanvas" style="display:none;"></canvas>
+          </div>
+
+          <!-- MODO DESKTOP: input de ficheiro normal -->
+          <div id="uploadBlock" style="display:none;">
+            <div id="uploadZone" class="camera-zone" onclick="document.getElementById('fotoFileInput').click()" style="cursor:pointer;">
+              <span class="camera-icon">🖼️</span>
+              <span class="camera-label">Carregar Foto do Documento</span>
+              <span class="camera-hint">Clique para seleccionar uma imagem (JPG, PNG, WEBP — máx. 10 MB)</span>
+              <button type="button" class="btn btn-primary" style="margin-top:1rem; pointer-events:none;">Escolher Ficheiro</button>
+            </div>
+            <input type="file" id="fotoFileInput" accept="image/jpeg,image/png,image/webp" style="display:none;">
+          </div>
+
+          <!-- Preview unificado (aparece após câmara ou upload) -->
+          <div id="fotoPreviewWrap" style="display:none; margin-top:0.75rem;">
+            <div style="position:relative; border-radius:12px; overflow:hidden; height:220px; background:#F3F4F6; margin-bottom:0.5rem;">
+              <img id="fotoPreviewImg" src="" alt="Preview" style="width:100%; height:100%; object-fit:cover;">
+              <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.18);">
+                <span style="color:rgba(255,255,255,0.9); font-size:0.85rem; font-weight:700; letter-spacing:0.1em; transform:rotate(-30deg); border:2px solid rgba(255,255,255,0.6); padding:4px 14px; border-radius:4px; white-space:nowrap;">MARCA D'ÁGUA</span>
+              </div>
+            </div>
+            <div style="display:flex; gap:0.75rem; justify-content:center; margin-bottom:0.75rem;">
+              <button type="button" id="btnTirarNovamente" class="btn btn-outline btn-sm">🔄 Nova foto</button>
+              <button type="button" id="btnDesfocar" class="btn btn-warning btn-sm">🔲 Desfocar áreas sensíveis</button>
             </div>
           </div>
 
-          <!-- Canvas escondido para captura (não visível) -->
-          <canvas id="cameraCanvas" style="display:none;"></canvas>
-
-          <!-- Preview da foto capturada -->
-          <div id="fotoPreview" class="hidden" style="position:relative; border-radius:12px; overflow:hidden; margin-bottom:0.5rem; height:220px; background:#F3F4F6;">
-            <img id="fotoPreviewImg" src="" alt="Preview" style="width:100%; height:100%; object-fit:cover;">
-            <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.2);">
-              <span style="color:rgba(255,255,255,0.9); font-size:0.9rem; font-weight:700; letter-spacing:0.1em; transform:rotate(-30deg); border:2px solid rgba(255,255,255,0.7); padding:4px 14px; border-radius:4px; white-space:nowrap;">
-                MARCA D'ÁGUA APLICADA
-              </span>
-            </div>
-          </div>
-          <div id="fotoActions" class="hidden" style="text-align:center; margin-bottom:1rem;">
-            <button type="button" id="btnTirarNovamente" class="btn btn-outline btn-sm">🔄 Tirar novamente</button>
-          </div>
-
-          <span class="form-hint">⚠️ Apenas fotos tiradas na hora são aceites. Não é possível carregar da galeria.</span>
+          <span class="form-hint" id="fotoHint"></span>
         </div>
 
         <div class="form-group">
@@ -306,6 +319,7 @@
 <script src="js/api.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/navbar.js"></script>
+<script src="js/blur-tool.js"></script>
 <script src="js/publicar.js"></script>
 <script>
   if ('serviceWorker' in navigator) {

@@ -171,19 +171,41 @@
     });
   }
 
-  // ── CÂMARA AO VIVO (getUserMedia) ──
-  var cameraStart    = document.getElementById('cameraStart');
-  var cameraLive     = document.getElementById('cameraLive');
-  var cameraVideo    = document.getElementById('cameraVideo');
-  var cameraCanvas   = document.getElementById('cameraCanvas');
-  var btnAbrirCamera = document.getElementById('btnAbrirCamera');
-  var btnCapturar    = document.getElementById('btnCapturar');
+  // ── DETECÇÃO DE DISPOSITIVO ──
+  function isMobileDevice() {
+    return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) ||
+      ('ontouchstart' in window && navigator.maxTouchPoints > 0 && window.innerWidth <= 1024);
+  }
+
+  var cameraBlock       = document.getElementById('cameraBlock');
+  var uploadBlock       = document.getElementById('uploadBlock');
+  var cameraStart       = document.getElementById('cameraStart');
+  var cameraLive        = document.getElementById('cameraLive');
+  var cameraVideo       = document.getElementById('cameraVideo');
+  var cameraCanvas      = document.getElementById('cameraCanvas');
+  var btnAbrirCamera    = document.getElementById('btnAbrirCamera');
+  var btnCapturar       = document.getElementById('btnCapturar');
   var btnCancelarCamera = document.getElementById('btnCancelarCamera');
+  var fotoFileInput     = document.getElementById('fotoFileInput');
+  var fotoPreviewWrap   = document.getElementById('fotoPreviewWrap');
+  var fotoPreviewImg    = document.getElementById('fotoPreviewImg');
   var btnTirarNovamente = document.getElementById('btnTirarNovamente');
-  var fotoPreview    = document.getElementById('fotoPreview');
-  var fotoPreviewImg = document.getElementById('fotoPreviewImg');
-  var fotoActions    = document.getElementById('fotoActions');
-  var cameraStream   = null; // MediaStream activo
+  var btnDesfocar       = document.getElementById('btnDesfocar');
+  var fotoHint          = document.getElementById('fotoHint');
+  var cameraStream      = null;
+
+  // Inicializar modo correcto
+  (function initFotoMode() {
+    if (isMobileDevice()) {
+      if (cameraBlock) cameraBlock.style.display = '';
+      if (uploadBlock) uploadBlock.style.display = 'none';
+      if (fotoHint) fotoHint.textContent = '⚠️ Apenas fotos tiradas na hora são aceites.';
+    } else {
+      if (cameraBlock) cameraBlock.style.display = 'none';
+      if (uploadBlock) uploadBlock.style.display = '';
+      if (fotoHint) fotoHint.textContent = 'Formatos aceites: JPG, PNG, WEBP. Tamanho máximo: 10 MB.';
+    }
+  })();
 
   function stopCamera() {
     if (cameraStream) {
@@ -202,10 +224,9 @@
       .then(function(stream) {
         cameraStream = stream;
         cameraVideo.srcObject = stream;
-        cameraStart.classList.add('hidden');
-        cameraLive.classList.remove('hidden');
-        fotoPreview.classList.add('hidden');
-        fotoActions.classList.add('hidden');
+        cameraStart.style.display = 'none';
+        cameraLive.style.display = '';
+        fotoPreviewWrap.style.display = 'none';
       })
       .catch(function(err) {
         var msg = 'Não foi possível aceder à câmara.';
@@ -224,14 +245,10 @@
     cameraCanvas.height = h;
     cameraCanvas.getContext('2d').drawImage(cameraVideo, 0, 0, w, h);
     var dataUrl = cameraCanvas.toDataURL('image/jpeg', 0.85);
-    formData.fotoDataUrl = dataUrl;
-    formData.fotoBlob = dataURLtoBlob(dataUrl);
-    fotoPreviewImg.src = dataUrl;
+    setFotoFromDataUrl(dataUrl);
     stopCamera();
-    cameraLive.classList.add('hidden');
-    cameraStart.classList.add('hidden');
-    fotoPreview.classList.remove('hidden');
-    fotoActions.classList.remove('hidden');
+    cameraLive.style.display = 'none';
+    cameraStart.style.display = 'none';
   }
 
   function dataURLtoBlob(dataURL) {
@@ -244,6 +261,15 @@
     return new Blob([u8arr], { type: mime });
   }
 
+  // ── UNIFICADO ──
+  function setFotoFromDataUrl(dataUrl) {
+    formData.fotoDataUrl = dataUrl;
+    formData.fotoBlob = dataURLtoBlob(dataUrl);
+    fotoPreviewImg.src = dataUrl;
+    fotoPreviewWrap.style.display = '';
+    formData.desfocagemAplicada = false;
+  }
+
   if (btnAbrirCamera) btnAbrirCamera.addEventListener('click', openCamera);
   if (cameraStart) cameraStart.addEventListener('click', function(e) {
     if (e.target !== btnAbrirCamera) openCamera();
@@ -251,15 +277,48 @@
   if (btnCapturar) btnCapturar.addEventListener('click', capturePhoto);
   if (btnCancelarCamera) btnCancelarCamera.addEventListener('click', function() {
     stopCamera();
-    cameraLive.classList.add('hidden');
-    cameraStart.classList.remove('hidden');
+    cameraLive.style.display = 'none';
+    cameraStart.style.display = '';
   });
+
+  // ── UPLOAD (desktop) ──
+  if (fotoFileInput) {
+    fotoFileInput.addEventListener('change', function() {
+      var file = fotoFileInput.files[0];
+      if (!file) return;
+      if (file.size > 10 * 1024 * 1024) { alert('Ficheiro demasiado grande. Máximo 10 MB.'); fotoFileInput.value = ''; return; }
+      var reader = new FileReader();
+      reader.onload = function(e) { setFotoFromDataUrl(e.target.result); };
+      reader.readAsDataURL(file);
+    });
+  }
+
   if (btnTirarNovamente) btnTirarNovamente.addEventListener('click', function() {
     formData.fotoDataUrl = null;
     formData.fotoBlob = null;
-    fotoPreview.classList.add('hidden');
-    fotoActions.classList.add('hidden');
-    openCamera();
+    formData.desfocagemAplicada = false;
+    fotoPreviewImg.src = '';
+    fotoPreviewWrap.style.display = 'none';
+    if (isMobileDevice()) {
+      cameraStart.style.display = '';
+      openCamera();
+    } else {
+      if (fotoFileInput) fotoFileInput.value = '';
+      if (uploadBlock) uploadBlock.style.display = '';
+    }
+  });
+
+  // Botão desfocar — abre o modal de desfocagem
+  if (btnDesfocar) btnDesfocar.addEventListener('click', function() {
+    if (!formData.fotoDataUrl) return;
+    BlurTool.open(formData.fotoDataUrl, function(newDataUrl) {
+      if (newDataUrl) {
+        formData.fotoDataUrl = newDataUrl;
+        formData.fotoBlob = dataURLtoBlob(newDataUrl);
+        fotoPreviewImg.src = newDataUrl;
+        formData.desfocagemAplicada = true;
+      }
+    });
   });
 
   // Passo 2 → 1 (parar câmara ao sair do passo 2)
@@ -274,7 +333,7 @@
       var municipio = document.getElementById('municipioDoc') ? document.getElementById('municipioDoc').value : '';
 
       if (!formData.fotoBlob) {
-        alert('Por favor, tire uma foto do documento antes de avançar.');
+        alert('Por favor, adicione uma foto do documento antes de avançar.');
         return;
       }
       if (!local || !municipio) {
