@@ -8,6 +8,9 @@
   <link rel="stylesheet" href="css/navbar.css">
   <link rel="stylesheet" href="css/footer.css">
   <link rel="stylesheet" href="css/components.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#12305f">
 </head>
 <body>
 
@@ -20,6 +23,8 @@
       <a href="buscar.html" id="linkBuscar" style="display:none">Buscar Documento</a>
       <a href="publicar.html" id="linkPublicar" style="display:none" class="active">Publicar Achado</a>
       <a href="recompensas.html" id="linkRecompensas" style="display:none">Recompensas</a>
+      <a href="sobre.html">Sobre</a>
+      <a href="contacto.html">Contacto</a>
     </div>
     <div class="navbar-right">
       <div id="navLogin">
@@ -35,6 +40,8 @@
     <a href="buscar.html" id="mobileLinkBuscar" style="display:none">Buscar Documento</a>
     <a href="publicar.html" id="mobileLinkPublicar" style="display:none" class="active">Publicar Achado</a>
     <a href="recompensas.html" id="mobileLinkRecompensas" style="display:none">Recompensas</a>
+    <a href="sobre.html">Sobre</a>
+    <a href="contacto.html">Contacto</a>
     <div class="mobile-divider"></div>
     <div id="mobileNavLogin">
       <a href="login.html">Entrar</a>
@@ -133,18 +140,31 @@
 
         <div class="form-group">
           <label class="form-label">Foto do Documento *</label>
-          <input type="file" id="fotoInput" class="form-input" accept="image/*" style="padding: 8px;">
-          <span class="form-hint">Tire uma foto clara do documento. Marca d'água será aplicada automaticamente.</span>
-        </div>
-
-        <!-- Preview da imagem -->
-        <div id="fotoPreview" class="hidden" style="position:relative; border-radius:12px; overflow:hidden; margin-bottom:1rem; height:200px; background:#F3F4F6;">
-          <img id="fotoPreviewImg" src="" alt="Preview" style="width:100%; height:100%; object-fit:cover;">
-          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.2);">
-            <span style="color:rgba(255,255,255,0.9); font-size:0.9rem; font-weight:700; letter-spacing:0.1em; transform:rotate(-30deg); border:2px solid rgba(255,255,255,0.7); padding:4px 14px; border-radius:4px;">
-              MARCA D'ÁGUA APLICADA
-            </span>
+          <!-- Input escondido com capture obrigatório -->
+          <input type="file" id="fotoInput" accept="image/*" capture="environment" style="display:none;">
+          
+          <!-- Botão de câmara estilizado -->
+          <div id="cameraZone" class="camera-zone">
+            <div class="camera-icon">📷</div>
+            <div class="camera-label">Tirar Foto</div>
+            <div class="camera-hint">A câmara do seu telemóvel será aberta</div>
+            <button type="button" id="btnCamera" class="btn btn-primary" style="margin-top:1rem;">Abrir Câmara</button>
           </div>
+
+          <!-- Preview depois de tirar a foto -->
+          <div id="fotoPreview" class="hidden" style="position:relative; border-radius:12px; overflow:hidden; margin-bottom:0.5rem; height:220px; background:#F3F4F6;">
+            <img id="fotoPreviewImg" src="" alt="Preview" style="width:100%; height:100%; object-fit:cover;">
+            <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.2);">
+              <span style="color:rgba(255,255,255,0.9); font-size:0.9rem; font-weight:700; letter-spacing:0.1em; transform:rotate(-30deg); border:2px solid rgba(255,255,255,0.7); padding:4px 14px; border-radius:4px; white-space:nowrap;">
+                MARCA D'ÁGUA APLICADA
+              </span>
+            </div>
+          </div>
+          <div id="fotoActions" class="hidden" style="text-align:center; margin-bottom:1rem;">
+            <button type="button" id="btnTirarNovamente" class="btn btn-outline btn-sm">🔄 Tirar novamente</button>
+          </div>
+          
+          <span class="form-hint">A foto deve ser tirada na hora com a câmara do telemóvel.</span>
         </div>
 
         <div class="form-group">

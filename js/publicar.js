@@ -204,10 +204,29 @@
     btnPrev3.addEventListener('click', function () { showStep(2); });
   }
 
-  // Upload da foto com preview
+  // Camera interface
   var fotoInput = document.getElementById('fotoInput');
   var fotoPreview = document.getElementById('fotoPreview');
   var fotoPreviewImg = document.getElementById('fotoPreviewImg');
+  var btnCamera = document.getElementById('btnCamera');
+  var cameraZone = document.getElementById('cameraZone');
+  var btnTirarNovamente = document.getElementById('btnTirarNovamente');
+
+  function openCamera() {
+    if (fotoInput) fotoInput.click();
+  }
+
+  if (btnCamera) btnCamera.addEventListener('click', openCamera);
+  if (cameraZone) cameraZone.addEventListener('click', function(e) {
+    if (e.target !== btnCamera) openCamera();
+  });
+  if (btnTirarNovamente) btnTirarNovamente.addEventListener('click', function() {
+    if (fotoInput) fotoInput.value = '';
+    if (fotoPreview) fotoPreview.classList.add('hidden');
+    var fotoActions = document.getElementById('fotoActions');
+    if (fotoActions) fotoActions.classList.add('hidden');
+    if (cameraZone) cameraZone.classList.remove('hidden');
+  });
 
   if (fotoInput && fotoPreview && fotoPreviewImg) {
     fotoInput.addEventListener('change', function () {
@@ -217,6 +236,9 @@
       reader.onload = function (e) {
         fotoPreviewImg.src = e.target.result;
         fotoPreview.classList.remove('hidden');
+        var fotoActions = document.getElementById('fotoActions');
+        if (fotoActions) fotoActions.classList.remove('hidden');
+        if (cameraZone) cameraZone.classList.add('hidden');
         formData.fotoPreview = e.target.result;
       };
       reader.readAsDataURL(file);

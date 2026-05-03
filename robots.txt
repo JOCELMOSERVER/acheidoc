@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /agente/
+
+Sitemap: https://acheidoc.ao/sitemap.xml

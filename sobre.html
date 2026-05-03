@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sobre — AcheiDoc</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#12305f">
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="navbar-logo"><span class="logo-icon">AD</span>AcheiDoc</a>
+    <div class="navbar-links">
+      <a href="index.html">Home</a>
+      <a href="buscar.html" id="linkBuscar" style="display:none">Buscar Documento</a>
+      <a href="publicar.html" id="linkPublicar" style="display:none">Publicar Achado</a>
+      <a href="recompensas.html" id="linkRecompensas" style="display:none">Recompensas</a>
+      <a href="sobre.html" class="active">Sobre</a>
+      <a href="contacto.html">Contacto</a>
+    </div>
+    <div class="navbar-right">
+      <div id="navLogin">
+        <a href="login.html" class="btn btn-outline">Entrar</a>
+        <a href="cadastro.html" class="btn btn-primary">Cadastrar</a>
+      </div>
+      <div id="navUser" style="display:none; position:relative;"></div>
+    </div>
+    <div class="navbar-toggle" id="navbarToggle"><span></span><span></span><span></span></div>
+  </div>
+  <div class="navbar-mobile" id="navbarMobile">
+    <a href="index.html">Home</a>
+    <a href="buscar.html" id="mobileLinkBuscar" style="display:none">Buscar Documento</a>
+    <a href="publicar.html" id="mobileLinkPublicar" style="display:none">Publicar Achado</a>
+    <a href="recompensas.html" id="mobileLinkRecompensas" style="display:none">Recompensas</a>
+    <a href="sobre.html" class="active">Sobre</a>
+    <a href="contacto.html">Contacto</a>
+    <div class="mobile-divider"></div>
+    <div id="mobileNavLogin">
+      <a href="login.html">Entrar</a>
+      <a href="cadastro.html">Cadastrar</a>
+    </div>
+    <div id="mobileNavUser" style="display:none;"></div>
+    <div class="mobile-divider"></div>
+    <a href="agente/login.html">Agente</a>
+    <a href="admin/login.html">Admin</a>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<div class="page-header">
+  <div class="container">
+    <h1>Sobre o AcheiDoc</h1>
+    <p>Conheça a nossa missão e como estamos a mudar Angola</p>
+  </div>
+</div>
+
+<main class="page-content">
+  <div class="container">
+
+    <!-- Missão -->
+    <section style="max-width:720px; margin:0 auto 3rem;">
+      <h2 class="section-title">A nossa missão</h2>
+      <p style="color:var(--text-gray); font-size:1.05rem; line-height:1.8; margin-bottom:1rem;">
+        O AcheiDoc é uma plataforma angolana que conecta quem encontra documentos perdidos com os seus legítimos proprietários. Em Angola, perder documentos como o Bilhete de Identidade, Carta de Condução ou Passaporte representa um problema significativo — processos longos, custos elevados e muita burocracia.
+      </p>
+      <p style="color:var(--text-gray); font-size:1.05rem; line-height:1.8; margin-bottom:1rem;">
+        Acreditamos que a tecnologia pode simplificar este processo. O nosso sistema permite que qualquer pessoa que encontre um documento o registe de forma segura, garantindo que o proprietário possa localizá-lo rapidamente através de uma rede de pontos de entrega espalhados pelo país.
+      </p>
+      <p style="color:var(--text-gray); font-size:1.05rem; line-height:1.8;">
+        Com privacidade, segurança e simplicidade como pilares, o AcheiDoc é a solução digital que Angola precisava para devolver documentos perdidos aos seus donos de forma rápida, transparente e acessível a todos.
+      </p>
+    </section>
+
+    <!-- Como funciona -->
+    <section style="margin-bottom:3rem;">
+      <h2 class="section-title text-center">Como Funciona</h2>
+      <p class="section-subtitle text-center">Três passos simples para recuperar um documento perdido</p>
+      <div class="como-funciona-grid" style="margin-top:2rem;">
+        <div class="card card-process text-center">
+          <div class="process-step">01</div>
+          <h3 class="process-title">Alguém encontra o documento</h3>
+          <p class="process-copy">Uma pessoa encontra um documento perdido na rua, no transporte ou em qualquer lugar público e decide ajudar.</p>
+        </div>
+        <div class="card card-process text-center">
+          <div class="process-step">02</div>
+          <h3 class="process-title">Publica na plataforma</h3>
+          <p class="process-copy">A pessoa fotografa e regista o documento no AcheiDoc, indicando onde foi encontrado. O documento fica disponível para pesquisa.</p>
+        </div>
+        <div class="card card-process text-center">
+          <div class="process-step">03</div>
+          <h3 class="process-title">O dono resgata</h3>
+          <p class="process-copy">O proprietário pesquisa, identifica o seu documento e efetua o resgate num ponto de entrega próximo, usando um código único.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Equipa -->
+    <section style="margin-bottom:3rem;">
+      <h2 class="section-title text-center">A nossa equipa</h2>
+      <p class="section-subtitle text-center">Pessoas dedicadas a fazer a diferença em Angola</p>
+      <div class="grid-3" style="margin-top:2rem;">
+        <div class="card text-center" style="padding:2rem 1rem;">
+          <div style="width:72px; height:72px; border-radius:50%; background:var(--primary); color:white; display:flex; align-items:center; justify-content:center; font-size:1.8rem; font-weight:800; margin:0 auto 1rem;">J</div>
+          <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:0.25rem;">João Silva</h3>
+          <p style="color:var(--text-gray); font-size:0.9rem;">Fundador & CEO</p>
+        </div>
+        <div class="card text-center" style="padding:2rem 1rem;">
+          <div style="width:72px; height:72px; border-radius:50%; background:var(--success); color:white; display:flex; align-items:center; justify-content:center; font-size:1.8rem; font-weight:800; margin:0 auto 1rem;">A</div>
+          <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:0.25rem;">Ana Ferreira</h3>
+          <p style="color:var(--text-gray); font-size:0.9rem;">Directora de Operações</p>
+        </div>
+        <div class="card text-center" style="padding:2rem 1rem;">
+          <div style="width:72px; height:72px; border-radius:50%; background:#7C3AED; color:white; display:flex; align-items:center; justify-content:center; font-size:1.8rem; font-weight:800; margin:0 auto 1rem;">M</div>
+          <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:0.25rem;">Miguel Santos</h3>
+          <p style="color:var(--text-gray); font-size:0.9rem;">Director de Tecnologia</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Números -->
+    <section class="stats-section" style="border-radius:16px; margin-bottom:3rem; padding:2.5rem 0;">
+      <div class="container">
+        <h2 class="section-title text-center" style="color:white; margin-bottom:2rem;">Os nossos números</h2>
+        <div class="grid-4">
+          <div class="stat-card stat-card-muted">
+            <div class="stat-number stat-number-light" id="statDocsTotal">—</div>
+            <div class="stat-label stat-label-light">Documentos publicados</div>
+          </div>
+          <div class="stat-card stat-card-muted">
+            <div class="stat-number stat-number-light" id="statDocsEntregues">—</div>
+            <div class="stat-label stat-label-light">Documentos entregues</div>
+          </div>
+          <div class="stat-card stat-card-muted">
+            <div class="stat-number stat-number-light" id="statAgentes">—</div>
+            <div class="stat-label stat-label-light">Agentes activos</div>
+          </div>
+          <div class="stat-card stat-card-muted">
+            <div class="stat-number stat-number-light" id="statMunicipios">—</div>
+            <div class="stat-label stat-label-light">Municípios cobertos</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- ══ FOOTER ══ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo"><span class="logo-icon">AD</span> AcheiDoc</div>
+        <p>Sistema de recuperação de documentos perdidos em Angola. Ligamos quem encontrou a quem perdeu.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Plataforma</h4>
+        <ul>
+          <li><a href="buscar.html">Buscar Documento</a></li>
+          <li><a href="publicar.html">Publicar Achado</a></li>
+          <li><a href="recompensas.html">Recompensas</a></li>
+          <li><a href="pontos-mapa.html">Pontos no Mapa</a></li>
+          <li><a href="meus-achados.html">Meus Achados</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Acesso</h4>
+        <ul>
+          <li><a href="agente/login.html">Portal do Agente</a></li>
+          <li><a href="admin/login.html">Painel Admin</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="tel:+244923000000">+244 923 000 000</a></li>
+          <li><a href="mailto:info@acheidoc.ao">info@acheidoc.ao</a></li>
+          <li><a href="#">Luanda, Angola</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 AcheiDoc. Todos os direitos reservados.</span>
+      <div class="footer-legal">
+        <a href="faq.html">FAQ</a>
+        <a href="termos.html">Privacidade</a>
+        <a href="termos.html">Termos de Uso</a>
+      </div>
+    </div>
+  </div>
+</footer>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/navbar.js"></script>
+<script>
+(function() {
+  if (typeof Api === 'undefined' || !Api.stats) return;
+  Api.stats.get().then(function(data) {
+    if (!data) return;
+    var s = data.stats || data;
+    var el = function(id, v) { var e = document.getElementById(id); if (e) e.textContent = v; };
+    el('statDocsTotal', s.total_documentos || s.documentos_total || '—');
+    el('statDocsEntregues', s.documentos_entregues || '—');
+    el('statAgentes', s.total_agentes || s.agentes_ativos || '—');
+    el('statMunicipios', s.municipios || '7');
+  }).catch(function(){});
+})();
+</script>
+</body>
+</html>
