@@ -187,10 +187,12 @@
   var btnCapturar       = document.getElementById('btnCapturar');
   var btnCancelarCamera = document.getElementById('btnCancelarCamera');
   var fotoFileInput     = document.getElementById('fotoFileInput');
+  var blurProcessing    = document.getElementById('blurProcessing');
+  var blurStatus        = document.getElementById('blurStatus');
   var fotoPreviewWrap   = document.getElementById('fotoPreviewWrap');
   var fotoPreviewImg    = document.getElementById('fotoPreviewImg');
-  var btnTirarNovamente = document.getElementById('btnTirarNovamente');
-  var btnDesfocar       = document.getElementById('btnDesfocar');
+  var blurRegionLabels  = document.getElementById('blurRegionLabels');
+  var btnNovaFoto       = document.getElementById('btnNovaFoto');
   var fotoHint          = document.getElementById('fotoHint');
   var cameraStream      = null;
 
@@ -244,11 +246,10 @@
     cameraCanvas.width = w;
     cameraCanvas.height = h;
     cameraCanvas.getContext('2d').drawImage(cameraVideo, 0, 0, w, h);
-    var dataUrl = cameraCanvas.toDataURL('image/jpeg', 0.85);
-    setFotoFromDataUrl(dataUrl);
+    var dataUrl = cameraCanvas.toDataURL('image/jpeg', 0.88);
     stopCamera();
-    cameraLive.style.display = 'none';
-    cameraStart.style.display = 'none';
+    if (cameraLive) cameraLive.style.display = 'none';
+    processAndShowFoto(dataUrl);
   }
 
   function dataURLtoBlob(dataURL) {
@@ -261,13 +262,45 @@
     return new Blob([u8arr], { type: mime });
   }
 
-  // ── UNIFICADO ──
-  function setFotoFromDataUrl(dataUrl) {
-    formData.fotoDataUrl = dataUrl;
-    formData.fotoBlob = dataURLtoBlob(dataUrl);
-    fotoPreviewImg.src = dataUrl;
-    fotoPreviewWrap.style.display = '';
-    formData.desfocagemAplicada = false;
+  // ── PROCESSAMENTO AUTOMÁTICO ──
+  function processAndShowFoto(originalDataUrl) {
+    if (uploadBlock) uploadBlock.style.display = 'none';
+    if (cameraBlock) cameraBlock.style.display = 'none';
+    if (blurProcessing) blurProcessing.style.display = '';
+    if (fotoPreviewWrap) fotoPreviewWrap.style.display = 'none';
+
+    var docTipo = formData.tipo || 'Outro';
+
+    AutoBlur.process(originalDataUrl, docTipo, function(statusMsg) {
+      if (blurStatus) blurStatus.textContent = statusMsg;
+    }).then(function(result) {
+      formData.fotoDataUrl = result.blurredDataUrl;
+      formData.fotoBlob = dataURLtoBlob(result.blurredDataUrl);
+      formData.fotoOriginalDataUrl = originalDataUrl;
+
+      if (fotoPreviewImg) fotoPreviewImg.src = result.blurredDataUrl;
+
+      if (blurRegionLabels) {
+        if (result.regions && result.regions.length > 0) {
+          blurRegionLabels.innerHTML = '<p style="font-size:0.85rem; color:var(--text-gray); margin-bottom:0.4rem;">🔒 Zonas desfocadas automaticamente:</p>' +
+            result.regions.map(function(r) {
+              return '<span style="display:inline-block; background:#F3F4F6; border:1px solid var(--border); border-radius:20px; font-size:0.78rem; padding:3px 10px; margin:2px;">🔲 ' + r.label + '</span>';
+            }).join(' ');
+        } else {
+          blurRegionLabels.innerHTML = '<p style="font-size:0.85rem; color:var(--text-gray);">ℹ️ Nenhuma zona sensível detectada automaticamente.</p>';
+        }
+      }
+
+      if (blurProcessing) blurProcessing.style.display = 'none';
+      if (fotoPreviewWrap) fotoPreviewWrap.style.display = '';
+    }).catch(function() {
+      formData.fotoDataUrl = originalDataUrl;
+      formData.fotoBlob = dataURLtoBlob(originalDataUrl);
+      if (fotoPreviewImg) fotoPreviewImg.src = originalDataUrl;
+      if (blurRegionLabels) blurRegionLabels.innerHTML = '<p style="font-size:0.85rem; color:var(--warning);">⚠️ Não foi possível processar automaticamente. A imagem será publicada sem desfocagem.</p>';
+      if (blurProcessing) blurProcessing.style.display = 'none';
+      if (fotoPreviewWrap) fotoPreviewWrap.style.display = '';
+    });
   }
 
   if (btnAbrirCamera) btnAbrirCamera.addEventListener('click', openCamera);
@@ -288,37 +321,26 @@
       if (!file) return;
       if (file.size > 10 * 1024 * 1024) { alert('Ficheiro demasiado grande. Máximo 10 MB.'); fotoFileInput.value = ''; return; }
       var reader = new FileReader();
-      reader.onload = function(e) { setFotoFromDataUrl(e.target.result); };
+      reader.onload = function(e) { processAndShowFoto(e.target.result); };
       reader.readAsDataURL(file);
     });
   }
 
-  if (btnTirarNovamente) btnTirarNovamente.addEventListener('click', function() {
+  if (btnNovaFoto) btnNovaFoto.addEventListener('click', function() {
     formData.fotoDataUrl = null;
     formData.fotoBlob = null;
-    formData.desfocagemAplicada = false;
-    fotoPreviewImg.src = '';
-    fotoPreviewWrap.style.display = 'none';
+    formData.fotoOriginalDataUrl = null;
+    if (fotoPreviewWrap) fotoPreviewWrap.style.display = 'none';
+    if (fotoPreviewImg) fotoPreviewImg.src = '';
+    if (blurRegionLabels) blurRegionLabels.innerHTML = '';
     if (isMobileDevice()) {
-      cameraStart.style.display = '';
+      if (cameraBlock) cameraBlock.style.display = '';
+      if (cameraStart) cameraStart.style.display = '';
       openCamera();
     } else {
-      if (fotoFileInput) fotoFileInput.value = '';
       if (uploadBlock) uploadBlock.style.display = '';
+      if (fotoFileInput) fotoFileInput.value = '';
     }
-  });
-
-  // Botão desfocar — abre o modal de desfocagem
-  if (btnDesfocar) btnDesfocar.addEventListener('click', function() {
-    if (!formData.fotoDataUrl) return;
-    BlurTool.open(formData.fotoDataUrl, function(newDataUrl) {
-      if (newDataUrl) {
-        formData.fotoDataUrl = newDataUrl;
-        formData.fotoBlob = dataURLtoBlob(newDataUrl);
-        fotoPreviewImg.src = newDataUrl;
-        formData.desfocagemAplicada = true;
-      }
-    });
   });
 
   // Passo 2 → 1 (parar câmara ao sair do passo 2)
