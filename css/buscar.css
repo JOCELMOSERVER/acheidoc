@@ -1,0 +1,61 @@
+/* ===========================
+   AcheiDoc — Buscar Page
+   =========================== */
+
+/*
+ * Grid de resultados da busca.
+ * Usar classe dedicada (.buscar-grid) em vez de .grid-4
+ * para evitar que o empty-state fique colado dentro do grid
+ * e quebre o layout no Android com grid-column:1/-1.
+ */
+.buscar-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+  .buscar-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .buscar-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .buscar-grid {
+    grid-template-columns: 1fr;
+    gap: 0.875rem;
+  }
+}
+
+/* Empty state fora do grid — ocupa 100% da largura normalmente */
+#emptyState.empty-state {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+#emptyState .empty-icon {
+  font-size: 3rem;
+  margin-bottom: 0.75rem;
+}
+
+#emptyState h3 {
+  font-size: 1.2rem;
+  color: var(--text-dark);
+  margin-bottom: 0.4rem;
+}
+
+#emptyState p {
+  color: var(--text-gray);
+  font-size: 0.95rem;
+  max-width: 340px;
+  margin: 0 auto;
+}
