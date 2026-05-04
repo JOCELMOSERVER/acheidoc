@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planos e Preços — Encontra já</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#12305f">
+  <meta name="description" content="Encontra já — Planos e preços para o seu negócio. Escolha o plano Starter, Profissional ou Enterprise adequado ao volume de transações.">
+  <meta property="og:title" content="Planos e Preços — Encontra já">
+  <meta property="og:description" content="Escolha o plano adequado ao volume e necessidades do seu negócio. Starter, Profissional ou Enterprise.">
+  <meta property="og:image" content="https://encontraja.ao/favicon.svg">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_AO">
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="navbar-logo"><span class="logo-icon">EJ</span>Encontra já</a>
+    <div class="navbar-links">
+      <a href="index.html">Home</a>
+      <a href="buscar.html" id="linkBuscar" style="display:none">Buscar Documento</a>
+      <a href="publicar.html" id="linkPublicar" style="display:none">Publicar Achado</a>
+      <a href="recompensas.html" id="linkRecompensas" style="display:none">Recompensas</a>
+      <a href="sobre.html">Sobre</a>
+      <a href="planos.html" class="active">Planos</a>
+      <a href="contacto.html">Contacto</a>
+    </div>
+    <div class="navbar-right">
+      <div id="navLogin">
+        <a href="login.html" class="btn btn-outline">Entrar</a>
+        <a href="cadastro.html" class="btn btn-primary">Cadastrar</a>
+      </div>
+      <div id="navUser" style="display:none; position:relative;"></div>
+    </div>
+    <button class="navbar-toggle" id="navbarToggle" aria-label="Abrir menu de navegação" aria-expanded="false" aria-controls="navbarMobile"><span></span><span></span><span></span></button>
+  </div>
+  <div class="navbar-mobile" id="navbarMobile">
+    <a href="index.html">Home</a>
+    <a href="buscar.html" id="mobileLinkBuscar" style="display:none">Buscar Documento</a>
+    <a href="publicar.html" id="mobileLinkPublicar" style="display:none">Publicar Achado</a>
+    <a href="recompensas.html" id="mobileLinkRecompensas" style="display:none">Recompensas</a>
+    <a href="sobre.html">Sobre</a>
+    <a href="planos.html" class="active">Planos</a>
+    <a href="contacto.html">Contacto</a>
+    <div class="mobile-divider"></div>
+    <div id="mobileNavLogin">
+      <a href="login.html">Entrar</a>
+      <a href="cadastro.html">Cadastrar</a>
+    </div>
+    <div id="mobileNavUser" style="display:none;"></div>
+    <div class="mobile-divider"></div>
+    <a href="agente/login.html">Agente</a>
+    <a href="admin/login.html">Admin</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1>Planos e Preços</h1>
+    <p>Escolha o plano adequado ao volume e necessidades do seu negócio.</p>
+  </div>
+</div>
+
+<main class="page-content">
+  <div class="container">
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:2rem; align-items:start; padding-top:1.5rem;">
+
+      <!-- Plano Starter -->
+      <div class="card" style="display:flex; flex-direction:column; position:relative;">
+        <div style="margin-bottom:1.5rem;">
+          <p style="font-size:0.85rem; color:var(--text-gray); text-transform:uppercase; letter-spacing:0.06em; font-weight:600; margin-bottom:0.25rem;">Starter</p>
+          <div style="font-size:2rem; font-weight:800; color:var(--primary);">5.000 Kz<span style="font-size:1rem; font-weight:400; color:var(--text-gray);">/mês</span></div>
+          <p style="color:var(--text-gray); font-size:0.9rem; margin-top:0.25rem;">Pequenas Lojas Online e Freelancers</p>
+        </div>
+        <ul style="list-style:none; padding:0; margin:0 0 1.5rem; flex:1;">
+          <li style="padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">Transações/mês</span>
+            <span style="font-weight:600;">Até 500</span>
+          </li>
+          <li style="padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">Taxa de Transação</span>
+            <span style="font-weight:600;">2,5%</span>
+          </li>
+          <li style="padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">Métodos de Pagamento</span>
+            <span style="font-weight:600; text-align:right; max-width:55%;">Multicaixa Express, Referência</span>
+          </li>
+          <li style="padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">Suporte</span>
+            <span style="font-weight:600;">Email (24–48h)</span>
+          </li>
+          <li style="padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">Relatórios</span>
+            <span style="font-weight:600;">Básicos, Dashboard Simples</span>
+          </li>
+          <li style="padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">API dedicada</span>
+            <span style="color:#EF4444; font-weight:600;">Não</span>
+          </li>
+          <li style="padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">Webhooks</span>
+            <span style="color:#EF4444; font-weight:600;">Não</span>
+          </li>
+          <li style="padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">Integração com Plataformas</span>
+            <span style="color:#EF4444; font-weight:600;">Não</span>
+          </li>
+          <li style="padding:0.55rem 0; font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">Gerente de Conta</span>
+            <span style="color:#EF4444; font-weight:600;">Não</span>
+          </li>
+        </ul>
+        <a href="contacto.html" class="btn btn-outline btn-full">Subscrever Agora</a>
+      </div>
+
+      <!-- Plano Profissional -->
+      <div class="card" style="display:flex; flex-direction:column; position:relative; border-top:3px solid var(--primary);">
+        <span style="position:absolute; top:-12px; left:50%; transform:translateX(-50%); background:var(--primary); color:white; font-size:0.75rem; font-weight:700; padding:3px 14px; border-radius:20px; white-space:nowrap;">Recomendado</span>
+        <div style="margin-bottom:1.5rem;">
+          <p style="font-size:0.85rem; color:var(--text-gray); text-transform:uppercase; letter-spacing:0.06em; font-weight:600; margin-bottom:0.25rem;">Profissional</p>
+          <div style="font-size:2rem; font-weight:800; color:var(--primary);">15.000 Kz<span style="font-size:1rem; font-weight:400; color:var(--text-gray);">/mês</span></div>
+          <p style="color:var(--text-gray); font-size:0.9rem; margin-top:0.25rem;">Empresa em Crescimento</p>
+        </div>
+        <ul style="list-style:none; padding:0; margin:0 0 1.5rem; flex:1;">
+          <li style="padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">Transações/mês</span>
+            <span style="font-weight:600;">Até 5.000</span>
+          </li>
+          <li style="padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">Taxa de Transação</span>
+            <span style="font-weight:600;">1,8%</span>
+          </li>
+          <li style="padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">Métodos de Pagamento</span>
+            <span style="font-weight:600; text-align:right; max-width:55%;">Multicaixa Express, Referência</span>
+          </li>
+          <li style="padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">Suporte</span>
+            <span style="font-weight:600;">Prioritário (Chat + Email 24–48h)</span>
+          </li>
+          <li style="padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">Relatórios</span>
+            <span style="font-weight:600;">Avançados, Dashboard Completo</span>
+          </li>
+          <li style="padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">API dedicada</span>
+            <span style="color:#16a34a; font-weight:600;">Sim</span>
+          </li>
+          <li style="padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">Webhooks</span>
+            <span style="color:#16a34a; font-weight:600;">Sim</span>
+          </li>
+          <li style="padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">Integração com Plataformas</span>
+            <span style="color:#EF4444; font-weight:600;">Não</span>
+          </li>
+          <li style="padding:0.55rem 0; font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">Gerente de Conta</span>
+            <span style="color:#EF4444; font-weight:600;">Não</span>
+          </li>
+        </ul>
+        <a href="contacto.html" class="btn btn-primary btn-full">Subscrever Agora</a>
+      </div>
+
+      <!-- Plano Enterprise -->
+      <div class="card" style="display:flex; flex-direction:column; position:relative;">
+        <div style="margin-bottom:1.5rem;">
+          <p style="font-size:0.85rem; color:var(--text-gray); text-transform:uppercase; letter-spacing:0.06em; font-weight:600; margin-bottom:0.25rem;">Enterprise</p>
+          <div style="font-size:1.5rem; font-weight:800; color:var(--primary);">Personalizado</div>
+          <p style="color:var(--text-gray); font-size:0.85rem; margin-top:0.1rem;">Contactar Vendas</p>
+          <p style="color:var(--text-gray); font-size:0.9rem; margin-top:0.25rem;">Grandes Empresas</p>
+        </div>
+        <ul style="list-style:none; padding:0; margin:0 0 1.5rem; flex:1;">
+          <li style="padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">Transações/mês</span>
+            <span style="font-weight:600;">Ilimitadas</span>
+          </li>
+          <li style="padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">Taxa de Transação</span>
+            <span style="font-weight:600;">1,2%</span>
+          </li>
+          <li style="padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">Métodos de Pagamento</span>
+            <span style="font-weight:600; text-align:right; max-width:55%;">Multicaixa Express, Referência</span>
+          </li>
+          <li style="padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">Suporte</span>
+            <span style="font-weight:600;">Dedicado (Gerente de Conta)</span>
+          </li>
+          <li style="padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">Relatórios</span>
+            <span style="font-weight:600;">Personalizados, Dashboard Avançado</span>
+          </li>
+          <li style="padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">API dedicada</span>
+            <span style="color:#16a34a; font-weight:600;">Sim, com SLA</span>
+          </li>
+          <li style="padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">Webhooks</span>
+            <span style="color:#16a34a; font-weight:600;">Avançado</span>
+          </li>
+          <li style="padding:0.55rem 0; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">Integração com Plataformas</span>
+            <span style="color:#16a34a; font-weight:600;">Ilimitada</span>
+          </li>
+          <li style="padding:0.55rem 0; font-size:0.9rem; display:flex; justify-content:space-between;">
+            <span style="color:var(--text-gray);">Gerente de Conta</span>
+            <span style="color:#16a34a; font-weight:600;">Sim</span>
+          </li>
+        </ul>
+        <a href="contacto.html" class="btn btn-outline btn-full">Falar com Vendas</a>
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+<!-- ══ FOOTER ══ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo"><span class="logo-icon">EJ</span> Encontra já</div>
+        <p>Sistema de recuperação de documentos perdidos em Angola. Ligamos quem encontrou a quem perdeu.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Plataforma</h4>
+        <ul>
+          <li><a href="buscar.html">Buscar Documento</a></li>
+          <li><a href="publicar.html">Publicar Achado</a></li>
+          <li><a href="recompensas.html">Recompensas</a></li>
+          <li><a href="pontos-mapa.html">Pontos no Mapa</a></li>
+          <li><a href="meus-achados.html">Meus Achados</a></li>
+          <li><a href="planos.html">Planos e Preços</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Acesso</h4>
+        <ul>
+          <li><a href="agente/login.html">Portal do Agente</a></li>
+          <li><a href="admin/login.html">Painel Admin</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="tel:+244923000000">+244 923 000 000</a></li>
+          <li><a href="mailto:info@encontraja.ao">info@encontraja.ao</a></li>
+          <li><a href="#">Luanda, Angola</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Encontra já. Todos os direitos reservados.</span>
+      <div class="footer-legal">
+        <a href="faq.html">FAQ</a>
+        <a href="termos.html">Privacidade</a>
+        <a href="termos.html">Termos de Uso</a>
+      </div>
+    </div>
+  </div>
+</footer>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/navbar.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js');
+    });
+  }
+</script>
+</body>
+</html>
