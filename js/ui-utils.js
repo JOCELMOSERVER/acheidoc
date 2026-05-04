@@ -1,5 +1,5 @@
 /* ===========================
-   AcheiDoc — UI Utils
+   Encontra já — UI Utils
    =========================== */
 
 (function () {

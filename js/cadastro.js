@@ -1,5 +1,5 @@
 /* ===========================
-   AcheiDoc — Cadastro JS
+   Encontra já — Cadastro JS
    =========================== */
 
 // Validação em tempo real da senha

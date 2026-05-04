@@ -1,5 +1,5 @@
 /* ===========================
-   AcheiDoc — Agente Suporte
+   Encontra já — Agente Suporte
    =========================== */
 
 (function () {

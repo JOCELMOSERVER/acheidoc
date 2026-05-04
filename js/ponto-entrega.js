@@ -1,5 +1,5 @@
 /* ===========================
-   AcheiDoc — Ponto de Entrega JS
+   Encontra já — Ponto de Entrega JS
    =========================== */
 
 (function () {

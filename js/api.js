@@ -1,5 +1,5 @@
 /* ===========================
-   AcheiDoc — API Client
+   Encontra já — API Client
    =========================== */
 
 (function () {

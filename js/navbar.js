@@ -1,5 +1,5 @@
 /* ===========================
-   AcheiDoc — Navbar JS
+   Encontra já — Navbar JS
    =========================== */
 
 (function () {

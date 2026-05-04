@@ -1,5 +1,5 @@
 /* ===========================
-   AcheiDoc — Recuperar Password (Utilizador)
+   Encontra já — Recuperar Password (Utilizador)
    =========================== */
 
 (function () {

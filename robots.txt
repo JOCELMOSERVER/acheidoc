@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin/
 Disallow: /agente/
 
-Sitemap: https://acheidoc.ao/sitemap.xml
+Sitemap: https://encontraja.ao/sitemap.xml

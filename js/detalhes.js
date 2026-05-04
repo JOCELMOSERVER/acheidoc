@@ -1,5 +1,5 @@
 /* ===========================
-   AcheiDoc — Detalhes JS
+   Encontra já — Detalhes JS
    =========================== */
 
 (function () {
@@ -72,7 +72,7 @@
       }
     }
 
-    document.title = doc.tipo + ' — AcheiDoc';
+    document.title = doc.tipo + ' — Encontra já';
   }
 
   (async function loadDoc() {

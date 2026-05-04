@@ -1,5 +1,5 @@
 /* ===========================
-   AcheiDoc - Pontos no Mapa JS
+   Encontra já - Pontos no Mapa JS
    =========================== */
 
 (function () {

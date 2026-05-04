@@ -1,5 +1,5 @@
 /* ===========================
-   AcheiDoc — Perfil do Utilizador
+   Encontra já — Perfil do Utilizador
    =========================== */
 
 (function () {
