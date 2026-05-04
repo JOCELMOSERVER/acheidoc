@@ -15,9 +15,24 @@ var AutoBlur = (function () {
 
   var DOC_TEMPLATES = {
     'Bilhete de Identidade': [
-      { label: 'Número de BI',   x: 0.55, y: 0.18, w: 0.40, h: 0.10 },
-      { label: 'NIF',            x: 0.55, y: 0.30, w: 0.40, h: 0.10 },
-      { label: 'Assinatura',     x: 0.55, y: 0.82, w: 0.40, h: 0.12 }
+      // Nome Completo — desfocar os nomes do meio (manter 1.º e último)
+      { label: 'Nome (nomes do meio)',  x: 0.08, y: 0.455, w: 0.50, h: 0.075, xSkipStart: 0.22, xSkipEnd: 0.20 },
+      // Nome — linha 2 se o nome se estender (desfocar tudo menos o último nome)
+      { label: 'Nome (linha 2 meio)',   x: 0.08, y: 0.530, w: 0.50, h: 0.065, xSkipStart: 0.00, xSkipEnd: 0.22 },
+
+      // Filiação — Pai (manter primeiro e último nome)
+      { label: 'Pai (nomes do meio)',   x: 0.08, y: 0.605, w: 0.50, h: 0.065, xSkipStart: 0.22, xSkipEnd: 0.20 },
+      // Filiação — Linha 2 do pai se necessário
+      { label: 'Pai (linha 2)',         x: 0.08, y: 0.670, w: 0.50, h: 0.055, xSkipStart: 0.00, xSkipEnd: 0.22 },
+
+      // Filiação — Mãe (manter primeiro e último nome)
+      { label: 'Mãe (nomes do meio)',   x: 0.08, y: 0.655, w: 0.50, h: 0.065, xSkipStart: 0.22, xSkipEnd: 0.20 },
+
+      // Número de BI — manter os 4 primeiros e 4 últimos (14 chars: 4/14≈28.5%, 6 do meio≈43%)
+      { label: 'Número BI (meio)',      x: 0.08, y: 0.715, w: 0.50, h: 0.060, xSkipStart: 0.285, xSkipEnd: 0.285 },
+
+      // Assinatura (zona direita)
+      { label: 'Assinatura',            x: 0.55, y: 0.72,  w: 0.38, h: 0.10 }
     ],
     'Passaporte': [
       { label: 'Número',         x: 0.50, y: 0.14, w: 0.45, h: 0.10 },
@@ -116,8 +131,14 @@ var AutoBlur = (function () {
             var ry = Math.round(t.y * H);
             var rw = Math.round(t.w * W);
             var rh = Math.round(t.h * H);
-            blurRegionOnCanvas(ctx, canvas, rx, ry, rw, rh, TEMPLATE_BLUR_PX);
-            regions.push({ label: t.label, x: rx, y: ry, w: rw, h: rh });
+            var xSkipStart = t.xSkipStart || 0;
+            var xSkipEnd = t.xSkipEnd || 0;
+            var blurX = rx + Math.round(xSkipStart * rw);
+            var blurW = rw - Math.round((xSkipStart + xSkipEnd) * rw);
+            if (blurW > 0) {
+              blurRegionOnCanvas(ctx, canvas, blurX, ry, blurW, rh, TEMPLATE_BLUR_PX);
+              regions.push({ label: t.label, x: rx, y: ry, w: rw, h: rh });
+            }
           });
 
           onProgress('A detectar rosto no documento...');
