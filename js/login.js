@@ -1,5 +1,5 @@
 /* ===========================
-   AcheiDoc — Login JS
+   Encontra já — Login JS
    =========================== */
 
 // Submit do formulário

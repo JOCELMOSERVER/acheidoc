@@ -1,5 +1,5 @@
 /* ===========================
-   AcheiDoc — Auto Blur
+   Encontra já — Auto Blur
    Desfocagem automática de áreas sensíveis
    =========================== */
 

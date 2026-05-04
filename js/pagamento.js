@@ -1,5 +1,5 @@
 /* ===========================
-   AcheiDoc — Pagamento JS
+   Encontra já — Pagamento JS
    =========================== */
 
 (function () {

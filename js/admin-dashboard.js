@@ -1,5 +1,5 @@
 /* ===========================
-   AcheiDoc — Admin Dashboard JS
+   Encontra já — Admin Dashboard JS
    =========================== */
 
 (function () {

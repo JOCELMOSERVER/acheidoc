@@ -1,5 +1,5 @@
 /* ===========================
-   AcheiDoc — Admin Pagamentos JS
+   Encontra já — Admin Pagamentos JS
    PayPay: Entidade + Referência
    =========================== */
 

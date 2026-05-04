@@ -1,5 +1,5 @@
 /* ===========================
-   AcheiDoc — Buscar JS
+   Encontra já — Buscar JS
    =========================== */
 
 (function () {

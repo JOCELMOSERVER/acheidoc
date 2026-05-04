@@ -1,5 +1,5 @@
 /* ===========================
-   AcheiDoc — Agente Validar JS
+   Encontra já — Agente Validar JS
    =========================== */
 
 (function () {

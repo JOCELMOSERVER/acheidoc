@@ -1,5 +1,5 @@
 /* ===========================
-   AcheiDoc — Blur Tool
+   Encontra já — Blur Tool
    Ferramenta de desfocagem de áreas sensíveis
    =========================== */
 

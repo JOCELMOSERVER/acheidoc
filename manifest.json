@@ -1,6 +1,6 @@
 {
-  "name": "AcheiDoc",
-  "short_name": "AcheiDoc",
+  "name": "Encontra já",
+  "short_name": "Encontra já",
   "description": "Plataforma angolana de recuperação de documentos perdidos",
   "start_url": "/",
   "display": "standalone",

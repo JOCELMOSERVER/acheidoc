@@ -1,5 +1,5 @@
 /* ===========================
-   AcheiDoc — Agente Histórico JS
+   Encontra já — Agente Histórico JS
    =========================== */
 
 (function () {

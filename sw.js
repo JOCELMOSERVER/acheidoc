@@ -1,4 +1,4 @@
-/* AcheiDoc — Service Worker */
+/* Encontra já — Service Worker */
 var CACHE = 'acheidoc-v1';
 var ASSETS = [
   '/',

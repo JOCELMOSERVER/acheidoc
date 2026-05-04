@@ -1,5 +1,5 @@
 /* ===========================
-   AcheiDoc — Autenticação
+   Encontra já — Autenticação
    =========================== */
 
 const Auth = {
