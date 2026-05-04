@@ -151,7 +151,6 @@
           <!-- MODO MOBILE: câmara ao vivo -->
           <div id="cameraBlock">
             <div id="cameraStart" class="camera-zone">
-              <span class="camera-icon">📷</span>
               <span class="camera-label">Tirar Foto ao Documento</span>
               <span class="camera-hint">A câmara abrirá directamente</span>
               <button type="button" id="btnAbrirCamera" class="btn btn-primary" style="margin-top:1rem;">Abrir Câmara</button>
@@ -161,7 +160,7 @@
                 <video id="cameraVideo" autoplay playsinline muted style="width:100%; display:block; max-height:320px; object-fit:cover;"></video>
               </div>
               <div style="display:flex; gap:0.75rem; justify-content:center; margin-bottom:0.5rem;">
-                <button type="button" id="btnCapturar" class="btn btn-success btn-lg">📸 Capturar</button>
+                <button type="button" id="btnCapturar" class="btn btn-success btn-lg">Capturar</button>
                 <button type="button" id="btnCancelarCamera" class="btn btn-outline">Cancelar</button>
               </div>
             </div>
@@ -171,7 +170,6 @@
           <!-- MODO DESKTOP: upload de ficheiro -->
           <div id="uploadBlock" style="display:none;">
             <div id="uploadZone" class="camera-zone" onclick="document.getElementById('fotoFileInput').click()">
-              <span class="camera-icon">🖼️</span>
               <span class="camera-label">Carregar Foto do Documento</span>
               <span class="camera-hint">Clique para seleccionar (JPG, PNG — máx. 10 MB)</span>
               <button type="button" class="btn btn-primary" style="margin-top:1rem; pointer-events:none;">Escolher Ficheiro</button>
@@ -182,7 +180,7 @@
           <!-- Processamento automático (spinner) -->
           <div id="blurProcessing" style="display:none; text-align:center; padding:2rem 1rem;">
             <div class="spinner" style="margin:0 auto 1rem;"></div>
-            <p id="blurStatus" style="color:var(--text-gray); font-size:0.9rem;">A analisar documento...</p>
+            <p id="blurStatus" style="color:var(--text-gray); font-size:0.9rem;">A processar imagem...</p>
           </div>
 
           <!-- Preview com desfocagem automática aplicada -->
@@ -192,7 +190,7 @@
             </div>
             <div id="blurRegionLabels" style="margin-bottom:0.75rem;"></div>
             <div style="display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap;">
-              <button type="button" id="btnNovaFoto" class="btn btn-outline btn-sm">🔄 Nova foto</button>
+              <button type="button" id="btnNovaFoto" class="btn btn-outline btn-sm">Nova foto</button>
             </div>
           </div>
 

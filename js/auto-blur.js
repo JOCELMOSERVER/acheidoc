@@ -176,7 +176,7 @@ var AutoBlur = (function () {
    */
   function process(dataUrl, docTipo, onProgress) {
     onProgress = onProgress || function(){};
-    onProgress('A carregar modelos de IA...');
+    onProgress('A preparar processamento...');
 
     return loadModels().then(function() {
       return new Promise(function(resolve, reject) {
@@ -194,7 +194,7 @@ var AutoBlur = (function () {
           // Detetar a bounding box do cartão na foto
           var card = detectCardBounds(canvas, ctx);
 
-          onProgress('A identificar zonas sensíveis do documento...');
+          onProgress('A processar imagem...');
           var templates = DOC_TEMPLATES[docTipo] || [];
           templates.forEach(function(t) {
             // Coordenadas relativas ao cartão detetado
@@ -216,7 +216,7 @@ var AutoBlur = (function () {
             regions.push({ label: t.label, x: rx, y: ry, w: rw, h: rh });
           });
 
-          onProgress('A detectar rosto no documento...');
+          onProgress('A verificar campos do documento...');
 
           var facePromise;
           if (typeof faceapi !== 'undefined' && _modelsLoaded) {

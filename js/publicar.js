@@ -201,7 +201,7 @@
     if (isMobileDevice()) {
       if (cameraBlock) cameraBlock.style.display = '';
       if (uploadBlock) uploadBlock.style.display = 'none';
-      if (fotoHint) fotoHint.textContent = '⚠️ Apenas fotos tiradas na hora são aceites.';
+      if (fotoHint) fotoHint.textContent = 'Apenas fotos tiradas na hora são aceites.';
     } else {
       if (cameraBlock) cameraBlock.style.display = 'none';
       if (uploadBlock) uploadBlock.style.display = '';
@@ -282,12 +282,12 @@
 
       if (blurRegionLabels) {
         if (result.regions && result.regions.length > 0) {
-          blurRegionLabels.innerHTML = '<p style="font-size:0.85rem; color:var(--text-gray); margin-bottom:0.4rem;">🔒 Zonas desfocadas automaticamente:</p>' +
+          blurRegionLabels.innerHTML = '<p style="font-size:0.85rem; color:var(--text-gray); margin-bottom:0.4rem;">Zonas com protecção aplicada:</p>' +
             result.regions.map(function(r) {
-              return '<span style="display:inline-block; background:#F3F4F6; border:1px solid var(--border); border-radius:20px; font-size:0.78rem; padding:3px 10px; margin:2px;">🔲 ' + r.label + '</span>';
+              return '<span style="display:inline-block; background:#F3F4F6; border:1px solid var(--border); border-radius:20px; font-size:0.78rem; padding:3px 10px; margin:2px;">' + r.label + '</span>';
             }).join(' ');
         } else {
-          blurRegionLabels.innerHTML = '<p style="font-size:0.85rem; color:var(--text-gray);">ℹ️ Nenhuma zona sensível detectada automaticamente.</p>';
+          blurRegionLabels.innerHTML = '<p style="font-size:0.85rem; color:var(--text-gray);">Nenhuma zona protegida identificada.</p>';
         }
       }
 
@@ -297,7 +297,7 @@
       formData.fotoDataUrl = originalDataUrl;
       formData.fotoBlob = dataURLtoBlob(originalDataUrl);
       if (fotoPreviewImg) fotoPreviewImg.src = originalDataUrl;
-      if (blurRegionLabels) blurRegionLabels.innerHTML = '<p style="font-size:0.85rem; color:var(--warning);">⚠️ Não foi possível processar automaticamente. A imagem será publicada sem desfocagem.</p>';
+      if (blurRegionLabels) blurRegionLabels.innerHTML = '<p style="font-size:0.85rem; color:var(--warning);">A protecção da imagem não foi aplicada. Verifique a qualidade da foto.</p>';
       if (blurProcessing) blurProcessing.style.display = 'none';
       if (fotoPreviewWrap) fotoPreviewWrap.style.display = '';
     });
